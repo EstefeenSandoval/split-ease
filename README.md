@@ -15,27 +15,28 @@ Aplicación fullstack con frontend en React, backend en Node.js (Express) y base
 
 Desde la raíz del proyecto:
 
-# Clona el repositorio
+### Clona el repositorio
 git clone https://github.com/EstefeenSandoval/split-ease.git
+
 cd split-ease
 
-# Usa la versión correcta de Node
+### Usa la versión correcta de Node
 nvm use
 
-# Instala dependencias backend
+### Instala dependencias backend
 cd backend
 npm install
 
-# Instala dependencias frontend
+### Instala dependencias frontend
 cd ../frontend
 npm install
 
 ## ▶️ Ejecutar en desarrollo
 
-# Inicia el backend (Node.js)
+### Inicia el backend (Node.js)
 cd backend
 npm run dev
 
-# En otra terminal, inicia el frontend (React)
+### En otra terminal, inicia el frontend (React)
 cd frontend
 npm start
