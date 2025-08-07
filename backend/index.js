@@ -4,12 +4,14 @@ const app = express();
 
 const PORT = process.env.PORT || 3100;
 
+// Importa las rutas
+const usuariosRoutes = require('./routes/usuarios');
+
+
 app.use(express.json());
 
 // === Rutas de la API ===
-app.get('/api/saludo', (req, res) => {
-  res.json({ mensaje: 'Hola Mundo' });
-});
+app.use('/api/usuarios', usuariosRoutes);
 
 // Servir archivos estáticos de la carpeta 'frontend/build'
 app.use(express.static(path.join(__dirname, '../frontend/build')));
