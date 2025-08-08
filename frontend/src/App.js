@@ -1,25 +1,160 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Header from './components/Headers';
+import Hero from './components/Hero';
+import Features from './components/Features';
+import Footer from './components/Footer';
+import Modal from './components/Modal';
 
-function App() {
+const App = () => {
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    type: 'login' // 'login' o 'register'
+  });
+
+  const [user, setUser] = useState(null);
+
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        fetch('http://localhost:3100/api/usuarios/validar', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.usuario) {
+              setUser(data.usuario);
+            } else {
+              // Token inválido o expirado
+              console.log('Token inválido o expirado');
+              localStorage.removeItem('token');
+              localStorage.removeItem('usuario');
+              setUser(null);
+            }
+          })
+          .catch(() => {
+            console.log('Error al validar token.');
+            localStorage.removeItem('token');
+            localStorage.removeItem('usuario');
+            setUser(null);
+          });
+      }
+    }, []);
+
+  const styles = {
+    app: {
+      minHeight: '100vh',
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      lineHeight: 1.6,
+    }
+  };
+
+  // Funciones para manejar modales y usuario
+  const openModal = (type) => {
+    setModalState({ isOpen: true, type });
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    setModalState({ isOpen: false, type: 'login' });
+    document.body.style.overflow = 'auto';
+  };
+
+  const switchModal = (newType) => {
+    setModalState({ isOpen: true, type: newType });
+  };
+
+  const handleLoginSuccess = (nombre) => {
+    setUser({ nombre });
+    
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+  };
+
+  // Smooth scrolling para los enlaces de navegación
+  useEffect(() => {
+    const handleClick = (e) => {
+      const target = e.target;
+      const href = target.getAttribute('href');
+      
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const targetElement = document.querySelector(href);
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }
+    };
+
+    // Agregar event listener para links con href que empiecen con #
+    const links = document.querySelectorAll('a[href^="#"]');
+    links.forEach(link => {
+      link.addEventListener('click', handleClick);
+    });
+
+    // Cleanup
+    return () => {
+      links.forEach(link => {
+        link.removeEventListener('click', handleClick);
+      });
+    };
+  }, []);
+
+  // Cerrar modal al hacer clic fuera
+  useEffect(() => {
+    const handleEscKey = (e) => {
+      if (e.key === 'Escape' && modalState.isOpen) {
+        closeModal();
+      }
+    };
+
+    if (modalState.isOpen) {
+      document.addEventListener('keydown', handleEscKey);
+      return () => {
+        document.removeEventListener('keydown', handleEscKey);
+      };
+    }
+  }, [modalState.isOpen]);
+
+  // Resetear overflow del body cuando se desmonta el componente
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={styles.app}>
+      {/* Header con navegación */}
+      <Header onOpenModal={openModal} user={user} onLogout={handleLogout} />
+      {/* Sección Hero principal */}
+      <Hero onOpenModal={openModal} />
+      {/* Sección de características */}
+      <Features />
+      {/* Footer */}
+      <Footer />
+      {/* Modal para login/registro */}
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        type={modalState.type}
+        onSwitchModal={switchModal}
+        onLoginSuccess={handleLoginSuccess}
+      />
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
-}
+};
 
 export default App;
