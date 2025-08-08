@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Headers = ({ onOpenModal }) => {
+const Headers = ({ onOpenModal, user, onLogout }) => {
   const styles = {
     header: {
       background: 'rgba(255, 255, 255, 0.95)',
@@ -94,7 +94,6 @@ const Headers = ({ onOpenModal }) => {
 
   const [hoveredItem, setHoveredItem] = React.useState(null);
   const [hoveredBtn, setHoveredBtn] = React.useState(false);
-
   const handleScroll = (targetId) => {
     const target = document.querySelector(targetId);
     if (target) {
@@ -104,6 +103,15 @@ const Headers = ({ onOpenModal }) => {
       });
     }
   };
+  let userName = '';
+  try {
+    const userData = localStorage.getItem('usuario');
+    if (userData) {
+      userName = JSON.parse(userData).nombre || '';
+    }
+  } catch (e) {
+    userName = '';
+  }
 
   return (
     <header style={styles.header}>
@@ -120,7 +128,6 @@ const Headers = ({ onOpenModal }) => {
             <span style={{ fontSize: '2.5rem' }}>💲</span>
             SplitEase
           </a>
-          
           <ul style={styles.navLinks}>
             <li>
               <a 
@@ -173,33 +180,66 @@ const Headers = ({ onOpenModal }) => {
                 Características
               </a>
             </li>
-            <li>
-              <button 
-                onClick={() => onOpenModal('login')} 
-                style={{
-                  ...styles.navLink,
-                  ...(hoveredItem === 'login' ? styles.navLinkHover : {})
-                }}
-                onMouseEnter={() => setHoveredItem('login')}
-                onMouseLeave={() => setHoveredItem(null)}
-              >
-                Iniciar Sesión
-              </button>
-            </li>
-            <li>
-              <button 
-                onClick={() => onOpenModal('register')} 
-                style={{
-                  ...styles.btn,
-                  ...styles.btnPrimary,
-                  ...(hoveredBtn ? styles.btnPrimaryHover : {})
-                }}
-                onMouseEnter={() => setHoveredBtn(true)}
-                onMouseLeave={() => setHoveredBtn(false)}
-              >
-                Registrarse
-              </button>
-            </li>
+            
+            {user ? (
+              <>
+                <li>
+                  <span style={{
+                    ...styles.navLink,
+                    color: '#498467',
+                    fontWeight: 'bold',
+                    cursor: 'default',
+                  }}>
+                    {userName}
+                  </span>
+                </li>
+                <li>
+                  <button
+                    onClick={onLogout}
+                    style={{
+                      ...styles.btn,
+                      ...styles.btnPrimary,
+                      ...(hoveredBtn ? styles.btnPrimaryHover : {}),
+                      marginLeft: '0.5rem',
+                    }}
+                    onMouseEnter={() => setHoveredBtn(true)}
+                    onMouseLeave={() => setHoveredBtn(false)}
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <button 
+                    onClick={() => onOpenModal('login')} 
+                    style={{
+                      ...styles.navLink,
+                      ...(hoveredItem === 'login' ? styles.navLinkHover : {})
+                    }}
+                    onMouseEnter={() => setHoveredItem('login')}
+                    onMouseLeave={() => setHoveredItem(null)}
+                  >
+                    Iniciar Sesión
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => onOpenModal('register')} 
+                    style={{
+                      ...styles.btn,
+                      ...styles.btnPrimary,
+                      ...(hoveredBtn ? styles.btnPrimaryHover : {})
+                    }}
+                    onMouseEnter={() => setHoveredBtn(true)}
+                    onMouseLeave={() => setHoveredBtn(false)}
+                  >
+                    Registrarse
+                  </button>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </nav>

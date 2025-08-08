@@ -20,6 +20,12 @@ const mostrarTodos = (callback) => {
   db.query('SELECT * FROM USUARIOS', callback);
 };
 
+const findById = (id, callback) => {
+  db.query(
+    'SELECT * FROM USUARIOS WHERE id_usuario = ?',
+    [id],
+    callback
+  );
+};
 
-
-module.exports = { crearUsuario, buscarPorEmail, mostrarTodos };
+module.exports = { crearUsuario, buscarPorEmail, mostrarTodos, findById };

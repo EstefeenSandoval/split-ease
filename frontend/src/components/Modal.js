@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-const Modal = ({ isOpen, onClose, type, onSwitchModal }) => {
+const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
   const [hoveredClose, setHoveredClose] = useState(false);
   const [hoveredSubmit, setHoveredSubmit] = useState(false);
   const [hoveredSwitch, setHoveredSwitch] = useState(false);
@@ -179,9 +180,13 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal }) => {
     }));
   };
 
-  const handleSubmit = () => {
-    // Validaciones básicas
+  const handleSubmit = async () => {
     if (!formData.email || !formData.password) {
+      alert('Por favor completa todos los campos requeridos');
+      return;
+    }
+
+    if (!isLogin && (!formData.name || !formData.confirmPassword)) {
       alert('Por favor completa todos los campos requeridos');
       return;
     }
@@ -191,7 +196,44 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal }) => {
       return;
     }
 
-    alert('¡Funcionalidad de demostración! En la aplicación real, aquí se procesaría el formulario.');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+  toast.error('Por favor ingresa un correo electrónico válido');
+  return;
+    }
+
+    try {
+      const endpoint = isLogin ? 'http://localhost:3100/api/usuarios/login' : 'http://localhost:3100/api/usuarios/registro';
+      const payload = isLogin
+        ? { email: formData.email, password: formData.password }
+        : { nombre: formData.name, email: formData.email, password: formData.password };
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+  toast.error(data.error || 'Error en la petición');
+  return;
+      }
+
+      if (isLogin && data.token) {
+        localStorage.setItem('token', data.token);
+        // Guardar usuario en localStorage
+        localStorage.setItem('usuario', JSON.stringify({ nombre: data.usuario.nombre }));
+        if (onLoginSuccess) {
+          onLoginSuccess(data.usuario.nombre || formData.name || 'Usuario');
+        }
+      }
+  toast.success(data.mensaje || 'Operación exitosa');
+  onClose();
+    } catch (err) {
+  toast.error('Error de conexión con el servidor');
+    }
   };
 
   const handleBackdropClick = (e) => {

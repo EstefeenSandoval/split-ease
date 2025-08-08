@@ -1,12 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const usuariosController = require('../controllers/usuariosController');
+const auth = require('../middleware/auth');
+const { mostrarTodos, registrar, login, validar} = require('../controllers/usuariosController');
 
-router.post('/registro', usuariosController.registrar);
+// ruta /api/usuarios
 
-router.post('/login', usuariosController.login);
 
-router.get('/mostrar', usuariosController.mostrarTodos);
+// /api/usuarios/registro
+router.post('/registro', registrar);
 
+// /api/usuarios/login
+router.post('/login', login);
+
+// Proteger la ruta /mostrar con JWT
+// /api/usuarios/mostrar
+router.get('/mostrar', auth.verificarToken, mostrarTodos);
+
+// /api/usuarios/validar
+router.get('/validar', auth.verificarToken, validar);
 
 module.exports = router;

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Headers';
 import Hero from './components/Hero';
 import Features from './components/Features';
@@ -11,6 +13,38 @@ const App = () => {
     type: 'login' // 'login' o 'register'
   });
 
+  const [user, setUser] = useState(null);
+
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        fetch('http://localhost:3100/api/usuarios/validar', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.usuario) {
+              setUser(data.usuario);
+            } else {
+              // Token inválido o expirado
+              console.log('Token inválido o expirado');
+              localStorage.removeItem('token');
+              localStorage.removeItem('usuario');
+              setUser(null);
+            }
+          })
+          .catch(() => {
+            console.log('Error al validar token.');
+            localStorage.removeItem('token');
+            localStorage.removeItem('usuario');
+            setUser(null);
+          });
+      }
+    }, []);
+
   const styles = {
     app: {
       minHeight: '100vh',
@@ -19,7 +53,7 @@ const App = () => {
     }
   };
 
-  // Funciones para manejar modales
+  // Funciones para manejar modales y usuario
   const openModal = (type) => {
     setModalState({ isOpen: true, type });
     document.body.style.overflow = 'hidden';
@@ -32,6 +66,17 @@ const App = () => {
 
   const switchModal = (newType) => {
     setModalState({ isOpen: true, type: newType });
+  };
+
+  const handleLoginSuccess = (nombre) => {
+    setUser({ nombre });
+    
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
   };
 
   // Smooth scrolling para los enlaces de navegación
@@ -92,24 +137,22 @@ const App = () => {
   return (
     <div style={styles.app}>
       {/* Header con navegación */}
-      <Header onOpenModal={openModal} />
-      
+      <Header onOpenModal={openModal} user={user} onLogout={handleLogout} />
       {/* Sección Hero principal */}
       <Hero onOpenModal={openModal} />
-      
       {/* Sección de características */}
       <Features />
-      
       {/* Footer */}
       <Footer />
-      
       {/* Modal para login/registro */}
       <Modal
         isOpen={modalState.isOpen}
         onClose={closeModal}
         type={modalState.type}
         onSwitchModal={switchModal}
+        onLoginSuccess={handleLoginSuccess}
       />
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

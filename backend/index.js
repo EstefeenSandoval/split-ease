@@ -1,14 +1,16 @@
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 const app = express();
-
+const usuariosRoutes = require('./routes/usuarios');
 const PORT = process.env.PORT || 3100;
 
-// Importa las rutas
-const usuariosRoutes = require('./routes/usuarios');
-
-
 app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:3000', 
+  credentials: true
+}));
+
 
 // === Rutas de la API ===
 app.use('/api/usuarios', usuariosRoutes);
