@@ -1,10 +1,12 @@
 const mysql = require('mysql2');
+require('dotenv').config(); // Cargar las variables de entorno
 
 const db = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: 'Aries@2403',
-  database: 'splitease'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
 });
 
 module.exports = db;
+// Exportar la conexión para usarla en otros módulos
