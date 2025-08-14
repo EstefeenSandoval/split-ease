@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import './Modal.css';
 
 const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
   const [hoveredClose, setHoveredClose] = useState(false);

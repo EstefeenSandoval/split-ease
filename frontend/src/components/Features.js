@@ -1,78 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import './Features.css';
 
 const Features = () => {
   const [isVisible, setIsVisible] = useState(false);
-
-  const styles = {
-    features: {
-      padding: '4rem 0',
-      background: 'white',
-    },
-    container: {
-      maxWidth: '1200px',
-      margin: '0 auto',
-      padding: '0 20px',
-    },
-    title: {
-      textAlign: 'center',
-      fontSize: '2.5rem',
-      marginBottom: '3rem',
-      color: '#252627',
-      fontWeight: 'bold',
-    },
-    featuresGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-      gap: '2rem',
-    },
-    featureCard: {
-      background: 'white',
-      padding: '2rem',
-      borderRadius: '15px',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
-      textAlign: 'center',
-      transition: 'all 0.6s ease',
-      border: '2px solid #bcebcb',
-      opacity: isVisible ? 1 : 0,
-      transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-    },
-    featureCardHover: {
-      transform: 'translateY(-5px)',
-      boxShadow: '0 15px 40px rgba(0, 0, 0, 0.15)',
-    },
-    featureIcon: {
-      width: '60px',
-      height: '60px',
-      background: '#bcebcb',
-      borderRadius: '50%',
-      margin: '0 auto 1rem',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontSize: '1.5rem',
-      color: '#498467',
-    },
-    featureTitle: {
-      fontSize: '1.3rem',
-      fontWeight: '600',
-      marginBottom: '1rem',
-      color: '#252627',
-    },
-    featureDescription: {
-      color: '#998888',
-      lineHeight: '1.6',
-      fontSize: '1rem',
-    },
-    // Media queries para mobile
-    '@media (max-width: 768px)': {
-      featuresGrid: {
-        gridTemplateColumns: '1fr',
-      },
-      title: {
-        fontSize: '2rem',
-      },
-    },
-  };
+  const [hoveredCards, setHoveredCards] = useState({});
 
   const features = [
     {
@@ -91,8 +22,6 @@ const Features = () => {
       description: 'Mantén un registro detallado de todos tus gastos compartidos y balances pendientes.'
     }
   ];
-
-  const [hoveredCards, setHoveredCards] = useState({});
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -127,31 +56,30 @@ const Features = () => {
   };
 
   return (
-    <section id="caracteristicas" style={styles.features}>
-      <div style={styles.container}>
-        <h2 style={styles.title}>
+    <section id="caracteristicas" className="features-section">
+      <div className="features-container">
+        <h2 className="features-title">
           ¿Por qué elegir SplitEase?
         </h2>
         
-        <div style={styles.featuresGrid}>
+        <div className="features-grid">
           {features.map((feature, index) => (
             <div
               key={index}
+              className={`feature-card ${isVisible ? 'visible' : ''}`}
               style={{
-                ...styles.featureCard,
                 transitionDelay: isVisible ? `${index * 200}ms` : '0ms',
-                ...(hoveredCards[index] ? styles.featureCardHover : {})
               }}
               onMouseEnter={() => handleCardHover(index, true)}
               onMouseLeave={() => handleCardHover(index, false)}
             >
-              <div style={styles.featureIcon}>
+              <div className="feature-icon">
                 {feature.icon}
               </div>
-              <h3 style={styles.featureTitle}>
+              <h3 className="feature-card-title">
                 {feature.title}
               </h3>
-              <p style={styles.featureDescription}>
+              <p className="feature-card-description">
                 {feature.description}
               </p>
             </div>
