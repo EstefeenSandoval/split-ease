@@ -6,6 +6,10 @@ import Hero from './components/Hero';
 import Features from './components/Features';
 import Footer from './components/Footer';
 import Modal from './components/Modal';
+import Inicio from './pages/Inicio';
+import ComoFunciona from './pages/ComoFunciona';
+import Caracteristicas from './pages/Caracteristicas';
+import Headers from './components/Headers';
 
 const App = () => {
   const [modalState, setModalState] = useState({
@@ -135,25 +139,27 @@ const App = () => {
   }, []);
 
   return (
-    <div style={styles.app}>
-      {/* Header con navegación */}
-      <Header onOpenModal={openModal} user={user} onLogout={handleLogout} />
-      {/* Sección Hero principal */}
-      <Hero onOpenModal={openModal} />
-      {/* Sección de características */}
-      <Features />
-      {/* Footer */}
-      <Footer />
-      {/* Modal para login/registro */}
-      <Modal
-        isOpen={modalState.isOpen}
-        onClose={closeModal}
-        type={modalState.type}
-        onSwitchModal={switchModal}
-        onLoginSuccess={handleLoginSuccess}
-      />
-      <ToastContainer position="top-right" autoClose={3000} />
-    </div>
+    <>
+      <div style={styles.app}>
+        {/* Header con navegación */}
+        <Header onOpenModal={openModal} user={user} onLogout={handleLogout} />
+        {/* Sección Hero principal */}
+        <Hero onOpenModal={openModal} />
+        {/* Sección de características */}
+        <Features />
+        {/* Footer */}
+        <Footer />
+        {/* Modal para login/registro */}
+        <Modal
+          isOpen={modalState.isOpen}
+          onClose={closeModal}
+          type={modalState.type}
+          onSwitchModal={switchModal}
+          onLoginSuccess={handleLoginSuccess}
+        />
+        <ToastContainer position="top-right" autoClose={3000} />
+      </div>
+    </>
   );
 };
 
