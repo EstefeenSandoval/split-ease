@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 // import './HeadersDropdown.css';
 import './Headers.css';
+import logo from '../assets/logo.png';
+import logo2 from '../assets/logo2.png';
+
 
 const Headers = ({ onOpenModal, user, onLogout }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -67,12 +70,13 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
               handleScroll('#inicio');
             }}
           >
-            <span style={{ fontSize: '2.5rem' }}>💲</span>
+            {/*<span style={{ fontSize: '2.5rem' }}>💲</span> */}
+            <img src={logo2} alt="Logo" className="header-logo-img" />
             SplitEase
           </a>
           <ul className="header-nav-links">
             <li>
-              <a 
+              <a
                 href="#inicio" 
                 className={`header-nav-link ${hoveredItem === 'inicio' ? 'hovered' : ''}`}
                 onMouseEnter={() => setHoveredItem('inicio')}
@@ -86,7 +90,7 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
               </a>
             </li>
             <li>
-              <a 
+              <a
                 href="#como-funciona" 
                 className={`header-nav-link ${hoveredItem === 'como-funciona' ? 'hovered' : ''}`}
                 onMouseEnter={() => setHoveredItem('como-funciona')}
@@ -100,8 +104,8 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
               </a>
             </li>
             <li>
-              <a 
-                href="#caracteristicas" 
+              <a
+                href="#caracteristicas"
                 className={`header-nav-link ${hoveredItem === 'caracteristicas' ? 'hovered' : ''}`}
                 onMouseEnter={() => setHoveredItem('caracteristicas')}
                 onMouseLeave={() => setHoveredItem(null)}
