@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 // import './HeadersDropdown.css';
 import './Headers.css';
 import logo from '../assets/logo.png';
@@ -7,7 +8,12 @@ import logo2 from '../assets/logo2.png';
 
 const Headers = ({ onOpenModal, user, onLogout }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState(null);
+  const [hoveredBtn, setHoveredBtn] = useState(false);
+  const [hoveredUserBtn, setHoveredUserBtn] = useState(false);
+  const [hoveredDropdownItem, setHoveredDropdownItem] = useState(null);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   // Cerrar dropdown al hacer click fuera
   useEffect(() => {
@@ -33,20 +39,6 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
     // Aquí puedes agregar la lógica de navegación
     // Por ejemplo, usando React Router
   };
-  const [hoveredItem, setHoveredItem] = React.useState(null);
-  const [hoveredBtn, setHoveredBtn] = React.useState(false);
-  const [hoveredUserBtn, setHoveredUserBtn] = React.useState(false);
-  const [hoveredDropdownItem, setHoveredDropdownItem] = React.useState(null);
-
-  const handleScroll = (targetId) => {
-    const target = document.querySelector(targetId);
-    if (target) {
-      target.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  };
 
   let userName = '';
   try {
@@ -62,60 +54,44 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
     <header className="header-section">
       <nav className="header-container">
         <div className="header-nav">
-          <a 
-            href="#" 
+          <Link 
+            to="/" 
             className="header-logo"
-            onClick={(e) => {
-              e.preventDefault();
-              handleScroll('#inicio');
-            }}
           >
             {/*<span style={{ fontSize: '2.5rem' }}>💲</span> */}
             <img src={logo2} alt="Logo" className="header-logo-img" />
             SplitEase
-          </a>
+          </Link>
           <ul className="header-nav-links">
             <li>
-              <a
-                href="#inicio" 
+              <Link
+                to="/inicio" 
                 className={`header-nav-link ${hoveredItem === 'inicio' ? 'hovered' : ''}`}
                 onMouseEnter={() => setHoveredItem('inicio')}
                 onMouseLeave={() => setHoveredItem(null)}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleScroll('#inicio');
-                }}
               >
                 Inicio
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#como-funciona" 
+              <Link
+                to="/como-funciona" 
                 className={`header-nav-link ${hoveredItem === 'como-funciona' ? 'hovered' : ''}`}
                 onMouseEnter={() => setHoveredItem('como-funciona')}
                 onMouseLeave={() => setHoveredItem(null)}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleScroll('#como-funciona');
-                }}
               >
                 Cómo Funciona
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#caracteristicas"
+              <Link
+                to="/caracteristicas"
                 className={`header-nav-link ${hoveredItem === 'caracteristicas' ? 'hovered' : ''}`}
                 onMouseEnter={() => setHoveredItem('caracteristicas')}
                 onMouseLeave={() => setHoveredItem(null)}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleScroll('#caracteristicas');
-                }}
               >
                 Características
-              </a>
+              </Link>
             </li>
             
             {user ? (
