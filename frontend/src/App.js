@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Header from './components/Headers';
-import Hero from './components/Hero';
-import Features from './components/Features';
+import Headers from './components/Headers';
 import Footer from './components/Footer';
 import Modal from './components/Modal';
+import HomePage from './pages/HomePage';
 import Inicio from './pages/Inicio';
 import ComoFunciona from './pages/ComoFunciona';
 import Caracteristicas from './pages/Caracteristicas';
-import Headers from './components/Headers';
 
 const App = () => {
   const [modalState, setModalState] = useState({
@@ -83,38 +82,6 @@ const App = () => {
     localStorage.removeItem('usuario');
   };
 
-  // Smooth scrolling para los enlaces de navegación
-  useEffect(() => {
-    const handleClick = (e) => {
-      const target = e.target;
-      const href = target.getAttribute('href');
-      
-      if (href && href.startsWith('#')) {
-        e.preventDefault();
-        const targetElement = document.querySelector(href);
-        if (targetElement) {
-          targetElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      }
-    };
-
-    // Agregar event listener para links con href que empiecen con #
-    const links = document.querySelectorAll('a[href^="#"]');
-    links.forEach(link => {
-      link.addEventListener('click', handleClick);
-    });
-
-    // Cleanup
-    return () => {
-      links.forEach(link => {
-        link.removeEventListener('click', handleClick);
-      });
-    };
-  }, []);
-
   // Cerrar modal al hacer clic fuera
   useEffect(() => {
     const handleEscKey = (e) => {
@@ -139,16 +106,22 @@ const App = () => {
   }, []);
 
   return (
-    <>
+    <Router>
       <div style={styles.app}>
         {/* Header con navegación */}
-        <Header onOpenModal={openModal} user={user} onLogout={handleLogout} />
-        {/* Sección Hero principal */}
-        <Hero onOpenModal={openModal} />
-        {/* Sección de características */}
-        <Features />
+        <Headers onOpenModal={openModal} user={user} onLogout={handleLogout} />
+        
+        {/* Rutas principales */}
+        <Routes>
+          <Route path="/" element={<HomePage onOpenModal={openModal} />} />
+          <Route path="/inicio" element={<Inicio />} />
+          <Route path="/como-funciona" element={<ComoFunciona />} />
+          <Route path="/caracteristicas" element={<Caracteristicas />} />
+        </Routes>
+        
         {/* Footer */}
         <Footer />
+        
         {/* Modal para login/registro */}
         <Modal
           isOpen={modalState.isOpen}
@@ -159,7 +132,7 @@ const App = () => {
         />
         <ToastContainer position="top-right" autoClose={3000} />
       </div>
-    </>
+    </Router>
   );
 };
 
