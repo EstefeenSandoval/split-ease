@@ -15,6 +15,9 @@ app.use(cors({
 // === Rutas de la API ===
 app.use('/api/usuarios', usuariosRoutes);
 
+// Servir archivos estáticos desde la carpeta 'public' del backend
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
 // Servir archivos estáticos de la carpeta 'frontend/build'
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 

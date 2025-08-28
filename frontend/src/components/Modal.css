@@ -167,6 +167,8 @@
   font-size: 0.9rem;
 }
 
+
+
 /* Responsive Design */
 @media (max-width: 480px) {
   .modal-content {
