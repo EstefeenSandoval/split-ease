@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { API_ENDPOINTS } from './config/api';
 import Headers from './components/Headers';
 import Footer from './components/Footer';
 import Modal from './components/Modal';
@@ -9,6 +10,9 @@ import HomePage from './pages/HomePage';
 import Inicio from './pages/Inicio';
 import ComoFunciona from './pages/ComoFunciona';
 import Caracteristicas from './pages/Caracteristicas';
+import Dashboard from './pages/Dashboard';
+import Grupos from './pages/Grupos';
+import Opciones from './pages/Opciones';
 
 const App = () => {
   const [modalState, setModalState] = useState({
@@ -21,7 +25,7 @@ const App = () => {
     useEffect(() => {
       const token = localStorage.getItem('token');
       if (token) {
-        fetch('http://localhost:3100/api/usuarios/validar', {
+        fetch(API_ENDPOINTS.usuarios.validar, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -33,14 +37,14 @@ const App = () => {
               setUser(data.usuario);
             } else {
               // Token inválido o expirado
-              console.log('Token inválido o expirado');
+              //console.log('Token inválido o expirado');
               localStorage.removeItem('token');
               localStorage.removeItem('usuario');
               setUser(null);
             }
           })
           .catch(() => {
-            console.log('Error al validar token.');
+            //console.log('Error al validar token.');
             localStorage.removeItem('token');
             localStorage.removeItem('usuario');
             setUser(null);
@@ -117,6 +121,9 @@ const App = () => {
           <Route path="/inicio" element={<Inicio />} />
           <Route path="/como-funciona" element={<ComoFunciona />} />
           <Route path="/caracteristicas" element={<Caracteristicas />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/grupos" element={<Grupos />} />
+          <Route path="/opciones" element={<Opciones />} />
         </Routes>
         
         {/* Footer */}
@@ -130,7 +137,7 @@ const App = () => {
           onSwitchModal={switchModal}
           onLoginSuccess={handleLoginSuccess}
         />
-        <ToastContainer position="top-right" autoClose={3000} />
+        <ToastContainer position="top-right" autoClose={2000} />
       </div>
     </Router>
   );
