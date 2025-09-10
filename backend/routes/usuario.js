@@ -26,11 +26,6 @@ router.get('/mostrar', auth.verificarToken, mostrarTodos);
 router.get('/validar', auth.verificarToken, validar);
 
 // /api/usuarios/perfil
-router.put(
-  '/perfil', 
-  auth.verificarToken, 
-  upload.single('foto_perfil'), 
-  actualizarPerfil
-);
+router.put('/perfil', auth.verificarToken, upload.single('foto_perfil'), actualizarPerfil);
 
 module.exports = router;
