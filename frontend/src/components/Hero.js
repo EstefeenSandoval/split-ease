@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './Hero.css';
+import ImageDecoration from '../assets/image.png';
+
 
 const Hero = ({ onOpenModal }) => {
   const [hoveredBtn, setHoveredBtn] = useState(null);
 
   const styles = {
+    image: {
+      maxWidth: '100%',
+      width: '1000px', // Más grande
+      marginTop: '-350px', // Más arriba
+      marginLeft: '50px', 
+      display: 'block',
+    },
     hero: {
       padding: '4rem 0',
       textAlign: 'center',
@@ -102,50 +111,6 @@ const Hero = ({ onOpenModal }) => {
       margin: '0 auto',
       position: 'relative',
     },
-    moneyStack: {
-      width: '300px',
-      height: '300px',
-      margin: '0 auto',
-      position: 'relative',
-      animation: 'bounce 2s ease-in-out infinite',
-    },
-    bill: {
-      position: 'absolute',
-      width: '80px',
-      height: '40px',
-      background: 'linear-gradient(45deg, #bcebcb, #498467)',
-      borderRadius: '8px',
-      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
-    },
-    bill1: {
-      top: '50px',
-      left: '50px',
-      transform: 'rotate(-15deg)',
-    },
-    bill2: {
-      top: '70px',
-      left: '80px',
-      transform: 'rotate(10deg)',
-    },
-    bill3: {
-      top: '90px',
-      left: '60px',
-      transform: 'rotate(-5deg)',
-    },
-    bill4: {
-      top: '110px',
-      left: '90px',
-      transform: 'rotate(20deg)',
-    },
-    splitArrow: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      fontSize: '3rem',
-      color: '#498467',
-      animation: 'pulse 1.5s ease-in-out infinite',
-    },
     // Media queries para mobile
     '@media (max-width: 768px)': {
       title: {
@@ -193,6 +158,8 @@ const Hero = ({ onOpenModal }) => {
     };
   }, []);
 
+  
+
   const handleScroll = (targetId) => {
     const target = document.querySelector(targetId);
     if (target) {
@@ -204,11 +171,10 @@ const Hero = ({ onOpenModal }) => {
   };
 
   return (
-    <section id="inicio" style={styles.hero}>
+    <section id="inicio" style={{...styles.hero, minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative'}}>
       <div style={styles.heroBackground}></div>
-      
-      <div style={styles.container}>
-        <div>
+      <div style={{...styles.container, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '3rem'}}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
           <h1 style={styles.title}>
             Divide tus{' '}
             <span style={styles.highlight}>
@@ -218,11 +184,9 @@ const Hero = ({ onOpenModal }) => {
             <br />
             entre amigos
           </h1>
-          
           <p style={styles.subtitle}>
             Convierte tus gastos más grandes en pagos más manejables. SplitEase hace que dividir cuentas sea súper fácil.
           </p>
-          
           <div style={styles.heroButtons}>
             <button 
               onClick={() => onOpenModal('register')} 
@@ -236,7 +200,6 @@ const Hero = ({ onOpenModal }) => {
             >
               Comenzar Gratis
             </button>
-            
             <button 
               onClick={() => handleScroll('#como-funciona')} 
               style={{
@@ -250,16 +213,13 @@ const Hero = ({ onOpenModal }) => {
               Ver Cómo Funciona
             </button>
           </div>
-
-          <div style={styles.heroIllustration}>
-            <div style={styles.moneyStack}>
-              <div style={{...styles.bill, ...styles.bill1}}></div>
-              <div style={{...styles.bill, ...styles.bill2}}></div>
-              <div style={{...styles.bill, ...styles.bill3}}></div>
-              <div style={{...styles.bill, ...styles.bill4}}></div>
-              <div style={styles.splitArrow}>➗</div>
-            </div>
-          </div>
+        </div>
+        <div style={{...styles.heroIllustration, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <img 
+            src={ImageDecoration}
+            alt="Ilustración de personas dividiendo gastos" 
+            style={{...styles.image, marginTop: 0, marginLeft: 0, width: '100%', maxWidth: '400px'}} 
+          />
         </div>
       </div>
     </section>

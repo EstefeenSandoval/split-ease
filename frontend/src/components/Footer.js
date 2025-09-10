@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Footer.css';
+import logo2 from '../assets/logo2.png'; 
 
 const Footer = () => {
   const [hoveredLinks, setHoveredLinks] = useState({});
@@ -112,8 +113,8 @@ const Footer = () => {
 
   const footerSections = [
     {
-      title: 'Producto',
-      links: ['Características', 'Precios', 'Cómo funciona', 'Actualizaciones']
+      title: 'Acerca De',
+      links: ['Características', 'Cómo funciona', 'Actualizaciones', 'Precios']
     },
     {
       title: 'Empresa',
@@ -154,7 +155,7 @@ const Footer = () => {
           {/* Logo and description section */}
           <div style={styles.footerSection}>
             <div style={styles.footerLogo}>
-              <span style={styles.logoIcon}>💲</span>
+              <img src={logo2} alt="Logo" className="header-logo-img" />
               <span style={styles.logoText}>SplitEase</span>
             </div>
             <p style={styles.footerDescription}>
