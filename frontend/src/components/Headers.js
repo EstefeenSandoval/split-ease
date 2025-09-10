@@ -120,6 +120,18 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
     }
   };
 
+  const obtenerFotoPerfilUrl = (fotoUrl) => {
+    if (!fotoUrl) return null;
+    
+    // Verificar si la URL ya incluye el protocolo y host
+    if (fotoUrl.startsWith('http')) {
+      return fotoUrl;
+    } else {
+      // Si es una ruta relativa, agregar el host
+      return `http://localhost:3100${fotoUrl}`;
+    }
+  };
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -215,11 +227,22 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
                   >
                     <div className="header-user-avatar">
                       {userProfile.foto_perfil ? (
-                        <img 
-                          src={userProfile.foto_perfil} 
-                          alt="Foto de perfil" 
-                          className="header-avatar-img"
-                        />
+                        <>
+                          <img 
+                            src={obtenerFotoPerfilUrl(userProfile.foto_perfil)} 
+                            alt="Foto de perfil" 
+                            className="header-avatar-img"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.parentNode.querySelector('.header-avatar-placeholder').style.display = 'flex';
+                            }}
+                          />
+                          <div className="header-avatar-placeholder" style={{ display: 'none' }}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                          </div>
+                        </>
                       ) : (
                         <div className="header-avatar-placeholder">
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -283,7 +306,7 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
                 </li>
                 <li>
                   <button
-                    onClick={onLogout}
+                    onClick={() => onLogout(navigate)}
                     className={`header-btn header-btn-primary ${hoveredBtn ? 'hovered' : ''}`}
                     style={{ marginLeft: '0.5rem' }}
                     onMouseEnter={() => setHoveredBtn(true)}

@@ -8,7 +8,16 @@ export const API_ENDPOINTS = {
     validar: `${API_BASE_URL}/usuarios/validar`,
     actualizarPerfil: `${API_BASE_URL}/usuarios/perfil`
   },
-  
+  grupos: {
+    crear: `${API_BASE_URL}/grupos/crear`,
+    obtener: `${API_BASE_URL}/grupos/mostrar`,
+    obtenerPorId: (id) => `${API_BASE_URL}/grupos/${id}`,
+    actualizar: `${API_BASE_URL}/grupos/actualizar`,
+    eliminar: `${API_BASE_URL}/grupos/eliminar`,
+    obtenerParticipantes: (id) => `${API_BASE_URL}/grupos/${id}/participantes`,
+    eliminarParticipante: (idGrupo, idUsuario) => `${API_BASE_URL}/grupos/${idGrupo}/participantes/${idUsuario}`,
+    unirse: `${API_BASE_URL}/grupos/unirse`
+  }
 };
 
 export default API_ENDPOINTS;

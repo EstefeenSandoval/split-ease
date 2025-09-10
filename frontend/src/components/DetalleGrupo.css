@@ -1,0 +1,450 @@
+/* DetalleGrupo.css - Diseño moderno para vista detallada de grupo */
+
+/* Variables CSS consistentes con la aplicación */
+:root {
+  --viridian: #498467;
+  --celadon: #bcebcb;
+  --eerie-black: #252627;
+  --gunmetal: #2e3138;
+  --cinereous: #998888;
+  --light-green: #e8f5e8;
+  --dark-green: #3a6b54;
+  --success-green: #28a745;
+  --warning-orange: #fd7e14;
+  --danger-red: #dc3545;
+  --info-blue: #17a2b8;
+  --primary-blue: #007bff;
+}
+
+.detalle-grupo {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, rgba(188, 235, 203, 0.1) 0%, rgba(240, 249, 242, 0.05) 100%);
+  min-height: 100vh;
+}
+
+.detalle-header {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2.5rem;
+  border-radius: 20px;
+  margin-bottom: 2rem;
+  box-shadow: 0 15px 40px rgba(73, 132, 103, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(188, 235, 203, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.detalle-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(188, 235, 203, 0.1) 0%, rgba(240, 249, 242, 0.1) 100%);
+  pointer-events: none;
+}
+
+.btn-volver {
+  background: linear-gradient(135deg, var(--cinereous) 0%, #7a6a6a 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(153, 136, 136, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-volver::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+
+.btn-volver:hover::before {
+  left: 100%;
+}
+
+.btn-volver:hover {
+  background: linear-gradient(135deg, #7a6a6a 0%, var(--cinereous) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(153, 136, 136, 0.4);
+}
+
+.grupo-info h1 {
+  background: linear-gradient(135deg, var(--viridian) 0%, var(--dark-green) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 1rem 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.grupo-descripcion {
+  color: var(--gunmetal);
+  font-size: 1.15rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  background: rgba(188, 235, 203, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--viridian);
+}
+
+.grupo-creador,
+.grupo-fecha {
+  color: var(--cinereous);
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.grupo-creador strong,
+.grupo-fecha strong {
+  color: var(--gunmetal);
+}
+
+.grupo-acciones {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.btn-editar,
+.btn-eliminar-grupo,
+.btn-codigo {
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  min-width: 140px;
+}
+
+.btn-editar,
+.btn-eliminar-grupo,
+.btn-codigo {
+  position: relative;
+}
+
+.btn-editar::before,
+.btn-eliminar-grupo::before,
+.btn-codigo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+
+.btn-editar:hover::before,
+.btn-eliminar-grupo:hover::before,
+.btn-codigo:hover::before {
+  left: 100%;
+}
+
+.btn-editar {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, #0056b3 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+.btn-editar:hover {
+  background: linear-gradient(135deg, #0056b3 0%, var(--primary-blue) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+.btn-eliminar-grupo {
+  background: linear-gradient(135deg, var(--danger-red) 0%, #c82333 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+}
+
+.btn-eliminar-grupo:hover {
+  background: linear-gradient(135deg, #c82333 0%, var(--danger-red) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+}
+
+.btn-codigo {
+  background: linear-gradient(135deg, var(--success-green) 0%, #1e7e34 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.btn-codigo:hover {
+  background: linear-gradient(135deg, #1e7e34 0%, var(--success-green) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+}
+
+.codigo-invitacion {
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(30, 126, 52, 0.05) 100%);
+  border: 2px solid rgba(40, 167, 69, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.codigo-invitacion::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--success-green) 0%, #1e7e34 100%);
+}
+
+.codigo-invitacion h3 {
+  margin: 0 0 1.5rem 0;
+  color: var(--success-green);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.codigo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.codigo-container code {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--eerie-black);
+  border: 2px solid rgba(40, 167, 69, 0.2);
+  letter-spacing: 0.2em;
+  flex: 1;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);
+}
+
+.codigo-container code:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: var(--success-green);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
+}
+
+.btn-copiar {
+  background: linear-gradient(135deg, var(--info-blue) 0%, #138496 100%);
+  color: white;
+  border: none;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-copiar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+
+.btn-copiar:hover::before {
+  left: 100%;
+}
+
+.btn-copiar:hover {
+  background: linear-gradient(135deg, #138496 0%, var(--info-blue) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(23, 162, 184, 0.4);
+}
+
+.codigo-info {
+  color: var(--cinereous);
+  font-size: 0.95rem;
+  margin: 0;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.participantes-section {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(73, 132, 103, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(188, 235, 203, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.participantes-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(188, 235, 203, 0.1) 0%, rgba(240, 249, 242, 0.1) 100%);
+  pointer-events: none;
+}
+
+.participantes-section h2 {
+  color: var(--eerie-black);
+  margin: 0 0 2rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid var(--viridian);
+  font-size: 1.75rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--viridian) 0%, var(--dark-green) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+.participantes-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 3rem;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.loading {
+  background: linear-gradient(135deg, rgba(188, 235, 203, 0.2) 0%, rgba(240, 249, 242, 0.1) 100%);
+  color: var(--gunmetal);
+  border: 1px solid rgba(73, 132, 103, 0.2);
+}
+
+.error {
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(248, 215, 218, 0.3) 100%);
+  color: #721c24;
+  border: 1px solid rgba(245, 198, 203, 0.5);
+}
+
+/* Animaciones */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.detalle-header,
+.participantes-section {
+  animation: slideIn 0.6s ease-out;
+}
+
+.codigo-invitacion {
+  animation: slideIn 0.6s ease-out 0.2s both;
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+  .detalle-grupo {
+    padding: 1rem;
+  }
+  
+  .detalle-header,
+  .participantes-section {
+    padding: 2rem;
+  }
+  
+  .grupo-info h1 {
+    font-size: 2rem;
+  }
+  
+  .grupo-acciones {
+    flex-direction: column;
+  }
+  
+  .btn-editar,
+  .btn-eliminar-grupo,
+  .btn-codigo {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .codigo-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .btn-copiar {
+    width: 100%;
+  }
+
+  .codigo-container code {
+    font-size: 1.1rem;
+    padding: 0.875rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .detalle-header,
+  .participantes-section {
+    padding: 1.5rem;
+  }
+
+  .grupo-info h1 {
+    font-size: 1.75rem;
+  }
+
+  .participantes-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .codigo-invitacion {
+    padding: 1.5rem;
+  }
+}

@@ -80,10 +80,11 @@ const App = () => {
     
   };
 
-  const handleLogout = () => {
+  const handleLogout = (navigate) => {
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
+    navigate('/');
   };
 
   // Cerrar modal al hacer clic fuera
@@ -137,7 +138,18 @@ const App = () => {
           onSwitchModal={switchModal}
           onLoginSuccess={handleLoginSuccess}
         />
-        <ToastContainer position="top-right" autoClose={2000} />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
       </div>
     </Router>
   );
