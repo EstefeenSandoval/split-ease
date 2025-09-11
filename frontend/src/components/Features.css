@@ -30,10 +30,23 @@
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   text-align: center;
-  transition: all 0.6s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border: 2px solid #bcebcb;
   opacity: 0;
   transform: translateY(30px);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(188, 235, 203, 0.1), transparent);
+  transition: left 0.6s ease;
 }
 
 .feature-card.visible {
@@ -42,24 +55,41 @@
 }
 
 .feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 50px rgba(73, 132, 103, 0.2);
+  border-color: #498467;
+}
+
+.feature-card:hover::before {
+  left: 100%;
 }
 
 .feature-icon {
-  width: 60px;
-  height: 60px;
+  width: 120px;
+  height: 120px;
   margin: 0 auto 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.8rem;
   color: #498467;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50%;
+  background: rgba(188, 235, 203, 0.1);
 }
 
 .feature-card:hover .feature-icon {
-  transform: scale(1.1);
+  transform: scale(1.15) rotate(5deg);
+  background: rgba(73, 132, 103, 0.15);
+  box-shadow: 0 10px 25px rgba(73, 132, 103, 0.2);
+}
+
+.feature-icon img {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feature-card:hover .feature-icon img {
+  filter: brightness(1.1);
 }
 
 .feature-card-title {
@@ -68,11 +98,23 @@
   margin-top: 1rem;
   color: #252627;
   font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feature-card:hover .feature-card-title {
+  color: #498467;
+  transform: translateY(-2px);
 }
 
 .feature-card-description {
   color: #998888;
   line-height: 1.6;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feature-card:hover .feature-card-description {
+  color: #252627;
+  transform: translateY(-1px);
 }
 
 /* Responsive Design */

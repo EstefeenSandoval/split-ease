@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import './ParticipantCard.css';
 
 const ParticipantCard = ({ participante, esAdmin, puedeEliminar, onEliminar }) => {
@@ -91,7 +93,7 @@ const ParticipantCard = ({ participante, esAdmin, puedeEliminar, onEliminar }) =
             title={participante.rol === 'administrador' ? 'No puedes eliminar a un administrador' : 'Eliminar participante'}
             disabled={participante.rol === 'administrador'}
           >
-            🗑️
+            <FontAwesomeIcon icon={faTrashAlt} />
           </button>
         </div>
       )}

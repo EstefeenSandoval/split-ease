@@ -3,6 +3,7 @@ import './Footer.css';
 import logo2 from '../assets/logo2.png'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faTwitter, faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 const Footer = () => {
   const [hoveredLinks, setHoveredLinks] = useState({});
@@ -51,9 +52,9 @@ const Footer = () => {
         <div className="footer-content">
           {/* Logo and description section */}
 
-          <div className="footer-section">
+          <div className="footer-brand-section">
             <div className="footer-logo">
-              <img src={logo2} alt="Logo" className="header-logo-img" />
+              <img src={logo2} alt="SplitEase Logo" className="footer-logo-img" />
               <span className="footer-logo-text">SplitEase</span>
             </div>
             <p className="footer-description">
@@ -101,7 +102,7 @@ const Footer = () => {
         
         <div className="footer-bottom">
           <p>
-            &copy; 2025 SplitEase. Todos los derechos reservados. | Hecho con ❤️ para simplificar tus finanzas
+            &copy; 2025 SplitEase. Todos los derechos reservados. | Hecho con <FontAwesomeIcon icon={faHeart} style={{color: '#e74c3c'}} /> para simplificar tus finanzas
           </p>
         </div>
       </div>

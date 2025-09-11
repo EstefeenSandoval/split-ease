@@ -16,8 +16,20 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      // Prevent scrolling on mobile devices
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${window.scrollY}px`;
+      document.body.style.width = '100%';
+      
       return () => {
+        const scrollY = document.body.style.top;
         document.body.style.overflow = 'auto';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        if (scrollY) {
+          window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
       };
     }
   }, [isOpen]);
@@ -120,6 +132,7 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
                 onChange={(e) => handleInputChange('name', e.target.value)}
                 required
                 className="modal-input"
+                 onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(); }}
               />
             </div>
           )}
@@ -133,6 +146,7 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
               onChange={(e) => handleInputChange('email', e.target.value)}
               required
               className="modal-input"
+               onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(); }}
             />
           </div>
 
@@ -145,6 +159,7 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
               onChange={(e) => handleInputChange('password', e.target.value)}
               required
               className="modal-input"
+               onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(); }}
             />
           </div>
 
@@ -158,6 +173,7 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
                 onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
                 required
                 className="modal-input"
+                 onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(); }}
               />
             </div>
           )}

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { API_ENDPOINTS } from '../config/api';
 import './EliminarGrupoModal.css';
 
@@ -57,7 +59,7 @@ const EliminarGrupoModal = ({ isOpen, onClose, grupo, onGrupoEliminado }) => {
     <div className="eliminar-grupo-overlay" onClick={handleCancel}>
       <div className="eliminar-grupo-modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-icon">
-          ⚠️
+          <FontAwesomeIcon icon={faExclamationTriangle} />
         </div>
         
         <h2>Eliminar Grupo</h2>
@@ -69,7 +71,7 @@ const EliminarGrupoModal = ({ isOpen, onClose, grupo, onGrupoEliminado }) => {
           
           <div className="warning-box">
             <p>
-              <strong>⚠️ Esta acción es permanente e irreversible.</strong>
+              <strong><FontAwesomeIcon icon={faExclamationTriangle} /> Esta acción es permanente e irreversible.</strong>
             </p>
             <ul>
               <li>Se eliminarán todos los participantes del grupo</li>

@@ -129,8 +129,10 @@
 }
 
 .participant-email::before {
-  content: '✉️';
+  content: '@';
   font-size: 0.9rem;
+  color: var(--viridian);
+  font-weight: bold;
 }
 
 .participant-last-login {
