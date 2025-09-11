@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './Footer.css';
 import logo2 from '../assets/logo2.png'; 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebookF, faTwitter, faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 
 const Footer = () => {
   const [hoveredLinks, setHoveredLinks] = useState({});
@@ -131,10 +133,10 @@ const Footer = () => {
   ];
 
   const socialIcons = [
-    { icon: '📘', name: 'Facebook' },
-    { icon: '🐦', name: 'Twitter' },
-    { icon: '📷', name: 'Instagram' },
-    { icon: '💼', name: 'LinkedIn' }
+    { icon: faFacebookF, name: 'Facebook' },
+    { icon: faTwitter, name: 'Twitter' },
+    { icon: faInstagram, name: 'Instagram' },
+    { icon: faLinkedinIn, name: 'LinkedIn' }
   ];
 
   const handleLinkHover = (sectionIndex, linkIndex, isHovered) => {
@@ -174,7 +176,7 @@ const Footer = () => {
                   title={social.name}
                   onClick={() => console.log(`Clicked on ${social.name}`)}
                 >
-                  {social.icon}
+                  <FontAwesomeIcon icon={social.icon} size="lg" />
                 </button>
               ))}
             </div>

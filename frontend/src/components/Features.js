@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Features.css';
+import facilUso from '../assets/facilUso.png';
+import pagoSeguro from '../assets/pagoSeguro.png';
+import seguimientoInteligente from '../assets/seguimientoInteligente.png';
 
 const Features = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -7,17 +10,17 @@ const Features = () => {
 
   const features = [
     {
-      icon: '👥',
+      image: facilUso,
       title: 'Fácil de usar',
       description: 'Interfaz intuitiva que hace que dividir gastos sea tan simple como enviar un mensaje.'
     },
     {
-      icon: '💳',
+      image: pagoSeguro,
       title: 'Pagos seguros',
       description: 'Integración con múltiples métodos de pago para transacciones seguras y rápidas.'
     },
     {
-      icon: '📊',
+      image: seguimientoInteligente,
       title: 'Seguimiento inteligente',
       description: 'Mantén un registro detallado de todos tus gastos compartidos y balances pendientes.'
     }
@@ -74,7 +77,7 @@ const Features = () => {
               onMouseLeave={() => handleCardHover(index, false)}
             >
               <div className="feature-icon">
-                {feature.icon}
+                <img src={feature.image} alt={feature.title} style={{width: '115px', height: '115px', objectFit: 'contain'}} />
               </div>
               <h3 className="feature-card-title">
                 {feature.title}
