@@ -1,0 +1,336 @@
+/* ParticipantCard.css - Diseño moderno para tarjetas de participantes */
+
+/* Variables CSS consistentes con la aplicación */
+:root {
+  --viridian: #498467;
+  --celadon: #bcebcb;
+  --eerie-black: #252627;
+  --gunmetal: #2e3138;
+  --cinereous: #998888;
+  --light-green: #e8f5e8;
+  --dark-green: #3a6b54;
+  --success-green: #28a745;
+  --warning-orange: #fd7e14;
+  --danger-red: #dc3545;
+  --accent-orange: #ff6b35;
+}
+
+.participant-card {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  border: 1px solid rgba(188, 235, 203, 0.3);
+  border-radius: 16px;
+  margin-bottom: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 25px rgba(73, 132, 103, 0.1);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.participant-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(188, 235, 203, 0.05) 0%, rgba(240, 249, 242, 0.05) 100%);
+  pointer-events: none;
+}
+
+.participant-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 40px rgba(73, 132, 103, 0.2);
+  border-color: rgba(73, 132, 103, 0.4);
+}
+
+.participant-card:hover::before {
+  background: linear-gradient(135deg, rgba(188, 235, 203, 0.1) 0%, rgba(240, 249, 242, 0.1) 100%);
+}
+
+.participant-avatar {
+  position: relative;
+  margin-right: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.participant-card:hover .participant-avatar {
+  transform: scale(1.05);
+}
+
+.participant-avatar img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(188, 235, 203, 0.5);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(73, 132, 103, 0.2);
+}
+
+.participant-card:hover .participant-avatar img {
+  border-color: var(--viridian);
+  box-shadow: 0 6px 20px rgba(73, 132, 103, 0.3);
+}
+
+.admin-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: linear-gradient(135deg, var(--accent-orange) 0%, #ff5722 100%);
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 3px 10px rgba(255, 107, 53, 0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.participant-info {
+  flex: 1;
+  position: relative;
+}
+
+.participant-info h4 {
+  margin: 0 0 0.75rem 0;
+  color: var(--eerie-black);
+  font-size: 1.2rem;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.participant-card:hover .participant-info h4 {
+  color: var(--viridian);
+}
+
+.participant-email {
+  margin: 0 0 0.5rem 0;
+  color: var(--gunmetal);
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.participant-email::before {
+  content: '✉️';
+  font-size: 0.9rem;
+}
+
+.participant-last-login {
+  margin: 0 0 0.5rem 0;
+  color: var(--cinereous);
+  font-size: 0.85rem;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.participant-last-login::before {
+  content: '🕒';
+  font-size: 0.9rem;
+}
+
+.participant-join-date {
+  margin: 0;
+  color: var(--cinereous);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.participant-join-date::before {
+  content: '📅';
+  font-size: 0.9rem;
+}
+
+.participant-actions {
+  display: flex;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.btn-eliminar {
+  background: linear-gradient(135deg, var(--danger-red) 0%, #c82333 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+  position: relative;
+  overflow: hidden;
+  min-width: 100px;
+}
+
+.btn-eliminar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+
+.btn-eliminar:hover::before {
+  left: 100%;
+}
+
+.btn-eliminar:hover:not(:disabled) {
+  background: linear-gradient(135deg, #c82333 0%, var(--danger-red) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+}
+
+.btn-eliminar:disabled {
+  background: linear-gradient(135deg, #ddd 0%, #ccc 100%);
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-eliminar:disabled::before {
+  display: none;
+}
+
+/* Estados especiales */
+.participant-card.is-admin {
+  border-color: rgba(255, 107, 53, 0.3);
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
+}
+
+.participant-card.is-current-user {
+  border-color: rgba(73, 132, 103, 0.4);
+  background: linear-gradient(135deg, rgba(188, 235, 203, 0.1) 0%, rgba(255, 255, 255, 0.95) 100%);
+}
+
+.participant-card.is-current-user::after {
+  content: 'Tú';
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: linear-gradient(135deg, var(--viridian) 0%, var(--dark-green) 100%);
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 3px 10px rgba(73, 132, 103, 0.4);
+}
+
+/* Animaciones de entrada */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.participant-card {
+  animation: slideInUp 0.5s ease-out;
+}
+
+.participant-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.participant-card:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.participant-card:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.participant-card:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+  .participant-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem 1rem;
+  }
+  
+  .participant-avatar {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+
+  .participant-avatar img {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .participant-actions {
+    margin-top: 1rem;
+    justify-content: center;
+  }
+
+  .btn-eliminar {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .participant-card.is-current-user::after {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .participant-card {
+    padding: 1rem;
+  }
+
+  .participant-info h4 {
+    font-size: 1.1rem;
+  }
+
+  .participant-email,
+  .participant-last-login,
+  .participant-join-date {
+    font-size: 0.85rem;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-start;
+  }
+
+  .participant-email::before,
+  .participant-last-login::before,
+  .participant-join-date::before {
+    display: none;
+  }
+}

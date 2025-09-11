@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Header from './components/Headers';
-import Hero from './components/Hero';
-import Features from './components/Features';
+import { API_ENDPOINTS } from './config/api';
+import Headers from './components/Headers';
 import Footer from './components/Footer';
 import Modal from './components/Modal';
+import HomePage from './pages/HomePage';
 import Inicio from './pages/Inicio';
 import ComoFunciona from './pages/ComoFunciona';
 import Caracteristicas from './pages/Caracteristicas';
-import Headers from './components/Headers';
+import Dashboard from './pages/Dashboard';
+import Grupos from './pages/Grupos';
+import Opciones from './pages/Opciones';
 
 const App = () => {
   const [modalState, setModalState] = useState({
@@ -22,7 +25,7 @@ const App = () => {
     useEffect(() => {
       const token = localStorage.getItem('token');
       if (token) {
-        fetch('http://localhost:3100/api/usuarios/validar', {
+        fetch(API_ENDPOINTS.usuarios.validar, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -34,14 +37,14 @@ const App = () => {
               setUser(data.usuario);
             } else {
               // Token inválido o expirado
-              console.log('Token inválido o expirado');
+              //console.log('Token inválido o expirado');
               localStorage.removeItem('token');
               localStorage.removeItem('usuario');
               setUser(null);
             }
           })
           .catch(() => {
-            console.log('Error al validar token.');
+            //console.log('Error al validar token.');
             localStorage.removeItem('token');
             localStorage.removeItem('usuario');
             setUser(null);
@@ -77,43 +80,12 @@ const App = () => {
     
   };
 
-  const handleLogout = () => {
+  const handleLogout = (navigate) => {
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
+    navigate('/');
   };
-
-  // Smooth scrolling para los enlaces de navegación
-  useEffect(() => {
-    const handleClick = (e) => {
-      const target = e.target;
-      const href = target.getAttribute('href');
-      
-      if (href && href.startsWith('#')) {
-        e.preventDefault();
-        const targetElement = document.querySelector(href);
-        if (targetElement) {
-          targetElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      }
-    };
-
-    // Agregar event listener para links con href que empiecen con #
-    const links = document.querySelectorAll('a[href^="#"]');
-    links.forEach(link => {
-      link.addEventListener('click', handleClick);
-    });
-
-    // Cleanup
-    return () => {
-      links.forEach(link => {
-        link.removeEventListener('click', handleClick);
-      });
-    };
-  }, []);
 
   // Cerrar modal al hacer clic fuera
   useEffect(() => {
@@ -139,16 +111,25 @@ const App = () => {
   }, []);
 
   return (
-    <>
+    <Router>
       <div style={styles.app}>
         {/* Header con navegación */}
-        <Header onOpenModal={openModal} user={user} onLogout={handleLogout} />
-        {/* Sección Hero principal */}
-        <Hero onOpenModal={openModal} />
-        {/* Sección de características */}
-        <Features />
+        <Headers onOpenModal={openModal} user={user} onLogout={handleLogout} />
+        
+        {/* Rutas principales */}
+        <Routes>
+          <Route path="/" element={<HomePage onOpenModal={openModal} />} />
+          <Route path="/inicio" element={<Inicio />} />
+          <Route path="/como-funciona" element={<ComoFunciona />} />
+          <Route path="/caracteristicas" element={<Caracteristicas />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/grupos" element={<Grupos />} />
+          <Route path="/opciones" element={<Opciones />} />
+        </Routes>
+        
         {/* Footer */}
         <Footer />
+        
         {/* Modal para login/registro */}
         <Modal
           isOpen={modalState.isOpen}
@@ -157,9 +138,20 @@ const App = () => {
           onSwitchModal={switchModal}
           onLoginSuccess={handleLoginSuccess}
         />
-        <ToastContainer position="top-right" autoClose={3000} />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
       </div>
-    </>
+    </Router>
   );
 };
 
