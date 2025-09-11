@@ -51,10 +51,10 @@ const Footer = () => {
         <div className="footer-content">
           {/* Logo and description section */}
 
-          <div style={styles.footerSection}>
-            <div style={styles.footerLogo}>
+          <div className="footer-section">
+            <div className="footer-logo">
               <img src={logo2} alt="Logo" className="header-logo-img" />
-              <span style={styles.logoText}>SplitEase</span>
+              <span className="footer-logo-text">SplitEase</span>
             </div>
             <p className="footer-description">
               La forma más fácil de dividir gastos entre amigos. Simplicidad, seguridad y transparencia en cada transacción.
