@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import './Footer.css';
+import logo2 from '../assets/logo2.png'; 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebookF, faTwitter, faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 
 const Footer = () => {
   const [hoveredLinks, setHoveredLinks] = useState({});
@@ -7,8 +10,8 @@ const Footer = () => {
 
   const footerSections = [
     {
-      title: 'Producto',
-      links: ['Características', 'Precios', 'Cómo funciona', 'Actualizaciones']
+      title: 'Acerca De',
+      links: ['Características', 'Cómo funciona', 'Actualizaciones', 'Precios']
     },
     {
       title: 'Empresa',
@@ -25,10 +28,10 @@ const Footer = () => {
   ];
 
   const socialIcons = [
-    { icon: '📘', name: 'Facebook' },
-    { icon: '🐦', name: 'Twitter' },
-    { icon: '📷', name: 'Instagram' },
-    { icon: '💼', name: 'LinkedIn' }
+    { icon: faFacebookF, name: 'Facebook' },
+    { icon: faTwitter, name: 'Twitter' },
+    { icon: faInstagram, name: 'Instagram' },
+    { icon: faLinkedinIn, name: 'LinkedIn' }
   ];
 
   const handleLinkHover = (sectionIndex, linkIndex, isHovered) => {
@@ -47,10 +50,11 @@ const Footer = () => {
       <div className="footer-container">
         <div className="footer-content">
           {/* Logo and description section */}
-          <div>
-            <div className="footer-logo">
-              <span className="footer-logo-icon">💲</span>
-              <span className="footer-logo-text">SplitEase</span>
+
+          <div style={styles.footerSection}>
+            <div style={styles.footerLogo}>
+              <img src={logo2} alt="Logo" className="header-logo-img" />
+              <span style={styles.logoText}>SplitEase</span>
             </div>
             <p className="footer-description">
               La forma más fácil de dividir gastos entre amigos. Simplicidad, seguridad y transparencia en cada transacción.
@@ -65,7 +69,7 @@ const Footer = () => {
                   title={social.name}
                   onClick={() => console.log(`Clicked on ${social.name}`)}
                 >
-                  {social.icon}
+                  <FontAwesomeIcon icon={social.icon} size="lg" />
                 </button>
               ))}
             </div>

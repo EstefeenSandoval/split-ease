@@ -49,8 +49,6 @@
 .feature-icon {
   width: 60px;
   height: 60px;
-  background: #bcebcb;
-  border-radius: 50%;
   margin: 0 auto 1rem;
   display: flex;
   align-items: center;
@@ -61,14 +59,13 @@
 }
 
 .feature-card:hover .feature-icon {
-  background: #498467;
-  color: white;
   transform: scale(1.1);
 }
 
 .feature-card-title {
   font-size: 1.3rem;
   margin-bottom: 1rem;
+  margin-top: 1rem;
   color: #252627;
   font-weight: 600;
 }

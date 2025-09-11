@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './Hero.css';
+import ImageDecoration from '../assets/image.png';
+
 
 const Hero = ({ onOpenModal }) => {
   const [hoveredBtn, setHoveredBtn] = useState(null);
@@ -29,6 +31,7 @@ const Hero = ({ onOpenModal }) => {
             <br />
             entre amigos
           </h1>
+
           
           <p className="hero-subtitle">
             Convierte tus gastos más grandes en pagos más manejables. SplitEase hace que dividir cuentas sea súper fácil.
@@ -43,7 +46,6 @@ const Hero = ({ onOpenModal }) => {
             >
               Comenzar Gratis
             </button>
-            
             <button 
               onClick={() => handleScroll('#como-funciona')} 
               className={`hero-btn hero-btn-secondary ${hoveredBtn === 'secondary' ? 'hero-btn-secondary-hover' : ''}`}
