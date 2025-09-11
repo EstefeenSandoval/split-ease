@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 import './UnirseGrupoForm.css';
 
 const UnirseGrupoForm = ({ onUnirse, onCancelar, cargando }) => {
@@ -14,6 +16,20 @@ const UnirseGrupoForm = ({ onUnirse, onCancelar, cargando }) => {
     }
   };
 
+  const handlePasteFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text.trim()) {
+        setCodigoInvitacion(text.trim());
+        toast.success('Código pegado desde el portapapeles');
+      } else {
+        toast.info('El portapapeles está vacío');
+      }
+    } catch (err) {
+      toast.error('No se pudo acceder al portapapeles');
+    }
+  };
+
   return (
     <div className="unirse-grupo-overlay">
       <div className="unirse-grupo-modal">
@@ -23,14 +39,26 @@ const UnirseGrupoForm = ({ onUnirse, onCancelar, cargando }) => {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="codigo_invitacion">Código de Invitación</label>
-            <input
-              type="text"
-              id="codigo_invitacion"
-              value={codigoInvitacion}
-              onChange={(e) => setCodigoInvitacion(e.target.value)}
-              placeholder="Introduce el código aquí..."
-              required
-            />
+            <div className="input-container">
+              <input
+                type="text"
+                id="codigo_invitacion"
+                value={codigoInvitacion}
+                onChange={(e) => setCodigoInvitacion(e.target.value)}
+                placeholder="Introduce el código aquí..."
+                onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(e); }}
+                required
+              />
+              <button
+                type="button"
+                className="btn-paste"
+                onClick={handlePasteFromClipboard}
+                title="Pegar desde portapapeles"
+                disabled={cargando}
+              >
+                <FontAwesomeIcon icon={faClipboard} />
+              </button>
+            </div>
           </div>
           
           <div className="form-actions">

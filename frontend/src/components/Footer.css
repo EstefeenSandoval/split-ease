@@ -26,6 +26,14 @@
   margin-bottom: 1rem;
 }
 
+.footer-logo-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: transparent;
+}
+
 .footer-logo-text {
   font-size: 1.5rem;
   font-weight: bold;

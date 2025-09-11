@@ -102,11 +102,31 @@
 }
 
 .unirse-grupo-modal p::before {
-  content: 'ℹ️';
+  content: '';
   position: absolute;
   top: 0.75rem;
   left: 1rem;
   font-size: 1.2rem;
+  color: var(--viridian);
+  width: 20px;
+  height: 20px;
+  background: var(--viridian);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.unirse-grupo-modal p::after {
+  content: 'i';
+  position: absolute;
+  top: 0.75rem;
+  left: 1rem;
+  font-size: 0.9rem;
+  color: white;
+  font-weight: bold;
+  font-style: italic;
+  z-index: 1;
 }
 
 .form-group {
@@ -123,9 +143,15 @@
   transition: color 0.3s ease;
 }
 
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .form-group input {
   width: 100%;
-  padding: 1rem 1.25rem;
+  padding: 1rem 4rem 1rem 1.25rem;
   border: 2px solid rgba(188, 235, 203, 0.5);
   border-radius: 12px;
   font-size: 1.1rem;
@@ -135,9 +161,40 @@
   color: var(--eerie-black);
   text-align: center;
   font-family: 'Courier New', monospace;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.1em;
   font-weight: 600;
-  text-transform: uppercase;
+}
+
+.btn-paste {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--viridian);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(73, 132, 103, 0.2);
+}
+
+.btn-paste:hover:not(:disabled) {
+  background: var(--dark-green);
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 4px 12px rgba(73, 132, 103, 0.3);
+}
+
+.btn-paste:disabled {
+  background: #ddd;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .form-group input::placeholder {
@@ -155,6 +212,14 @@
   background: rgba(255, 255, 255, 1);
   box-shadow: 0 0 0 4px rgba(73, 132, 103, 0.1);
   transform: translateY(-2px);
+}
+
+.form-group input:focus ~ .btn-paste {
+  background: var(--dark-green);
+}
+
+.input-container:focus-within .btn-paste {
+  background: var(--dark-green);
 }
 
 .form-group input:focus + label {
@@ -343,8 +408,15 @@
   }
 
   .form-group input {
-    padding: 0.875rem 1rem;
+    padding: 0.875rem 3.5rem 0.875rem 1rem;
     font-size: 1rem;
+  }
+
+  .btn-paste {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+    right: 6px;
   }
 
   .unirse-grupo-modal p {

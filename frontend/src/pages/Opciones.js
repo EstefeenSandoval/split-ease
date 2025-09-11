@@ -297,6 +297,7 @@ const Opciones = () => {
                   Nombre completo
                 </label>
                 <input
+                  style={{ textTransform: 'capitalize', fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif' }}
                   type="text"
                   id="nombre"
                   value={userProfile.nombre}
@@ -316,6 +317,7 @@ const Opciones = () => {
                 <input
                   type="email"
                   id="email"
+                  style={{ textTransform: 'lowercase' }}
                   value={userProfile.email}
                   onChange={(e) => handleProfileChange('email', e.target.value)}
                   className="input-field"

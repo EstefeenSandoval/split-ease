@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faPlus, faLink } from '@fortawesome/free-solid-svg-icons';
 import CrearGrupoForm from '../components/CrearGrupoForm';
 import UnirseGrupoForm from '../components/UnirseGrupoForm';
 import EditarGrupoForm from '../components/EditarGrupoForm';
@@ -181,13 +183,13 @@ const Grupos = () => {
             className="btn-crear-grupo"
             onClick={() => setMostrarCrearForm(true)}
           >
-            ➕ Crear Grupo
+            <FontAwesomeIcon icon={faPlus} /> Crear Grupo
           </button>
           <button 
             className="btn-unirse-grupo"
             onClick={() => setMostrarUnirseForm(true)}
           >
-            🔗 Unirse a Grupo
+            <FontAwesomeIcon icon={faLink} /> Unirse a Grupo
           </button>
         </div>
       </div>
@@ -246,7 +248,7 @@ const Grupos = () => {
                   className="btn-ver-detalle"
                   onClick={() => setGrupoSeleccionado(grupo)}
                 >
-                  👁️ Ver Detalle
+                  <FontAwesomeIcon icon={faEye} /> Ver Detalle
                 </button>
               </div>
             </div>

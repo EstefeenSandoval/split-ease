@@ -6,9 +6,11 @@
   left: 0;
   top: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .modal-overlay.open {
@@ -17,23 +19,40 @@
 
 .modal-content {
   background-color: white;
-  margin: 5% auto;
+  margin: 2vh auto;
   padding: 0;
   border-radius: 15px;
   width: 90%;
   max-width: 400px;
+  max-height: 95vh;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   animation: modalSlideIn 0.3s ease-out;
+  overflow-y: auto;
+  position: relative;
 }
 
 @keyframes modalSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-50px);
+    transform: translateY(-50px) scale(0.9);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-overlay.open {
+  display: block;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -51,20 +70,22 @@
   font-size: 1.5rem;
   font-weight: bold;
   cursor: pointer;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: none;
   border: none;
+  z-index: 10;
 }
 
 .modal-close:hover {
   background: #bcebcb;
   color: #498467;
+  transform: scale(1.1);
 }
 
 .modal-title {
@@ -100,13 +121,16 @@
   border: 2px solid #bcebcb;
   border-radius: 8px;
   font-size: 1rem;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-sizing: border-box;
+  line-height: 1.4;
 }
 
 .modal-input:focus {
   border-color: #498467;
   outline: none;
+  box-shadow: 0 0 0 3px rgba(73, 132, 103, 0.1);
+  transform: translateY(-1px);
 }
 
 .modal-submit {
@@ -119,13 +143,15 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   margin-bottom: 1rem;
+  line-height: 1.4;
 }
 
 .modal-submit:hover {
   background: #3a6b55;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(73, 132, 103, 0.3);
 }
 
 .modal-switch-text {
@@ -170,10 +196,27 @@
 
 
 /* Responsive Design */
-@media (max-width: 480px) {
+@media (max-width: 1366px) and (min-height: 768px) {
+  /* Para laptops de 16 pulgadas y similares */
+  .modal-content {
+    margin: 3vh auto;
+    max-height: 90vh;
+  }
+  
+  .modal-header {
+    padding: 1.8rem 2rem 1.2rem;
+  }
+  
+  .modal-body {
+    padding: 0 2rem 2rem;
+  }
+}
+
+@media (max-width: 768px) {
   .modal-content {
     width: 95%;
-    margin: 10% auto;
+    margin: 2vh auto;
+    max-height: 96vh;
   }
   
   .modal-header {
@@ -185,6 +228,112 @@
   }
   
   .modal-title {
+    font-size: 1.6rem;
+  }
+  
+  .modal-form-group {
+    margin-bottom: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    width: 95%;
+    margin: 1vh auto;
+    max-height: 98vh;
+    border-radius: 10px;
+  }
+  
+  .modal-header {
+    padding: 1.2rem 1.2rem 0.8rem;
+  }
+  
+  .modal-body {
+    padding: 0 1.2rem 1.2rem;
+  }
+  
+  .modal-title {
+    font-size: 1.4rem;
+  }
+  
+  .modal-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .modal-form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .modal-input {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+  
+  .modal-submit {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-height: 700px) {
+  /* Para pantallas con altura reducida */
+  .modal-content {
+    margin: 1vh auto;
+    max-height: 98vh;
+  }
+  
+  .modal-header {
+    padding: 1.2rem 2rem 0.8rem;
+  }
+  
+  .modal-body {
+    padding: 0 2rem 1.2rem;
+  }
+  
+  .modal-form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .modal-title {
     font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .modal-subtitle {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-height: 600px) {
+  /* Para pantallas muy bajas */
+  .modal-content {
+    margin: 0.5vh auto;
+    max-height: 99vh;
+  }
+  
+  .modal-header {
+    padding: 1rem 2rem 0.5rem;
+  }
+  
+  .modal-body {
+    padding: 0 2rem 1rem;
+  }
+  
+  .modal-form-group {
+    margin-bottom: 0.8rem;
+  }
+  
+  .modal-title {
+    font-size: 1.4rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  .modal-subtitle {
+    font-size: 0.85rem;
+  }
+  
+  .modal-input, .modal-submit {
+    padding: 8px;
+    font-size: 0.9rem;
   }
 }

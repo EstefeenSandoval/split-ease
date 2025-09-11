@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen, faTrashAlt, faLock, faLink, faClipboard } from '@fortawesome/free-solid-svg-icons';
 import ParticipantCard from './ParticipantCard';
 import API_ENDPOINTS from '../config/api';
 import './DetalleGrupo.css';
@@ -118,10 +120,10 @@ const DetalleGrupo = ({ grupo, onVolver, onEditar, onEliminar }) => {
           {esAdminActual && (
             <>
               <button className="btn-editar" onClick={() => onEditar(grupo)}>
-                ✏️ Editar
+                <FontAwesomeIcon icon={faPen} /> Editar
               </button>
               <button className="btn-eliminar-grupo" onClick={() => onEliminar(grupo)}>
-                🗑️ Eliminar Grupo
+                <FontAwesomeIcon icon={faTrashAlt} /> Eliminar Grupo
               </button>
             </>
           )}
@@ -130,7 +132,7 @@ const DetalleGrupo = ({ grupo, onVolver, onEditar, onEliminar }) => {
             className="btn-codigo"
             onClick={() => setMostrarCodigo(!mostrarCodigo)}
           >
-            {mostrarCodigo ? '🔒 Ocultar' : '🔗 Mostrar'} Código
+            {mostrarCodigo ? <><FontAwesomeIcon icon={faLock} /> Ocultar</> : <><FontAwesomeIcon icon={faLink} /> Mostrar</>} Código
           </button>
         </div>
       </div>
@@ -141,7 +143,7 @@ const DetalleGrupo = ({ grupo, onVolver, onEditar, onEliminar }) => {
           <div className="codigo-container">
             <code>{grupo.codigo_invitacion}</code>
             <button className="btn-copiar" onClick={copiarCodigo}>
-              📋 Copiar
+              <FontAwesomeIcon icon={faClipboard} /> Copiar
             </button>
           </div>
           <p className="codigo-info">
