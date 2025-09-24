@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Headers.css';
 import logo from '../assets/logo.png';
 import logo2 from '../assets/logo2.png';
-import { API_ENDPOINTS } from '../config/api';
+import { API_ENDPOINTS, construirURLEstatico } from '../config/api';
 
 
 const Headers = ({ onOpenModal, user, onLogout }) => {
@@ -121,15 +121,7 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
   };
 
   const obtenerFotoPerfilUrl = (fotoUrl) => {
-    if (!fotoUrl) return null;
-    
-    // Verificar si la URL ya incluye el protocolo y host
-    if (fotoUrl.startsWith('http')) {
-      return fotoUrl;
-    } else {
-      // Si es una ruta relativa, agregar el host
-      return `http://localhost:3100${fotoUrl}`;
-    }
+    return construirURLEstatico(fotoUrl);
   };
 
   const toggleDropdown = () => {
