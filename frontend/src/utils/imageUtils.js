@@ -1,19 +1,8 @@
+import { construirURLEstatico } from '../config/api';
+
 // Utilidad para manejar URLs de fotos de perfil
 export const obtenerURLFotoPerfil = (fotoUrl) => {
-  if (!fotoUrl) return null;
-  
-  // Si es un data URL (para preview), devolverlo directamente
-  if (fotoUrl.startsWith('data:')) {
-    return fotoUrl;
-  }
-  
-  // Verificar si la URL ya incluye el protocolo y host
-  if (fotoUrl.startsWith('http')) {
-    return fotoUrl;
-  } else {
-    // Si es una ruta relativa, agregar el host
-    return `http://localhost:3100${fotoUrl}`;
-  }
+  return construirURLEstatico(fotoUrl);
 };
 
 // Componente de imagen de perfil con manejo de errores

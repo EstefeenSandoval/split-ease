@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { construirURLEstatico } from '../config/api';
 import './ParticipantCard.css';
 
 const ParticipantCard = ({ participante, esAdmin, puedeEliminar, onEliminar }) => {
@@ -38,13 +39,7 @@ const ParticipantCard = ({ participante, esAdmin, puedeEliminar, onEliminar }) =
     }
     
     if (participante.foto_perfil) {
-      // Verificar si la URL ya incluye el protocolo y host
-      if (participante.foto_perfil.startsWith('http')) {
-        return participante.foto_perfil;
-      } else {
-        // Si es una ruta relativa, agregar el host
-        return `http://localhost:3100${participante.foto_perfil}`;
-      }
+      return construirURLEstatico(participante.foto_perfil);
     }
     return '/logo.png'; // Imagen por defecto
   };

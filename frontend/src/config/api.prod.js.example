@@ -1,5 +1,8 @@
-// Configuración base para el servidor
-const BASE_URL = 'http://localhost:3100';
+// Configuración para producción - Ejemplo
+// Renombra este archivo a api.js cuando despliegues en producción
+
+// Configuración base para el servidor (CAMBIAR EN PRODUCCIÓN)
+const BASE_URL = 'https://tu-dominio.com'; // Cambiar por tu URL de producción
 const API_BASE_URL = `${BASE_URL}/api`;
 
 // Configuración para URLs de archivos estáticos (imágenes, uploads, etc.)

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { API_ENDPOINTS } from '../config/api';
+import { API_ENDPOINTS, construirURLEstatico } from '../config/api';
 import './Opciones.css';
 
 const Opciones = () => {
@@ -120,20 +120,7 @@ const Opciones = () => {
   };
 
   const obtenerFotoPerfilUrl = (fotoUrl) => {
-    if (!fotoUrl) return null;
-    
-    // Si es un data URL (para preview), devolverlo directamente
-    if (fotoUrl.startsWith('data:')) {
-      return fotoUrl;
-    }
-    
-    // Verificar si la URL ya incluye el protocolo y host
-    if (fotoUrl.startsWith('http')) {
-      return fotoUrl;
-    } else {
-      // Si es una ruta relativa, agregar el host
-      return `http://localhost:3100${fotoUrl}`;
-    }
+    return construirURLEstatico(fotoUrl);
   };
 
   const handleSaveChanges = async () => {
