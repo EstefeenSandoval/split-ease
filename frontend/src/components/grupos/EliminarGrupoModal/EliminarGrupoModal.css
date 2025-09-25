@@ -204,7 +204,6 @@
   border-color: var(--danger-red);
   background: rgba(255, 255, 255, 1);
   box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
-  transform: translateY(-2px);
 }
 
 .modal-actions {
@@ -259,8 +258,8 @@
 
 .btn-cancelar:hover:not(:disabled) {
   background: linear-gradient(135deg, #7a6a6a 0%, var(--cinereous) 100%);
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(153, 136, 136, 0.4);
+  opacity: 0.95;
 }
 
 .btn-eliminar {
@@ -271,8 +270,8 @@
 
 .btn-eliminar:hover:not(:disabled) {
   background: linear-gradient(135deg, #c82333 0%, var(--danger-red) 100%);
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+  opacity: 0.95;
 }
 
 .btn-eliminar:disabled,

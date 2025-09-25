@@ -4,6 +4,7 @@ const path = require('path');
 const app = express();
 const usuariosRoutes = require('./routes/usuario');
 const gruposRoutes = require('./routes/grupos');
+const gastosRoutes = require('./routes/gasto');
 const PORT = process.env.PORT || 3100;
 
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use(cors({
 // === Rutas de la API ===
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/grupos', gruposRoutes);
+app.use('/api/gastos', gastosRoutes);
 
 // Servir archivos estáticos desde la carpeta 'public' del backend
 app.use('/public', express.static(path.join(__dirname, 'public')));

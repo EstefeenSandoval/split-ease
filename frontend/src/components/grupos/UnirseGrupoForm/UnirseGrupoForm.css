@@ -181,14 +181,14 @@
   justify-content: center;
   cursor: pointer;
   font-size: 1.2rem;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease, opacity 0.2s ease;
   box-shadow: 0 2px 8px rgba(73, 132, 103, 0.2);
 }
 
 .btn-paste:hover:not(:disabled) {
   background: var(--dark-green);
-  transform: translateY(-50%) scale(1.05);
   box-shadow: 0 4px 12px rgba(73, 132, 103, 0.3);
+  opacity: 0.95;
 }
 
 .btn-paste:disabled {
@@ -211,7 +211,6 @@
   border-color: var(--viridian);
   background: rgba(255, 255, 255, 1);
   box-shadow: 0 0 0 4px rgba(73, 132, 103, 0.1);
-  transform: translateY(-2px);
 }
 
 .form-group input:focus ~ .btn-paste {
@@ -278,8 +277,8 @@
 
 .btn-cancelar:hover:not(:disabled) {
   background: linear-gradient(135deg, #7a6a6a 0%, var(--cinereous) 100%);
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(153, 136, 136, 0.4);
+  opacity: 0.95;
 }
 
 .btn-unirse {
@@ -290,8 +289,8 @@
 
 .btn-unirse:hover:not(:disabled) {
   background: linear-gradient(135deg, #1e7e34 0%, var(--success-green) 100%);
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+  opacity: 0.95;
 }
 
 .btn-unirse:disabled,

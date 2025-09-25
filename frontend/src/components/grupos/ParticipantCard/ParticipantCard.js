@@ -4,6 +4,8 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { construirURLEstatico } from '../../../config/api';
 import './ParticipantCard.css';
 
+// Componente para mostrar la tarjeta de un participante
+
 const ParticipantCard = ({ participante, esAdmin, puedeEliminar, onEliminar }) => {
   const [imagenError, setImagenError] = useState(false);
 

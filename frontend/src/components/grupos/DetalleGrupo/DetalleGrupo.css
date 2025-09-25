@@ -80,8 +80,8 @@
 
 .btn-volver:hover {
   background: linear-gradient(135deg, #7a6a6a 0%, var(--cinereous) 100%);
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(153, 136, 136, 0.4);
+  opacity: 0.95;
 }
 
 .grupo-info h1 {
@@ -174,8 +174,8 @@
 
 .btn-editar:hover {
   background: linear-gradient(135deg, #0056b3 0%, var(--primary-blue) 100%);
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+  opacity: 0.95;
 }
 
 .btn-eliminar-grupo {
@@ -186,8 +186,8 @@
 
 .btn-eliminar-grupo:hover {
   background: linear-gradient(135deg, #c82333 0%, var(--danger-red) 100%);
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+  opacity: 0.95;
 }
 
 .btn-codigo {
@@ -198,8 +198,8 @@
 
 .btn-codigo:hover {
   background: linear-gradient(135deg, #1e7e34 0%, var(--success-green) 100%);
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+  opacity: 0.95;
 }
 
 .codigo-invitacion {
@@ -292,8 +292,8 @@
 
 .btn-copiar:hover {
   background: linear-gradient(135deg, #138496 0%, var(--info-blue) 100%);
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(23, 162, 184, 0.4);
+  opacity: 0.95;
 }
 
 .codigo-info {
