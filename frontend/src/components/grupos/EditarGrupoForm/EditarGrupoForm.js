@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { API_ENDPOINTS } from '../config/api';
+import { API_ENDPOINTS } from '../../../config/api';
 import './EditarGrupoForm.css';
 
 const EditarGrupoForm = ({ isOpen, onClose, grupo, onGrupoActualizado }) => {

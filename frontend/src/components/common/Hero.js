@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Hero.css';
-import ImageDecoration from '../assets/image.png';
+import ImageDecoration from '../../assets/image.png';
 
 
 const Hero = ({ onOpenModal }) => {
