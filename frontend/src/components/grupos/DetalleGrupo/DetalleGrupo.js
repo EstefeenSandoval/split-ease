@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrashAlt, faLock, faLink, faClipboard } from '@fortawesome/free-solid-svg-icons';
-import ParticipantCard from './ParticipantCard';
-import API_ENDPOINTS from '../config/api';
+import ParticipantCard from '../ParticipantCard/ParticipantCard';
+import API_ENDPOINTS from '../../../config/api';
 import './DetalleGrupo.css';
 
 const DetalleGrupo = ({ grupo, onVolver, onEditar, onEliminar }) => {

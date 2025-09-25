@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { API_ENDPOINTS } from '../config/api';
+import { API_ENDPOINTS } from '../../config/api';
 import './Modal.css';
 
 const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {

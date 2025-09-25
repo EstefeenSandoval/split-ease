@@ -1,6 +1,6 @@
 import React from 'react';
-import Hero from '../components/Hero';
-import Features from '../components/Features';
+import Hero from '../components/common/Hero';
+import Features from '../components/common/Features';
 
 const HomePage = ({ onOpenModal }) => {
   return (

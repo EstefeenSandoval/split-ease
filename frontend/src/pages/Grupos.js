@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faPlus, faLink } from '@fortawesome/free-solid-svg-icons';
-import CrearGrupoForm from '../components/CrearGrupoForm';
-import UnirseGrupoForm from '../components/UnirseGrupoForm';
-import EditarGrupoForm from '../components/EditarGrupoForm';
-import EliminarGrupoModal from '../components/EliminarGrupoModal';
-import DetalleGrupo from '../components/DetalleGrupo';
+import {
+  CrearGrupoForm,
+  UnirseGrupoForm,
+  EditarGrupoForm,
+  EliminarGrupoModal,
+  DetalleGrupo
+} from '../components/grupos';
 import API_ENDPOINTS from '../config/api';
 import './Grupos.css';
 

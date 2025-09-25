@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 // import './HeadersDropdown.css';
 import './Headers.css';
-import logo from '../assets/logo.png';
-import logo2 from '../assets/logo2.png';
-import { API_ENDPOINTS, construirURLEstatico } from '../config/api';
+import logo from '../../assets/logo.png';
+import logo2 from '../../assets/logo2.png';
+import { API_ENDPOINTS, construirURLEstatico } from '../../config/api';
 
 
 const Headers = ({ onOpenModal, user, onLogout }) => {

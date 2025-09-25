@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { construirURLEstatico } from '../config/api';
+import { construirURLEstatico } from '../../../config/api';
 import './ParticipantCard.css';
 
 const ParticipantCard = ({ participante, esAdmin, puedeEliminar, onEliminar }) => {

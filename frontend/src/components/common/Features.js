@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Features.css';
-import facilUso from '../assets/facilUso.png';
-import pagoSeguro from '../assets/pagoSeguro.png';
-import seguimientoInteligente from '../assets/seguimientoInteligente.png';
+import facilUso from '../../assets/facilUso.png';
+import pagoSeguro from '../../assets/pagoSeguro.png';
+import seguimientoInteligente from '../../assets/seguimientoInteligente.png';
 
 const Features = () => {
   const [isVisible, setIsVisible] = useState(false);
