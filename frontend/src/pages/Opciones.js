@@ -16,11 +16,11 @@ const Opciones = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
-  const [setSettings] = useState({
-    language: 'es',
-    currency: 'MXN',
-    autoConversion: true
-  });
+  // const [setSettings] = useState({
+  //   language: 'es',
+  //   currency: 'MXN',
+  //   autoConversion: true
+  // });
 
   // Cargar datos del usuario al montar el componente
   useEffect(() => {
@@ -82,12 +82,12 @@ const Opciones = () => {
     }));
   };
 
-  const handleSettingsChange = (field, value) => {
-    setSettings(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+  // const handleSettingsChange = (field, value) => {
+  //   setSettings(prev => ({
+  //     ...prev,
+  //     [field]: value
+  //   }));
+  // };
 
   const handleProfilePictureChange = (event) => {
     const file = event.target.files[0];
@@ -284,7 +284,6 @@ const Opciones = () => {
                   Nombre completo
                 </label>
                 <input
-                  style={{ textTransform: 'capitalize', fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif' }}
                   type="text"
                   id="nombre"
                   value={userProfile.nombre}
@@ -304,7 +303,6 @@ const Opciones = () => {
                 <input
                   type="email"
                   id="email"
-                  style={{ textTransform: 'lowercase' }}
                   value={userProfile.email}
                   onChange={(e) => handleProfileChange('email', e.target.value)}
                   className="input-field"

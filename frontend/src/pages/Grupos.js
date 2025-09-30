@@ -7,7 +7,8 @@ import {
   UnirseGrupoForm,
   EditarGrupoForm,
   EliminarGrupoModal,
-  DetalleGrupo
+  DetalleGrupo,
+  GrupoGastos
 } from '../components/grupos';
 import API_ENDPOINTS from '../config/api';
 import './Grupos.css';
@@ -22,6 +23,8 @@ const Grupos = () => {
   const [mostrarEliminarModal, setMostrarEliminarModal] = useState(false);
   const [grupoSeleccionado, setGrupoSeleccionado] = useState(null);
   const [editandoGrupo, setEditandoGrupo] = useState(null);
+  const [vistaGastos, setVistaGastos] = useState(false);
+  const [participantesGrupo, setParticipantesGrupo] = useState([]);
 
   useEffect(() => {
     cargarGrupos();
@@ -139,8 +142,52 @@ const Grupos = () => {
     setGrupos(grupos.filter(g => g.id_grupo !== idGrupoEliminado));
     if (grupoSeleccionado && grupoSeleccionado.id_grupo === idGrupoEliminado) {
       setGrupoSeleccionado(null);
+      setVistaGastos(false);
     }
   };
+
+  const handleVerGastos = (grupo, participantes) => {
+    setGrupoSeleccionado(grupo);
+    setParticipantesGrupo(participantes);
+    setVistaGastos(true);
+  };
+
+  const handleVolverDeGastos = () => {
+    setVistaGastos(false);
+  };
+
+  if (vistaGastos && grupoSeleccionado) {
+    return (
+      <>
+        <GrupoGastos
+          grupo={grupoSeleccionado}
+          participantes={participantesGrupo}
+          onVolver={handleVolverDeGastos}
+        />
+        
+        {/* Modales para editar y eliminar grupo */}
+        <EditarGrupoForm
+          isOpen={mostrarEditarForm}
+          onClose={() => {
+            setMostrarEditarForm(false);
+            setEditandoGrupo(null);
+          }}
+          grupo={editandoGrupo}
+          onGrupoActualizado={onGrupoActualizado}
+        />
+
+        <EliminarGrupoModal
+          isOpen={mostrarEliminarModal}
+          onClose={() => {
+            setMostrarEliminarModal(false);
+            setEditandoGrupo(null);
+          }}
+          grupo={editandoGrupo}
+          onGrupoEliminado={onGrupoEliminado}
+        />
+      </>
+    );
+  }
 
   if (grupoSeleccionado) {
     return (
@@ -150,6 +197,7 @@ const Grupos = () => {
           onVolver={() => setGrupoSeleccionado(null)}
           onEditar={handleEditarGrupo}
           onEliminar={handleEliminarGrupo}
+          onVerGastos={handleVerGastos}
         />
         
         {/* Modales para editar y eliminar grupo */}

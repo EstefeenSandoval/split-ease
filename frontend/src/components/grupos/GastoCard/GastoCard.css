@@ -1,0 +1,325 @@
+/* GastoCard.css - Diseño moderno para cards de gastos */
+
+/* Variables CSS consistentes con la aplicación */
+:root {
+  --viridian: #498467;
+  --celadon: #bcebcb;
+  --eerie-black: #252627;
+  --gunmetal: #2e3138;
+  --cinereous: #998888;
+  --light-green: #e8f5e8;
+  --dark-green: #3a6b54;
+  --success-green: #28a745;
+  --warning-orange: #fd7e14;
+  --danger-red: #dc3545;
+  --info-blue: #17a2b8;
+  --primary-blue: #007bff;
+}
+
+.gasto-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  border-left: 4px solid var(--viridian);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(188, 235, 203, 0.3);
+  box-shadow: 0 8px 25px rgba(73, 132, 103, 0.1);
+}
+
+.gasto-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(188, 235, 203, 0.1) 0%, rgba(240, 249, 242, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gasto-card:hover::before {
+  opacity: 1;
+}
+
+.gasto-card:hover {
+  box-shadow: 0 15px 40px rgba(73, 132, 103, 0.2);
+  border-left-width: 6px;
+  border-left-color: var(--dark-green);
+  transform: translateY(-2px);
+}
+
+.gasto-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.gasto-info-principal {
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.gasto-descripcion {
+  color: var(--eerie-black);
+  margin: 0 0 0.75rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  transition: color 0.3s ease;
+}
+
+.gasto-card:hover .gasto-descripcion {
+  color: var(--viridian);
+}
+
+.gasto-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.estado-pendiente {
+  background: rgba(253, 126, 20, 0.1);
+  color: var(--warning-orange);
+  border: 1px solid rgba(253, 126, 20, 0.3);
+}
+
+.estado-confirmado {
+  background: rgba(40, 167, 69, 0.1);
+  color: var(--success-green);
+  border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.estado-cancelado {
+  background: rgba(220, 53, 69, 0.1);
+  color: var(--danger-red);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+.gasto-monto {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.monto-valor {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--eerie-black);
+  line-height: 1.2;
+}
+
+.monto-moneda {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--cinereous);
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+.gasto-detalles {
+  margin-bottom: 1.5rem;
+}
+
+.detalle-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.detalle-item:last-child {
+  margin-bottom: 0;
+}
+
+.detalle-icono {
+  color: var(--viridian);
+  width: 14px;
+  flex-shrink: 0;
+}
+
+.detalle-label {
+  color: var(--cinereous);
+  font-weight: 500;
+  min-width: 80px;
+}
+
+.detalle-valor {
+  color: var(--gunmetal);
+  font-weight: 600;
+  flex: 1;
+}
+
+.gasto-acciones {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.btn-ver-detalle,
+.btn-marcar-pagado,
+.btn-eliminar-gasto {
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-ver-detalle::before,
+.btn-marcar-pagado::before,
+.btn-eliminar-gasto::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+
+.btn-ver-detalle:hover::before,
+.btn-marcar-pagado:hover::before,
+.btn-eliminar-gasto:hover::before {
+  left: 100%;
+}
+
+.btn-ver-detalle {
+  background: linear-gradient(135deg, var(--info-blue) 0%, #138496 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+}
+
+.btn-ver-detalle:hover {
+  background: linear-gradient(135deg, #138496 0%, var(--info-blue) 100%);
+  box-shadow: 0 6px 20px rgba(23, 162, 184, 0.4);
+  opacity: 0.95;
+}
+
+.btn-marcar-pagado {
+  background: linear-gradient(135deg, var(--success-green) 0%, #1e7e34 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.btn-marcar-pagado:hover {
+  background: linear-gradient(135deg, #1e7e34 0%, var(--success-green) 100%);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+  opacity: 0.95;
+}
+
+.btn-eliminar-gasto {
+  background: linear-gradient(135deg, var(--danger-red) 0%, #c82333 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+  padding: 0.625rem;
+  min-width: auto;
+}
+
+.btn-eliminar-gasto:hover {
+  background: linear-gradient(135deg, #c82333 0%, var(--danger-red) 100%);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+  opacity: 0.95;
+}
+
+/* Animación de entrada para la card */
+.gasto-card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+  .gasto-card {
+    padding: 1.25rem;
+  }
+  
+  .gasto-card-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .gasto-info-principal {
+    margin-right: 0;
+  }
+  
+  .gasto-monto {
+    text-align: left;
+  }
+  
+  .gasto-acciones {
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+  
+  .btn-ver-detalle,
+  .btn-marcar-pagado {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .detalle-item {
+    flex-wrap: wrap;
+  }
+  
+  .detalle-label {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .gasto-card {
+    padding: 1rem;
+  }
+  
+  .gasto-descripcion {
+    font-size: 1.1rem;
+  }
+  
+  .monto-valor {
+    font-size: 1.25rem;
+  }
+  
+  .detalle-item {
+    font-size: 0.85rem;
+  }
+  
+  .btn-ver-detalle,
+  .btn-marcar-pagado {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+  }
+}

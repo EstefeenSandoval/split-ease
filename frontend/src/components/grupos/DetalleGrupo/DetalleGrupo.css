@@ -128,7 +128,8 @@
 
 .btn-editar,
 .btn-eliminar-grupo,
-.btn-codigo {
+.btn-codigo,
+.btn-ver-gastos {
   padding: 0.875rem 1.5rem;
   border: none;
   border-radius: 12px;
@@ -149,7 +150,8 @@
 
 .btn-editar::before,
 .btn-eliminar-grupo::before,
-.btn-codigo::before {
+.btn-codigo::before,
+.btn-ver-gastos::before {
   content: '';
   position: absolute;
   top: 0;
@@ -162,7 +164,8 @@
 
 .btn-editar:hover::before,
 .btn-eliminar-grupo:hover::before,
-.btn-codigo:hover::before {
+.btn-codigo:hover::before,
+.btn-ver-gastos:hover::before {
   left: 100%;
 }
 
@@ -199,6 +202,18 @@
 .btn-codigo:hover {
   background: linear-gradient(135deg, #1e7e34 0%, var(--success-green) 100%);
   box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+  opacity: 0.95;
+}
+
+.btn-ver-gastos {
+  background: linear-gradient(135deg, var(--warning-orange) 0%, #e8590c 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(253, 126, 20, 0.3);
+}
+
+.btn-ver-gastos:hover {
+  background: linear-gradient(135deg, #e8590c 0%, var(--warning-orange) 100%);
+  box-shadow: 0 6px 20px rgba(253, 126, 20, 0.4);
   opacity: 0.95;
 }
 
@@ -410,7 +425,8 @@
   
   .btn-editar,
   .btn-eliminar-grupo,
-  .btn-codigo {
+  .btn-codigo,
+  .btn-ver-gastos {
     width: 100%;
     margin-bottom: 0.5rem;
   }
