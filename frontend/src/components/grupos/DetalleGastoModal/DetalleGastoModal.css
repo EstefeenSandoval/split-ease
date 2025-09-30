@@ -1,0 +1,557 @@
+/* DetalleGastoModal.css - Diseño moderno para modal de detalle de gasto */
+
+/* Variables CSS consistentes con la aplicación */
+:root {
+  --viridian: #498467;
+  --celadon: #bcebcb;
+  --eerie-black: #252627;
+  --gunmetal: #2e3138;
+  --cinereous: #998888;
+  --light-green: #e8f5e8;
+  --dark-green: #3a6b54;
+  --success-green: #28a745;
+  --warning-orange: #fd7e14;
+  --danger-red: #dc3545;
+  --info-blue: #17a2b8;
+  --primary-blue: #007bff;
+}
+
+.detalle-gasto-modal {
+  background: white;
+  border-radius: 20px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.detalle-gasto-content {
+  padding: 2rem;
+}
+
+.gasto-info-principal {
+  background: linear-gradient(135deg, rgba(188, 235, 203, 0.1) 0%, rgba(240, 249, 242, 0.1) 100%);
+  border: 2px solid rgba(188, 235, 203, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.gasto-info-principal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--viridian) 0%, var(--dark-green) 100%);
+}
+
+.gasto-header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.gasto-descripcion {
+  color: var(--eerie-black);
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  flex: 1;
+  min-width: 200px;
+}
+
+.gasto-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.estado-pendiente {
+  background: rgba(253, 126, 20, 0.15);
+  color: var(--warning-orange);
+  border: 2px solid rgba(253, 126, 20, 0.3);
+}
+
+.estado-confirmado {
+  background: rgba(40, 167, 69, 0.15);
+  color: var(--success-green);
+  border: 2px solid rgba(40, 167, 69, 0.3);
+}
+
+.estado-cancelado {
+  background: rgba(220, 53, 69, 0.15);
+  color: var(--danger-red);
+  border: 2px solid rgba(220, 53, 69, 0.3);
+}
+
+.gasto-monto-principal {
+  text-align: center;
+}
+
+.monto-total {
+  display: block;
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--viridian);
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(73, 132, 103, 0.1);
+}
+
+.moneda {
+  display: block;
+  font-size: 1rem;
+  color: var(--cinereous);
+  font-weight: 600;
+  margin-top: 0.5rem;
+  letter-spacing: 1px;
+}
+
+.gasto-detalles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.detalle-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(248, 249, 250, 0.8);
+  border: 2px solid rgba(188, 235, 203, 0.2);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.detalle-item:hover {
+  border-color: rgba(188, 235, 203, 0.4);
+  background: rgba(188, 235, 203, 0.1);
+}
+
+.detalle-icono {
+  color: var(--viridian);
+  font-size: 1.25rem;
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+}
+
+.detalle-content {
+  flex: 1;
+}
+
+.detalle-label {
+  display: block;
+  color: var(--cinereous);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.detalle-valor {
+  display: block;
+  color: var(--eerie-black);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.detalle-secundario {
+  display: block;
+  color: var(--gunmetal);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+.progreso-pagos {
+  background: rgba(248, 249, 250, 0.8);
+  border: 2px solid rgba(188, 235, 203, 0.3);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.progreso-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.progreso-header h4 {
+  margin: 0;
+  color: var(--eerie-black);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.progreso-texto {
+  color: var(--gunmetal);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.progreso-bar {
+  background: rgba(188, 235, 203, 0.3);
+  border-radius: 10px;
+  height: 12px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progreso-fill {
+  background: linear-gradient(90deg, var(--success-green) 0%, #1e7e34 100%);
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.progreso-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.progreso-porcentaje {
+  display: block;
+  text-align: right;
+  color: var(--gunmetal);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.divisiones-section {
+  margin-bottom: 2rem;
+}
+
+.divisiones-section h4 {
+  color: var(--eerie-black);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.divisiones-section h4::before {
+  content: '';
+  width: 4px;
+  height: 24px;
+  background: linear-gradient(180deg, var(--viridian) 0%, var(--dark-green) 100%);
+  border-radius: 2px;
+}
+
+.divisiones-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.division-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  background: rgba(248, 249, 250, 0.8);
+  border: 2px solid rgba(188, 235, 203, 0.2);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.division-item:hover {
+  border-color: rgba(188, 235, 203, 0.4);
+  background: rgba(188, 235, 203, 0.1);
+}
+
+.division-item.usuario-actual {
+  border-color: var(--viridian);
+  background: rgba(73, 132, 103, 0.05);
+  position: relative;
+}
+
+.division-item.usuario-actual::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--viridian) 0%, var(--dark-green) 100%);
+  border-radius: 0 2px 2px 0;
+}
+
+.division-item.pagado {
+  opacity: 0.8;
+}
+
+.division-usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.usuario-icono {
+  color: var(--viridian);
+  font-size: 1.1rem;
+}
+
+.usuario-nombre {
+  color: var(--eerie-black);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.tu-badge {
+  background: var(--viridian);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.division-monto {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: right;
+}
+
+.monto-icono {
+  color: var(--viridian);
+  font-size: 1rem;
+}
+
+.monto-asignado {
+  color: var(--eerie-black);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.division-estado {
+  text-align: center;
+}
+
+.estado-pagado,
+.estado-pendiente {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.estado-pagado {
+  color: var(--success-green);
+}
+
+.estado-pendiente {
+  color: var(--warning-orange);
+}
+
+.estado-pagado svg,
+.estado-pendiente svg {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.estado-pagado span:first-of-type,
+.estado-pendiente span:first-of-type {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fecha-pago {
+  font-size: 0.75rem;
+  color: var(--cinereous);
+  font-weight: 500;
+}
+
+.detalle-acciones {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-top: 1.5rem;
+  border-top: 2px solid rgba(188, 235, 203, 0.3);
+}
+
+.btn-marcar-pagado-detalle,
+.btn-eliminar-gasto-detalle {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 200px;
+  justify-content: center;
+}
+
+.btn-marcar-pagado-detalle::before,
+.btn-eliminar-gasto-detalle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+
+.btn-marcar-pagado-detalle:hover::before,
+.btn-eliminar-gasto-detalle:hover::before {
+  left: 100%;
+}
+
+.btn-marcar-pagado-detalle {
+  background: linear-gradient(135deg, var(--success-green) 0%, #1e7e34 100%);
+  color: white;
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+}
+
+.btn-marcar-pagado-detalle:hover {
+  background: linear-gradient(135deg, #1e7e34 0%, var(--success-green) 100%);
+  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-eliminar-gasto-detalle {
+  background: linear-gradient(135deg, var(--danger-red) 0%, #c82333 100%);
+  color: white;
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+}
+
+.btn-eliminar-gasto-detalle:hover {
+  background: linear-gradient(135deg, #c82333 0%, var(--danger-red) 100%);
+  box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+  .detalle-gasto-modal {
+    max-height: 95vh;
+  }
+  
+  .detalle-gasto-content {
+    padding: 1.5rem;
+  }
+  
+  .gasto-info-principal {
+    padding: 1.5rem;
+  }
+  
+  .gasto-header-info {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .monto-total {
+    font-size: 2.5rem;
+  }
+  
+  .gasto-detalles-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .division-item {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .division-usuario {
+    justify-content: center;
+  }
+  
+  .division-monto {
+    justify-content: center;
+  }
+  
+  .detalle-acciones {
+    flex-direction: column;
+  }
+  
+  .btn-marcar-pagado-detalle,
+  .btn-eliminar-gasto-detalle {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .detalle-gasto-content {
+    padding: 1rem;
+  }
+  
+  .gasto-info-principal {
+    padding: 1.25rem;
+  }
+  
+  .gasto-descripcion {
+    font-size: 1.25rem;
+  }
+  
+  .monto-total {
+    font-size: 2rem;
+  }
+  
+  .detalle-item {
+    padding: 1rem;
+  }
+  
+  .progreso-pagos {
+    padding: 1.25rem;
+  }
+  
+  .division-item {
+    padding: 1rem;
+  }
+}

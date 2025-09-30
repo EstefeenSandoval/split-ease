@@ -145,5 +145,20 @@ CREATE TABLE NOTIFICACIONES (
     ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB COMMENT='Notificaciones que se envían a cada usuario sobre diversos eventos';
 
+-- ########### DATOS INICIALES ###########
+
+-- Insertar categorías por defecto
+INSERT INTO CATEGORIAS (nombre, descripcion) VALUES
+('Comida', 'Gastos relacionados con alimentos y restaurantes'),
+('Transporte', 'Gastos de transporte público, taxis, combustible'),
+('Entretenimiento', 'Gastos de ocio, cine, conciertos, actividades'),
+('Vivienda', 'Gastos de alquiler, servicios básicos, mantenimiento'),
+('Compras', 'Gastos de compras generales y productos varios'),
+('Salud', 'Gastos médicos, farmacia, seguros de salud'),
+('Educación', 'Gastos educativos, libros, cursos'),
+('Viajes', 'Gastos de viajes, hoteles, vacaciones'),
+('Servicios', 'Gastos de servicios profesionales y técnicos'),
+('Otros', 'Gastos que no se ajustan a otras categorías');
+
 -- Restaurar revisión de claves foráneas
 SET FOREIGN_KEY_CHECKS = 1;

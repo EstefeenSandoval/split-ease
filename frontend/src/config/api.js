@@ -22,6 +22,16 @@ export const API_ENDPOINTS = {
     obtenerParticipantes: (id) => `${API_BASE_URL}/grupos/${id}/participantes`,
     eliminarParticipante: (idGrupo, idUsuario) => `${API_BASE_URL}/grupos/${idGrupo}/participantes/${idUsuario}`,
     unirse: `${API_BASE_URL}/grupos/unirse`
+  },
+  gastos: {
+    crear: `${API_BASE_URL}/gastos`,
+    obtenerPorGrupo: (idGrupo) => `${API_BASE_URL}/gastos/grupo/${idGrupo}`,
+    obtenerPorId: (idGasto) => `${API_BASE_URL}/gastos/${idGasto}`,
+    actualizar: (idGasto) => `${API_BASE_URL}/gastos/${idGasto}`,
+    eliminar: (idGasto) => `${API_BASE_URL}/gastos/${idGasto}`,
+    marcarPagado: (idGasto) => `${API_BASE_URL}/gastos/${idGasto}/pagar`,
+    categorias: `${API_BASE_URL}/gastos/categorias`,
+    crearCategoria: `${API_BASE_URL}/gastos/categorias`
   }
 };
 

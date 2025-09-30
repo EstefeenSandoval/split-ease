@@ -42,7 +42,6 @@
 }
 
 .participant-card:hover {
-  transform: translateY(-4px);
   box-shadow: 0 15px 40px rgba(73, 132, 103, 0.2);
   border-color: rgba(73, 132, 103, 0.4);
 }
@@ -57,9 +56,7 @@
   transition: transform 0.3s ease;
 }
 
-.participant-card:hover .participant-avatar {
-  transform: scale(1.05);
-}
+
 
 .participant-avatar img {
   width: 70px;

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faTrashAlt, faLock, faLink, faClipboard } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrashAlt, faLock, faLink, faClipboard, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons';
 import ParticipantCard from '../ParticipantCard/ParticipantCard';
 import API_ENDPOINTS from '../../../config/api';
 import './DetalleGrupo.css';
 
-const DetalleGrupo = ({ grupo, onVolver, onEditar, onEliminar }) => {
+const DetalleGrupo = ({ grupo, onVolver, onEditar, onEliminar, onVerGastos }) => {
   const [participantes, setParticipantes] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
@@ -117,6 +117,13 @@ const DetalleGrupo = ({ grupo, onVolver, onEditar, onEliminar }) => {
         </div>
 
         <div className="grupo-acciones">
+          <button 
+            className="btn-ver-gastos"
+            onClick={() => onVerGastos(grupo, participantes)}
+          >
+            <FontAwesomeIcon icon={faMoneyBillWave} /> Ver Gastos
+          </button>
+          
           {esAdminActual && (
             <>
               <button className="btn-editar" onClick={() => onEditar(grupo)}>

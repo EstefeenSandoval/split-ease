@@ -127,7 +127,6 @@
   border-color: var(--warning-orange);
   background: rgba(255, 255, 255, 1);
   box-shadow: 0 0 0 4px rgba(253, 126, 20, 0.1);
-  transform: translateY(-2px);
 }
 
 .form-group input:focus + label,
@@ -193,8 +192,8 @@
 
 .btn-cancelar:hover:not(:disabled) {
   background: linear-gradient(135deg, #7a6a6a 0%, var(--cinereous) 100%);
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(153, 136, 136, 0.4);
+  opacity: 0.95;
 }
 
 .btn-actualizar {
@@ -205,8 +204,8 @@
 
 .btn-actualizar:hover:not(:disabled) {
   background: linear-gradient(135deg, #ff5722 0%, var(--warning-orange) 100%);
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(253, 126, 20, 0.4);
+  opacity: 0.95;
 }
 
 .btn-actualizar:disabled,
