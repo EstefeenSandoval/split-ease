@@ -283,6 +283,7 @@ const actualizarGasto = (req, res) => {
     const sanitizedIdCategoria = id_categoria ? parseInt(id_categoria) : null;
     const sanitizedFechaGasto = fecha_gasto ? new Date(fecha_gasto) : gasto.fecha_gasto;
     
+    // Actualizar el gasto
     gastoModel.actualizarGasto(
       id_gasto, 
       sanitizedDescripcion, 
@@ -295,7 +296,65 @@ const actualizarGasto = (req, res) => {
           return res.status(500).json({ error: 'Error al actualizar el gasto.' });
         }
         
-        res.status(200).json({ mensaje: 'Gasto actualizado correctamente.' });
+        // Si el monto cambió, actualizar las divisiones
+        if (sanitizedMontoTotal !== gasto.monto_total) {
+          // Obtener las divisiones existentes
+          gastoModel.obtenerDivisionesPorGasto(id_gasto, (err, divisiones) => {
+            if (err) {
+              console.error('Error al obtener divisiones:', err);
+              return res.status(500).json({ error: 'Error al obtener las divisiones.' });
+            }
+            
+            if (divisiones.length === 0) {
+              return res.status(200).json({ mensaje: 'Gasto actualizado correctamente.' });
+            }
+            
+            // Verificar si es división equitativa
+            const tipoDivision = divisiones[0].tipo_division;
+            
+            if (tipoDivision === 'equitativa') {
+              // Recalcular monto por persona
+              const numParticipantes = divisiones.length;
+              const montoPorPersona = parseFloat((sanitizedMontoTotal / numParticipantes).toFixed(2));
+              
+              // Actualizar cada división
+              let divisionesActualizadas = 0;
+              let errorEnActualizacion = false;
+              
+              divisiones.forEach(division => {
+                gastoModel.actualizarDivisionGasto(
+                  id_gasto,
+                  division.id_usuario,
+                  montoPorPersona,
+                  (err) => {
+                    if (err && !errorEnActualizacion) {
+                      errorEnActualizacion = true;
+                      console.error('Error al actualizar división:', err);
+                      return res.status(500).json({ error: 'Error al actualizar las divisiones del gasto.' });
+                    }
+                    
+                    divisionesActualizadas++;
+                    if (divisionesActualizadas === divisiones.length && !errorEnActualizacion) {
+                      res.status(200).json({ 
+                        mensaje: 'Gasto y divisiones actualizados correctamente.',
+                        divisiones_recalculadas: true
+                      });
+                    }
+                  }
+                );
+              });
+            } else {
+              // Para divisiones no equitativas, solo respondemos que el gasto se actualizó
+              res.status(200).json({ 
+                mensaje: 'Gasto actualizado correctamente. Las divisiones personalizadas no se modificaron.',
+                divisiones_recalculadas: false
+              });
+            }
+          });
+        } else {
+          // Si el monto no cambió, solo responder que se actualizó
+          res.status(200).json({ mensaje: 'Gasto actualizado correctamente.' });
+        }
       }
     );
   });

@@ -146,6 +146,14 @@ const eliminarDivisionesPorGasto = (id_gasto, callback) => {
   db.query('DELETE FROM DIVISIONES_GASTO WHERE id_gasto = ?', [id_gasto], callback);
 };
 
+const actualizarDivisionGasto = (id_gasto, id_usuario, monto_asignado, callback) => {
+  db.query(
+    'UPDATE DIVISIONES_GASTO SET monto_asignado = ? WHERE id_gasto = ? AND id_usuario = ?',
+    [monto_asignado, id_gasto, id_usuario],
+    callback
+  );
+};
+
 module.exports = {
   // Categorías
   obtenerCategorias,
@@ -164,5 +172,6 @@ module.exports = {
   crearDivisionGasto,
   obtenerDivisionesPorGasto,
   marcarDivisionComoPagada,
-  eliminarDivisionesPorGasto
+  eliminarDivisionesPorGasto,
+  actualizarDivisionGasto
 };
