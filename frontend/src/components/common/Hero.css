@@ -87,13 +87,13 @@
 
 .hero-highlight-underline {
   position: absolute;
-  bottom: 0;
+  bottom: -2px;
   left: 0;
   width: 100%;
-  height: 3px;
-  background: #bcebcb;
+  height: 4px;
+  background: #498467;
   transform-origin: left;
-  animation: underline 2s ease-out 1s forwards;
+  animation: underline 1.5s cubic-bezier(0.65, 0, 0.35, 1) 0.5s forwards;
   transform: scaleX(0);
 }
 

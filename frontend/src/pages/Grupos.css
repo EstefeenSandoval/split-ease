@@ -22,6 +22,9 @@
   min-height: 100vh;
   background: linear-gradient(135deg, var(--celadon) 0%, #f0f9f2 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+
 }
 
 .grupos-header {
