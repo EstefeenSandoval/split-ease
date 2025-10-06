@@ -82,7 +82,7 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
           foto_perfil: parsedData.foto_perfil || null
         });
       }
-
+      
       // Luego hacer una llamada a la API para obtener datos actualizados
       const token = localStorage.getItem('token');
       if (!token) return;

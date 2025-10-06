@@ -7,7 +7,6 @@ import Headers from './components/common/Headers';
 import Footer from './components/common/Footer';
 import Modal from './components/common/Modal';
 import HomePage from './pages/HomePage';
-import Inicio from './pages/Inicio';
 import ComoFunciona from './pages/ComoFunciona';
 import Caracteristicas from './pages/Caracteristicas';
 import Dashboard from './pages/Dashboard';
@@ -112,15 +111,14 @@ const App = () => {
 
   return (
     <Router>
-      <div style={styles.app}>
-        {/* Header con navegación */}
+      <div className="App">
         <Headers onOpenModal={openModal} user={user} onLogout={handleLogout} />
         
         {/* Rutas principales */}
         <Routes>
           <Route path="/" element={<HomePage onOpenModal={openModal} />} />
-          <Route path="/inicio" element={<Inicio />} />
-          <Route path="/como-funciona" element={<ComoFunciona />} />
+          <Route path="/inicio" element={<HomePage onOpenModal={openModal}/>} />
+          <Route path="/como-funciona" element={<ComoFunciona onOpenModal={openModal} />} />
           <Route path="/caracteristicas" element={<Caracteristicas />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/grupos" element={<Grupos />} />

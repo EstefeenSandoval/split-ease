@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // 1. Importa useNavigate
 import './Hero.css';
 import ImageDecoration from '../../assets/image.png';
 
 
 const Hero = ({ onOpenModal }) => {
   const [hoveredBtn, setHoveredBtn] = useState(null);
-
-  const handleScroll = (targetId) => {
-    const target = document.querySelector(targetId);
-    if (target) {
-      target.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  };
+  const navigate = useNavigate(); // 2. Inicializa la función de navegación
 
   return (
     <section id="inicio" className="hero-section">
@@ -48,7 +40,7 @@ const Hero = ({ onOpenModal }) => {
                 Comenzar Gratis
               </button>
               <button 
-                onClick={() => handleScroll('#como-funciona')} 
+                onClick={() => navigate('/como-funciona')} // 3. Cambia el onClick para navegar
                 className={`hero-btn hero-btn-secondary ${hoveredBtn === 'secondary' ? 'hero-btn-secondary-hover' : ''}`}
                 onMouseEnter={() => setHoveredBtn('secondary')}
                 onMouseLeave={() => setHoveredBtn(null)}
