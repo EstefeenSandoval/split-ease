@@ -31,6 +31,7 @@ backend/
 - [🔐 Autenticación y Usuarios](./api/usuarios.md) - Registro, login y gestión de usuarios
 - [👥 Grupos](./api/grupos.md) - Creación y gestión de grupos
 - [💰 Gastos](./api/gastos.md) - Gestión de gastos y categorías
+- [📊 Dashboard](./api/dashboard.md) - Estadísticas, pagos y actividad del usuario
 
 ### Base de Datos
 - [🗄️ Esquema de Base de Datos](./database/schema.md) - Estructura de tablas y relaciones
