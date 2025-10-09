@@ -1,0 +1,141 @@
+.actividad-reciente-container {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.actividad-titulo {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 1.5rem 0;
+}
+
+.actividad-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.actividad-lista::-webkit-scrollbar {
+  width: 6px;
+}
+
+.actividad-lista::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.actividad-lista::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.actividad-lista::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.actividad-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.actividad-item:hover {
+  background-color: #f8fafc;
+}
+
+.actividad-item.no-leida {
+  background-color: #f0f9ff;
+  border-left: 3px solid #667eea;
+}
+
+.actividad-icono {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.actividad-contenido {
+  flex: 1;
+  min-width: 0;
+}
+
+.actividad-mensaje {
+  font-size: 0.875rem;
+  color: #334155;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.5;
+}
+
+.actividad-fecha {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.actividad-badge {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #667eea;
+  flex-shrink: 0;
+  margin-top: 0.5rem;
+}
+
+.actividad-vacia {
+  text-align: center;
+  padding: 2rem;
+  color: #94a3b8;
+}
+
+.actividad-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.boton-cargar-mas {
+  padding: 0.5rem 1.5rem;
+  background: white;
+  color: #667eea;
+  border: 1px solid #667eea;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.boton-cargar-mas:hover {
+  background: #f8fafc;
+  transform: translateY(-1px);
+}
+
+.paginacion-info {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+@media (max-width: 768px) {
+  .actividad-lista {
+    max-height: 400px;
+  }
+}

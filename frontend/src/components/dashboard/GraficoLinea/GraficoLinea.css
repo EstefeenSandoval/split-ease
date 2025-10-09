@@ -1,0 +1,77 @@
+.grafico-linea-container {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.grafico-linea-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.grafico-linea-svg {
+  width: 100%;
+  height: 200px;
+}
+
+.punto-linea {
+  cursor: pointer;
+  transition: r 0.2s, stroke-width 0.2s;
+}
+
+.punto-linea:hover {
+  r: 2;
+  stroke-width: 0.8;
+}
+
+.grafico-linea-etiquetas {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.etiqueta-mes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.etiqueta-mes-nombre {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.etiqueta-mes-valor {
+  font-size: 0.875rem;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.grafico-vacio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #94a3b8;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .etiqueta-mes-nombre {
+    font-size: 0.625rem;
+  }
+
+  .etiqueta-mes-valor {
+    font-size: 0.75rem;
+  }
+
+  .grafico-linea-svg {
+    height: 150px;
+  }
+}

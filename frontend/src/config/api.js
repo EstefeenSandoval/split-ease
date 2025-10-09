@@ -32,6 +32,12 @@ export const API_ENDPOINTS = {
     marcarPagado: (idGasto) => `${API_BASE_URL}/gastos/${idGasto}/pagar`,
     categorias: `${API_BASE_URL}/gastos/categorias`,
     crearCategoria: `${API_BASE_URL}/gastos/categorias`
+  },
+  dashboard: {
+    personal: `${API_BASE_URL}/dashboard/personal`,
+    actividad: `${API_BASE_URL}/dashboard/actividad`,
+    saldarDeuda: `${API_BASE_URL}/dashboard/pagos/saldar`,
+    historialPagos: (idGasto) => `${API_BASE_URL}/dashboard/pagos/historial/${idGasto}`
   }
 };
 
