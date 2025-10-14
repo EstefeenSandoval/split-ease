@@ -40,3 +40,6 @@ npm run dev
 ### En otra terminal, inicia el frontend (React)
 cd frontend
 npm start
+
+## Railway Deploy
+Todos los deploy en railway se hacen de manera automatica con un push
