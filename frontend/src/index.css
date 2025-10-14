@@ -1,5 +1,44 @@
+/* 1. Primero, importa las fuentes (usando Google Fonts como ejemplo) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Colores Primarios */
+  --verde-principal: #498467;
+  --verde-profundo: #356859;
+  --verde-oscuro-hover: #3a6b55;
+
+  /* Colores Neutrales */
+  --casi-negro: #252627;
+  --gris-azulado: #596869;
+  --blanco: #FFFFFF;
+  --verde-palido: #e8f5e9;
+  --verde-claro: #c8e6c9;
+  
+  /* Colores de Acento y UI */
+  --menta-suave: #bcebcb;
+  --verde-brillante: #66bb6a;
+
+  /* Colores de Feedback */
+  --verde-exito: #393;
+  --fondo-exito: #efe;
+  --rojo-error: #c33;
+  --fondo-error: #fee;
+
+  /* 2. Define variables para las fuentes */
+  --font-primary: 'Sans-Serif', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --font-secondary: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Estilos Base Globales */
+html, body, #root {
+  font-family: var(--font-primary);
+  height: 100%;
+}
+
 body {
   margin: 0;
+  color: var(--casi-negro);
+  background: linear-gradient(135deg, var(--verde-palido) 0%, var(--verde-claro) 100%);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -10,4 +49,50 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* --- Keyframes Globales --- */
+/* (Se quedan aquí para que cualquier componente pueda usarlos) */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Clases de Utilidad Globales --- */
+.text-secondary { color: var(--gris-azulado); }
+.bg-card { background-color: var(--blanco); }
+
+/* Estilos de Botón (Base) */
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* Estilo de Botón Primario */
+.btn-primary {
+  background-color: var(--verde-profundo);
+  color: var(--blanco);
+  box-shadow: 0 6px 20px rgba(53, 104, 89, 0.25);
+}
+
+.btn-primary:hover {
+  background-color: var(--verde-oscuro-hover);
+  box-shadow: 0 10px 25px rgba(53, 104, 89, 0.35);
+  transform: translateY(-3px);
+}
+
+/* 4. Opcionalmente, define estilos para diferentes niveles de títulos */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-primary);
+  font-weight: 700;
 }
