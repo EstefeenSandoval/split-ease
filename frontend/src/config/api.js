@@ -1,8 +1,12 @@
-// Configuración para producción
-// Este archivo está configurado para usar el backend en Railway
+// Configuración dinámica basada en el entorno
+// Detecta automáticamente si estás en desarrollo o producción
 
-// Configuración base para el servidor de producción
-const BASE_URL = 'https://backend-split-ease.up.railway.app';
+// Determinar la URL base según el entorno
+const BASE_URL = process.env.REACT_APP_API_URL || 
+  (process.env.NODE_ENV === 'production' 
+    ? 'https://backend-split-ease.up.railway.app' 
+    : 'http://localhost:3100');
+
 const API_BASE_URL = `${BASE_URL}/api`;
 
 // Configuración para URLs de archivos estáticos (imágenes, uploads, etc.)
