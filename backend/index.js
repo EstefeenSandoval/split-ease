@@ -8,10 +8,28 @@ const gastosRoutes = require('./routes/gasto');
 const dashboardRoutes = require('./routes/dashboard');
 const PORT = process.env.PORT || 3100;
 
+// Configuración de CORS para desarrollo y producción
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3100',
+  'https://split-ease.up.railway.app'
+];
+
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:3000', 
-  credentials: true
+  origin: function (origin, callback) {
+    // Permitir requests sin origin (como mobile apps o curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'La política de CORS no permite el acceso desde este origen.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 

@@ -1,8 +1,5 @@
-// Configuración para producción
-// Este archivo está configurado para usar el backend en Railway
-
-// Configuración base para el servidor de producción
-const BASE_URL = 'https://backend-split-ease.up.railway.app';
+// Configuración base para el servidor
+const BASE_URL = 'http://localhost:3100';
 const API_BASE_URL = `${BASE_URL}/api`;
 
 // Configuración para URLs de archivos estáticos (imágenes, uploads, etc.)
