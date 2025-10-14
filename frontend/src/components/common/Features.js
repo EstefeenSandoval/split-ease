@@ -6,7 +6,6 @@ import seguimientoInteligente from '../../assets/seguimientoInteligente.png';
 
 const Features = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [hoveredCards, setHoveredCards] = useState({});
 
   const features = [
     {
@@ -51,13 +50,6 @@ const Features = () => {
     };
   }, []);
 
-  const handleCardHover = (index, isHovered) => {
-    setHoveredCards(prev => ({
-      ...prev,
-      [index]: isHovered
-    }));
-  };
-
   return (
     <section id="caracteristicas" className="features-section">
       <div className="features-container">
@@ -73,8 +65,6 @@ const Features = () => {
               style={{
                 transitionDelay: isVisible ? `${index * 200}ms` : '0ms',
               }}
-              onMouseEnter={() => handleCardHover(index, true)}
-              onMouseLeave={() => handleCardHover(index, false)}
             >
               <div className="feature-icon">
                 <img src={feature.image} alt={feature.title} style={{width: '115px', height: '115px', objectFit: 'contain'}} />

@@ -51,14 +51,6 @@ const App = () => {
       }
     }, []);
 
-  const styles = {
-    app: {
-      minHeight: '100vh',
-      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-      lineHeight: 1.6,
-    }
-  };
-
   // Funciones para manejar modales y usuario
   const openModal = (type) => {
     setModalState({ isOpen: true, type });

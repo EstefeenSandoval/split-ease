@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrashAlt, faLock, faLink, faClipboard, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons';
@@ -13,24 +13,7 @@ const DetalleGrupo = ({ grupo, onVolver, onEditar, onEliminar, onVerGastos }) =>
   const [mostrarCodigo, setMostrarCodigo] = useState(false);
   const [usuarioActual, setUsuarioActual] = useState(null);
 
-  useEffect(() => {
-    cargarParticipantes();
-    obtenerUsuarioActual();
-  }, [grupo.id_grupo]);
-
-  const obtenerUsuarioActual = () => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        setUsuarioActual(payload);
-      } catch (error) {
-        console.error('Error al decodificar token:', error);
-      }
-    }
-  };
-
-  const cargarParticipantes = async () => {
+  const cargarParticipantes = useCallback(async () => {
     try {
       setCargando(true);
       const token = localStorage.getItem('token');
@@ -56,6 +39,23 @@ const DetalleGrupo = ({ grupo, onVolver, onEditar, onEliminar, onVerGastos }) =>
       setError('Error de conexión');
     } finally {
       setCargando(false);
+    }
+  }, [grupo.id_grupo]);
+
+  useEffect(() => {
+    cargarParticipantes();
+    obtenerUsuarioActual();
+  }, [cargarParticipantes]);
+
+  const obtenerUsuarioActual = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setUsuarioActual(payload);
+      } catch (error) {
+        console.error('Error al decodificar token:', error);
+      }
     }
   };
 
