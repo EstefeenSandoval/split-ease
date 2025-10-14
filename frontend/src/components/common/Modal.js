@@ -111,7 +111,7 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
             className="modal-close"
             type="button"
           >
-            ×
+            
           </button>
           <h2 className="modal-title">
             {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
