@@ -119,7 +119,7 @@ const App = () => {
           <Route path="/" element={<HomePage onOpenModal={openModal} />} />
           <Route path="/inicio" element={<HomePage onOpenModal={openModal}/>} />
           <Route path="/como-funciona" element={<ComoFunciona onOpenModal={openModal} />} />
-          <Route path="/caracteristicas" element={<Caracteristicas />} />
+          <Route path="/caracteristicas" element={<Caracteristicas onOpenModal={openModal} />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/grupos" element={<Grupos />} />
           <Route path="/opciones" element={<Opciones />} />

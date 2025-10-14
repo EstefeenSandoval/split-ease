@@ -1,0 +1,177 @@
+/* ComoFunciona Component Styles */
+
+.como-funciona-container {
+  background: linear-gradient(180deg, rgba(73,132,103,0.03) 0%, rgba(73,132,103,0.06) 100%);
+  padding: 4rem 2rem;
+  min-height: 100vh;
+}
+
+.como-funciona-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header Section */
+.como-funciona-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.como-funciona-title {
+  color: #356859;
+  font-size: 2.8rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.como-funciona-subtitle {
+  font-size: 1.2rem;
+  color: #555;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Steps Grid */
+.como-funciona-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 2.5rem;
+}
+
+/* Step Card */
+.como-funciona-card {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e0e0e0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.como-funciona-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Step Number */
+.como-funciona-number {
+  color: #356859;
+  font-size: 4rem;
+  font-weight: bold;
+  margin-right: 1.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* Step Content */
+.como-funciona-content {
+  flex: 1;
+}
+
+.como-funciona-step-title {
+  color: #498467;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.como-funciona-description {
+  color: #596869;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .como-funciona-grid {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+  
+  .como-funciona-title {
+    font-size: 2.4rem;
+  }
+  
+  .como-funciona-subtitle {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .como-funciona-container {
+    padding: 3rem 1.5rem;
+  }
+  
+  .como-funciona-header {
+    margin-bottom: 3rem;
+  }
+  
+  .como-funciona-title {
+    font-size: 2rem;
+  }
+  
+  .como-funciona-subtitle {
+    font-size: 1rem;
+    max-width: 100%;
+  }
+  
+  .como-funciona-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .como-funciona-card {
+    padding: 2rem;
+  }
+  
+  .como-funciona-number {
+    font-size: 3rem;
+    margin-right: 1rem;
+  }
+  
+  .como-funciona-step-title {
+    font-size: 1.3rem;
+  }
+  
+  .como-funciona-description {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .como-funciona-container {
+    padding: 2rem 1rem;
+  }
+  
+  .como-funciona-title {
+    font-size: 1.8rem;
+  }
+  
+  .como-funciona-subtitle {
+    font-size: 0.95rem;
+  }
+  
+  .como-funciona-card {
+    padding: 1.5rem;
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .como-funciona-number {
+    margin-right: 0;
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+  }
+  
+  .como-funciona-step-title {
+    font-size: 1.2rem;
+  }
+  
+  .como-funciona-description {
+    font-size: 0.9rem;
+  }
+}
