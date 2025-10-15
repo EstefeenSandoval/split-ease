@@ -35,15 +35,12 @@ const App = () => {
             if (data.usuario) {
               setUser(data.usuario);
             } else {
-              // Token inválido o expirado
-              //console.log('Token inválido o expirado');
               localStorage.removeItem('token');
               localStorage.removeItem('usuario');
               setUser(null);
             }
           })
           .catch(() => {
-            //console.log('Error al validar token.');
             localStorage.removeItem('token');
             localStorage.removeItem('usuario');
             setUser(null);
