@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Headers.css';
 import logo2 from '../../assets/logo2.png';
 import { API_ENDPOINTS, construirURLEstatico } from '../../config/api';
+import { NotificationBell } from '../notifications';
 
 
 const Headers = ({ onOpenModal, user, onLogout }) => {
@@ -12,6 +13,7 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
   const [hoveredBtn, setHoveredBtn] = useState(false);
   const [hoveredUserBtn, setHoveredUserBtn] = useState(false);
   const [hoveredDropdownItem, setHoveredDropdownItem] = useState(null);
+  const [userId, setUserId] = useState(null);
   const [userProfile, setUserProfile] = useState({
     nombre: '',
     foto_perfil: null
@@ -80,6 +82,10 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
           nombre: parsedData.nombre || '',
           foto_perfil: parsedData.foto_perfil || null
         });
+        // Establecer el userId si está disponible
+        if (parsedData.id_usuario) {
+          setUserId(parsedData.id_usuario);
+        }
       }
       
       // Luego hacer una llamada a la API para obtener datos actualizados
@@ -97,12 +103,17 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
       
       if (response.ok && data.usuario) {
         const profileData = {
+          id_usuario: data.usuario.id_usuario,
           nombre: data.usuario.nombre,
           foto_perfil: data.usuario.foto_perfil
         };
-        setUserProfile(profileData);
+        setUserProfile({
+          nombre: profileData.nombre,
+          foto_perfil: profileData.foto_perfil
+        });
+        setUserId(profileData.id_usuario);
         
-        // Actualizar localStorage con datos frescos
+        // Actualizar localStorage con datos frescos (incluyendo id_usuario)
         localStorage.setItem('usuario', JSON.stringify(profileData));
       }
     } catch (error) {
@@ -115,6 +126,9 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
           nombre: parsedData.nombre || '',
           foto_perfil: parsedData.foto_perfil || null
         });
+        if (parsedData.id_usuario) {
+          setUserId(parsedData.id_usuario);
+        }
       }
     }
   };
@@ -138,6 +152,9 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
         break;
       case 'grupos':
         navigate('/grupos');
+        break;
+      case 'notificaciones':
+        navigate('/notificaciones');
         break;
       case 'opciones':
         navigate('/opciones');
@@ -207,6 +224,11 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
             
             {user ? (
               <>
+                {/* Campana de notificaciones */}
+                <li className="header-notification-wrapper">
+                  <NotificationBell userId={userId} />
+                </li>
+                
                 <li className="header-user-menu" ref={dropdownRef}>
                   <button 
                     className={`header-user-button ${hoveredUserBtn ? 'hovered' : ''}`}
@@ -277,6 +299,18 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
                           <path d="M8 2a3 3 0 100 6 3 3 0 000-6zM2 14s0-4 6-4 6 4 6 4" stroke="currentColor" strokeWidth="1.5" fill="none"/>
                         </svg>
                         Ver Grupos
+                      </button>
+                      
+                      <button 
+                        className={`header-dropdown-item ${hoveredDropdownItem === 'notificaciones' ? 'hovered' : ''}`}
+                        onClick={() => handleMenuClick('notificaciones')}
+                        onMouseEnter={() => setHoveredDropdownItem('notificaciones')}
+                        onMouseLeave={() => setHoveredDropdownItem(null)}
+                      >
+                        <svg width="16" height="16" viewBox="0 0 16 16" className="header-menu-icon">
+                          <path d="M8 2a3 3 0 00-3 3v3L3 10v1h10v-1l-2-2V5a3 3 0 00-3-3zM6.5 12a1.5 1.5 0 003 0" stroke="currentColor" strokeWidth="1.2" fill="none"/>
+                        </svg>
+                        Notificaciones
                       </button>
                       
                       <hr className="header-dropdown-divider" />

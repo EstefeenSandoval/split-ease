@@ -45,6 +45,18 @@ export const API_ENDPOINTS = {
     actividad: `${API_BASE_URL}/dashboard/actividad`,
     saldarDeuda: `${API_BASE_URL}/dashboard/pagos/saldar`,
     historialPagos: (idGasto) => `${API_BASE_URL}/dashboard/pagos/historial/${idGasto}`
+  },
+  notificaciones: {
+    crear: `${API_BASE_URL}/notificaciones`,
+    obtenerPorUsuario: (idUsuario) => `${API_BASE_URL}/notificaciones/usuario/${idUsuario}`,
+    obtenerNoLeidas: (idUsuario) => `${API_BASE_URL}/notificaciones/usuario/${idUsuario}/no-leidas`,
+    contarNoLeidas: (idUsuario) => `${API_BASE_URL}/notificaciones/usuario/${idUsuario}/count`,
+    stream: (idUsuario) => `${API_BASE_URL}/notificaciones/usuario/${idUsuario}/stream`,
+    obtenerPorId: (idNotificacion) => `${API_BASE_URL}/notificaciones/${idNotificacion}`,
+    marcarLeida: (idNotificacion) => `${API_BASE_URL}/notificaciones/${idNotificacion}/marcar-leida`,
+    marcarTodasLeidas: (idUsuario) => `${API_BASE_URL}/notificaciones/usuario/${idUsuario}/marcar-todas-leidas`,
+    eliminar: (idNotificacion) => `${API_BASE_URL}/notificaciones/${idNotificacion}`,
+    eliminarLeidas: (idUsuario) => `${API_BASE_URL}/notificaciones/usuario/${idUsuario}/eliminar-leidas`
   }
 };
 
