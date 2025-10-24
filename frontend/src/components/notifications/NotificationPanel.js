@@ -174,7 +174,8 @@ const NotificationPanel = ({ isOpen, onClose, userId, anchorRef, onCountUpdate }
         disconnectNotificationSSE(eventSourceRef.current);
       }
     };
-  }, [isOpen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, userId]);
 
   // Efecto para cerrar al hacer click fuera
   useEffect(() => {

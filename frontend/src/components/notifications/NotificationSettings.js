@@ -74,6 +74,7 @@ const NotificationSettings = ({ isOpen, onClose }) => {
     return () => {
       document.removeEventListener('keydown', handleEscape);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   if (!isOpen) return null;

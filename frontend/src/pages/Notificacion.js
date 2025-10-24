@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NotificationItem from '../components/notifications/NotificationItem';
 import NotificationSettings from '../components/notifications/NotificationSettings';
@@ -153,11 +153,11 @@ const Notificacion = () => {
   };
 
   // Cargar más del historial
-  const handleLoadMore = useCallback(() => {
+  const handleLoadMore = () => {
     if (!isLoadingMore && hasMoreHistory) {
       loadHistoryNotifications(historyPage + 1, true);
     }
-  }, [historyPage, hasMoreHistory, isLoadingMore]);
+  };
 
   // Manejar nueva notificación desde SSE
   const handleNewNotification = (notification) => {
@@ -197,7 +197,8 @@ const Notificacion = () => {
         observerRef.current.disconnect();
       }
     };
-  }, [activeTab, hasMoreHistory, isLoadingMore, handleLoadMore]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, hasMoreHistory, isLoadingMore]);
 
   // Cargar datos iniciales y conectar SSE
   useEffect(() => {
@@ -222,6 +223,7 @@ const Notificacion = () => {
         disconnectNotificationSSE(eventSourceRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   if (!userId) {

@@ -264,7 +264,7 @@ export const disconnectNotificationSSE = (eventSource) => {
 };
 
 // Exportar todas las funciones como objeto por defecto también
-export default {
+const notificacionesApi = {
   getPendingNotifications,
   getHistoryNotifications,
   getUnreadCount,
@@ -274,3 +274,5 @@ export default {
   connectNotificationSSE,
   disconnectNotificationSSE
 };
+
+export default notificacionesApi;
