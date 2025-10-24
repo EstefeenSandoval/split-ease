@@ -85,6 +85,13 @@
   box-shadow: 0 5px 15px rgba(73, 132, 103, 0.3);
 }
 
+/* Notification Bell Wrapper */
+.header-notification-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
 /* User Menu Dropdown Styles */
 .header-user-menu {
   position: relative;

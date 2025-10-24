@@ -1,0 +1,136 @@
+.notification-item {
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: slideIn 0.3s ease;
+}
+
+.notification-item.pending {
+  background: white;
+  border: 1px solid #E0E0E0;
+}
+
+.notification-item.pending:hover {
+  background: #F9F9F9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.notification-item.read {
+  background: #F5F5F5;
+  border: 1px solid #E8E8E8;
+  cursor: default;
+}
+
+.notification-item.read .notification-title,
+.notification-item.read .notification-message,
+.notification-item.read .notification-time {
+  color: #666;
+}
+
+.notification-item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.notification-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.notification-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.notification-message {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.notification-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #888;
+}
+
+.notification-mark-read-btn {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.notification-mark-read-btn:hover {
+  background: #45a049;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.notification-mark-read-btn:active {
+  transform: scale(0.95);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animación de fade out al marcar como leída */
+.notification-item.fade-out {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .notification-item {
+    padding: 12px;
+  }
+  
+  .notification-title {
+    font-size: 13px;
+  }
+  
+  .notification-message {
+    font-size: 12px;
+  }
+  
+  .notification-mark-read-btn {
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+}

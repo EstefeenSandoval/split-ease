@@ -382,7 +382,9 @@ const obtenerHistorialPagosGasto = (id_gasto, id_usuario, callback) => {
       p.descripcion,
       p.fecha_pago,
       u_receptor.nombre AS nombreReceptor,
-      u_pagador.nombre AS nombrePagador
+      u_receptor.foto_perfil AS fotoReceptor,
+      u_pagador.nombre AS nombrePagador,
+      u_pagador.foto_perfil AS fotoPagador
     FROM PAGOS p
     INNER JOIN USUARIOS u_receptor ON p.id_usuario_receptor = u_receptor.id_usuario
     INNER JOIN USUARIOS u_pagador ON p.id_usuario_pagador = u_pagador.id_usuario
@@ -403,7 +405,9 @@ const obtenerHistorialPagosGasto = (id_gasto, id_usuario, callback) => {
       descripcion: item.descripcion,
       fecha: item.fecha_pago,
       nombreReceptor: item.nombreReceptor,
-      nombrePagador: item.nombrePagador
+      fotoReceptor: item.fotoReceptor || null,
+      nombrePagador: item.nombrePagador,
+      fotoPagador: item.fotoPagador || null
     }));
     
     callback(null, pagos);

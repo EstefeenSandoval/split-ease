@@ -274,7 +274,7 @@ const saldarDeuda = (req, res) => {
               sanitizedIdUsuarioAcreedor,
               'PAGO_REALIZADO',
               mensajeNotificacion,
-              `/pagos/${id_pago}`,
+              `/pagos/${sanitizedIdGasto}`,
               (err) => {
                 if (err) {
                   console.error('Error al crear notificación:', err);

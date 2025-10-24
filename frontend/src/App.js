@@ -12,6 +12,8 @@ import Caracteristicas from './pages/Caracteristicas';
 import Dashboard from './pages/Dashboard';
 import Grupos from './pages/Grupos';
 import Opciones from './pages/Opciones';
+import Notificacion from './pages/Notificacion';
+import Pagos from './pages/Pagos';
 
 const App = () => {
   const [modalState, setModalState] = useState({
@@ -112,6 +114,8 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/grupos" element={<Grupos />} />
           <Route path="/opciones" element={<Opciones />} />
+          <Route path="/notificaciones" element={<Notificacion />} />
+          <Route path="/pagos/:idGasto" element={<Pagos />} />
         </Routes>
         
         {/* Footer */}
@@ -127,7 +131,7 @@ const App = () => {
         />
         <ToastContainer
           position="top-right"
-          autoClose={5000}
+          autoClose={3000}
           hideProgressBar={false}
           newestOnTop
           closeOnClick
