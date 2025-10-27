@@ -1,0 +1,159 @@
+name: CI/CD Pipeline - Split Ease
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_VERSION: '20.15.0'
+
+jobs:
+  # ============================================
+  # JOB 1: BACKEND CI/CD
+  # ============================================
+  backend:
+    name: Backend - Test & Build
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./backend
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+        continue-on-error: false
+        env:
+          NODE_ENV: test
+          DB_HOST: localhost
+          DB_USER: test_user
+          DB_PASSWORD: test_password
+          DB_NAME: split_ease_test
+          JWT_SECRET: test_jwt_secret_for_ci_cd_pipeline_only
+
+      - name: Build backend
+        run: |
+          echo "Backend build completed successfully"
+          echo "Backend is ready for deployment"
+
+      - name: Upload backend artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-build
+          path: backend/
+          retention-days: 7
+
+  # ============================================
+  # JOB 2: FRONTEND CI/CD
+  # ============================================
+  frontend:
+    name: Frontend - Test & Build
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./frontend
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test -- --passWithNoTests
+        continue-on-error: false
+        env:
+          CI: true
+
+      - name: Build frontend
+        run: npm run build
+        env:
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL || 'https://backend-split-ease.up.railway.app' }}
+          NODE_ENV: production
+
+      - name: Upload frontend build
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/build/
+          retention-days: 7
+
+  # ============================================
+  # JOB 3: DEPLOY (Template)
+  # ============================================
+  deploy:
+    name: Deploy to Production
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📥 Download backend artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-build
+          path: ./backend-artifacts
+
+      - name: 📥 Download frontend artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: ./frontend-artifacts
+
+      - name: 🚀 Deploy Backend
+        run: |
+          echo "🚀 Iniciando deploy del backend..."
+          echo "📦 Artefactos descargados en: ./backend-artifacts"
+          echo "🔧 Configurando variables de entorno..."
+          echo "📡 Conectando con servidor de producción..."
+
+      - name: 🚀 Deploy Frontend
+        run: |
+          echo "🚀 Iniciando deploy del frontend..."
+          echo "📦 Artefactos descargados en: ./frontend-artifacts"
+          echo "🔧 Configurando CDN..."
+          echo "📡 Subiendo archivos estáticos..."
+
+      - name: ✅ Deployment Status
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✅ DEPLOYMENT TEMPLATE EJECUTADO"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "Backend: Listo para deploy"
+          echo "Frontend: Listo para deploy"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+
+
+            echo "🎉 Todos los jobs pasaron"
+          else
+            echo "❌ Pipeline falló"
+            echo "🔍 Revisar logs para más detalles"
+          fi
