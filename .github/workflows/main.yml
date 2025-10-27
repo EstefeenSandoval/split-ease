@@ -149,11 +149,4 @@ jobs:
           echo "Backend: Listo para deploy"
           echo "Frontend: Listo para deploy"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
-
-
-            echo "🎉 Todos los jobs pasaron"
-          else
-            echo "❌ Pipeline falló"
-            echo "🔍 Revisar logs para más detalles"
-          fi
+          echo "🎉 Todos los jobs pasaron"
