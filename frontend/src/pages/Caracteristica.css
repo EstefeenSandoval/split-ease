@@ -1,0 +1,249 @@
+/* Caracteristica page styles */
+.caracteristica-section {
+  padding: 6rem 1.5rem 4rem;
+  background: linear-gradient(135deg, rgba(188, 235, 203, 0.3) 0%, rgba(255, 255, 255, 0.9) 50%, #ffffff 100%);
+  min-height: 100vh;
+}
+
+.caracteristica-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.caracteristica-header {
+  text-align: center;
+  display: grid;
+  gap: 1.25rem;
+  justify-items: center;
+  margin-bottom: 3.5rem;
+}
+
+.caracteristica-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(73, 132, 103, 0.12);
+  color: var(--verde-profundo);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.caracteristica-heading {
+  font-size: clamp(2.25rem, 3vw + 1.25rem, 3rem);
+  font-weight: 700;
+  color: var(--verde-profundo);
+  max-width: 720px;
+  margin: 0;
+}
+
+.caracteristica-lead {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--gris-azulado);
+  max-width: 640px;
+}
+
+.caracteristica-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.caracteristica-card {
+  position: relative;
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  background: var(--blanco);
+  box-shadow: 0 4px 20px rgba(53, 104, 89, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.25rem;
+  isolation: isolate;
+  animation: caracteristica-fadeUp 0.6s ease forwards;
+  opacity: 0;
+  border: 1px solid rgba(73, 132, 103, 0.08);
+}
+
+.caracteristica-cardAccent {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border-top: 3px solid rgba(73, 132, 103, 0.4);
+  background: linear-gradient(120deg, rgba(73, 132, 103, 0.05), transparent);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.caracteristica-cardIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(188, 235, 203, 0.5), rgba(73, 132, 103, 0.15));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  color: var(--verde-principal);
+  box-shadow: 0 4px 12px rgba(73, 132, 103, 0.1);
+  flex-shrink: 0;
+}
+
+.caracteristica-cardTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--verde-profundo);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.caracteristica-cardCopy {
+  margin: 0;
+  line-height: 1.7;
+  color: var(--gris-azulado);
+  font-size: 0.97rem;
+}
+
+.caracteristica-cta {
+  margin-top: 4rem;
+  background: linear-gradient(135deg, var(--blanco) 0%, rgba(188, 235, 203, 0.1) 100%);
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  box-shadow: 0 8px 30px rgba(73, 132, 103, 0.12);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  border: 1px solid rgba(73, 132, 103, 0.1);
+}
+
+.caracteristica-ctaCopy h2 {
+  font-size: clamp(1.75rem, 2vw + 1rem, 2.2rem);
+  color: var(--verde-profundo);
+  margin: 0 0 0.5rem;
+  line-height: 1.2;
+}
+
+.caracteristica-ctaCopy p {
+  margin: 0;
+  color: var(--gris-azulado);
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+.caracteristica-ctaButton {
+  min-width: 200px;
+  padding: 1rem 2.5rem;
+  font-size: 1rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@keyframes caracteristica-fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 992px) {
+  .caracteristica-section {
+    padding: 5rem 1.5rem 3.5rem;
+  }
+
+  .caracteristica-grid {
+    gap: 2rem;
+  }
+
+  .caracteristica-cta {
+    padding: 2.5rem 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .caracteristica-section {
+    padding: 4rem 1.25rem 3rem;
+  }
+
+  .caracteristica-header {
+    margin-bottom: 3rem;
+  }
+
+  .caracteristica-grid {
+    gap: 1.75rem;
+    grid-template-columns: 1fr;
+  }
+
+  .caracteristica-card {
+    padding: 2rem 1.75rem;
+  }
+
+  .caracteristica-cta {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem 1.5rem;
+  }
+
+  .caracteristica-ctaCopy p {
+    max-width: 100%;
+  }
+
+  .caracteristica-ctaButton {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 540px) {
+  .caracteristica-section {
+    padding: 3rem 1rem 2.5rem;
+  }
+
+  .caracteristica-header {
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .caracteristica-badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .caracteristica-heading {
+    font-size: 1.9rem;
+  }
+
+  .caracteristica-lead {
+    font-size: 1rem;
+  }
+
+  .caracteristica-cardIcon {
+    width: 64px;
+    height: 64px;
+    font-size: 1.9rem;
+  }
+
+  .caracteristica-cardTitle {
+    font-size: 1.2rem;
+  }
+
+  .caracteristica-cardCopy {
+    font-size: 0.95rem;
+  }
+
+  .caracteristica-cta {
+    margin-top: 3rem;
+  }
+}

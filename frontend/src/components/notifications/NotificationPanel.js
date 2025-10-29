@@ -206,13 +206,7 @@ const NotificationPanel = ({ isOpen, onClose, userId, anchorRef, onCountUpdate }
         {/* Header */}
         <div className="notification-panel-header">
           <h3 className="notification-panel-title">🔔 Notificaciones</h3>
-          <button 
-            className="notification-settings-btn"
-            onClick={() => setShowSettings(true)}
-            aria-label="Configuración de notificaciones"
-          >
-            ⚙️
-          </button>
+         
         </div>
 
         {/* Tabs */}

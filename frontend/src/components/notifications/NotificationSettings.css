@@ -5,7 +5,7 @@
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 2000;
+  z-index: 9999;
   animation: fadeIn 0.2s ease;
 }
 
@@ -16,11 +16,11 @@
   transform: translate(-50%, -50%);
   width: 90%;
   max-width: 550px;
-  max-height: 80vh;
+  max-height: 85vh;
   background: white;
   border-radius: 12px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-  z-index: 2001;
+  z-index: 10000;
   display: flex;
   flex-direction: column;
   animation: slideUp 0.3s ease;
@@ -79,7 +79,7 @@
 .notification-settings-content {
   flex: 1;
   overflow-y: auto;
-  padding: 24px;
+  padding: 20px 24px;
 }
 
 .notification-settings-content::-webkit-scrollbar {
