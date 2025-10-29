@@ -6,7 +6,44 @@
   padding: 1rem 0;
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 100;
+  width: 100%;
+}
+
+/* Overlay para menú móvil */
+.header-mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 199;
+}
+
+.header-mobile-overlay[style*="display: block"] {
+  animation: fadeIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .header-container {
@@ -19,6 +56,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .header-logo {
@@ -29,12 +67,38 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  z-index: 300;
+  position: relative;
 }
 
 .header-logo-img {
   width: 60px;
   height: 60px;
   margin-right: 0px;
+}
+
+.header-logo-text {
+  display: inline;
+}
+
+/* Menú hamburguesa - simple */
+.header-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 300;
+  position: relative;
+}
+
+.hamburger-line {
+  width: 25px;
+  height: 3px;
+  background: #498467;
+  border-radius: 2px;
 }
 
 .header-nav-links {
@@ -44,6 +108,12 @@
   align-items: center;
   margin: 0;
   padding: 0;
+  background: transparent;
+}
+
+.header-nav-item {
+  display: flex;
+  align-items: center;
 }
 
 .header-nav-link {
@@ -55,6 +125,7 @@
   background: none;
   border: none;
   font-size: 1rem;
+  white-space: nowrap;
 }
 
 .header-nav-link:hover {
@@ -72,6 +143,8 @@
   transition: all 0.3s ease;
   text-align: center;
   font-size: 1rem;
+  min-height: 44px; /* Mejora accesibilidad táctil */
+  white-space: nowrap;
 }
 
 .header-btn-primary {
@@ -85,11 +158,19 @@
   box-shadow: 0 5px 15px rgba(73, 132, 103, 0.3);
 }
 
-/* Notification Bell Wrapper */
-.header-notification-wrapper {
+.header-btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(73, 132, 103, 0.2);
+}
+
+/* Notification Bell en Navbar */
+.header-notification-item {
   display: flex;
   align-items: center;
   position: relative;
+  min-height: 44px;
+  margin-left: auto;
+  margin-right: 1rem;
 }
 
 /* User Menu Dropdown Styles */
@@ -110,11 +191,16 @@
   transition: all 0.3s ease;
   font-size: 0.9rem;
   font-weight: bold;
+  min-height: 44px; /* Mejora accesibilidad táctil */
 }
 
 .header-user-button:hover {
   background: rgba(73, 132, 103, 0.2);
   transform: translateY(-1px);
+}
+
+.header-user-button:active {
+  transform: scale(0.98);
 }
 
 /* Avatar en el header */
@@ -126,18 +212,23 @@
   border: 2px solid rgba(73, 132, 103, 0.3);
   transition: all 0.3s ease;
   flex-shrink: 0;
+  background: white;
+  position: relative;
 }
 
 .header-user-button:hover .header-user-avatar {
   border-color: #498467;
   transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(73, 132, 103, 0.2);
 }
 
 .header-avatar-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.3s ease;
+  display: block;
 }
 
 .header-user-button:hover .header-avatar-img {
@@ -152,6 +243,9 @@
   justify-content: center;
   background: linear-gradient(135deg, #498467 0%, #3a6b55 100%);
   color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .header-avatar-placeholder svg {
@@ -183,6 +277,7 @@
   padding: 0.5rem 0;
   min-width: 200px;
   z-index: 1000;
+  border: 1px solid rgba(73, 132, 103, 0.1);
 }
 
 .header-dropdown-item {
@@ -196,12 +291,19 @@
   color: #374151;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   text-align: left;
+  min-height: 44px; /* Mejora accesibilidad táctil */
+  font-weight: 500;
 }
 
 .header-dropdown-item:hover {
   background: #f3f4f6;
+  color: #498467;
+}
+
+.header-dropdown-item:active {
+  background: rgba(73, 132, 103, 0.1);
 }
 
 .header-menu-icon {
@@ -232,74 +334,177 @@
   animation: fadeInDown 0.3s ease;
 }
 
+/* Prevent body scroll when mobile menu is open */
+body.mobile-menu-open {
+  overflow: hidden;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-  .header-nav-links {
-    gap: 1rem;
+  .header-section {
+    padding: 0.75rem 0;
+  }
+
+  .header-hamburger {
+    display: flex;
+  }
+
+  .header-mobile-overlay {
+    display: block !important;
   }
   
+  /* Asegurar que todos los elementos del menú sean visibles */
+  .header-nav-item,
+  .header-nav-link,
+  .header-btn,
+  .header-user-button,
+  .header-dropdown-item {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .header-nav-links {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 280px;
+    max-width: 80vw;
+    background: white;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    padding: 80px 0 20px 0;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    z-index: 250;
+    list-style: none;
+    margin: 0;
+    transform: translateX(100%);
+  }
+
+  .header-nav-links.mobile-open {
+    display: flex !important;
+    animation: slideInFromRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  .header-nav-item {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid #e5e5e5;
+    display: block;
+  }
+
+  .header-nav-link {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    display: block !important;
+    text-align: left;
+    color: #2e3138 !important;
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .header-nav-link:hover {
+    background: #f5f5f5;
+  }
+
+  .header-btn {
+    width: calc(100% - 3rem);
+    margin: 1rem 1.5rem;
+    padding: 1rem;
+    text-align: center;
+    display: block;
+  }
+
+  .header-logout-item {
+    margin-top: 0.5rem;
+    border: none;
+  }
+
+  .header-notification-wrapper {
+    justify-content: flex-start;
+    padding: 1rem 1.5rem;
+    display: none;
+  }
+
+  .header-user-menu {
+    padding: 0;
+    display: block;
+  }
+
+  .header-user-button {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 1rem 1.5rem;
+    display: flex;
+  }
+
+  .header-user-avatar {
+    width: 36px;
+    height: 36px;
+    display: flex;
+  }
+
+  .header-user-name {
+    display: inline;
+  }
+
+  .header-dropdown-menu {
+    position: static;
+    width: 100%;
+    margin: 0;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    background: #f9f9f9;
+    display: block;
+  }
+
+  .header-dropdown-item {
+    padding: 0.875rem 1.5rem;
+    padding-left: 3rem;
+    display: flex !important;
+    width: 100%;
+  }
+
   .header-logo {
     font-size: 1.5rem;
+  }
+  
+  .header-logo-img {
+    width: 45px;
+    height: 45px;
+  }
+
+  /* Efecto de desvanecimiento del texto cuando el menú móvil está abierto */
+  .header-logo.menu-open .header-logo-text {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .header-logo .header-logo-text {
+    transition: opacity 0.3s ease;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-logo {
+    font-size: 1.35rem;
   }
   
   .header-logo-img {
     width: 40px;
     height: 40px;
   }
-  
-  .header-dropdown-menu {
-    min-width: 180px;
-  }
 
-  .header-user-avatar {
-    width: 28px;
-    height: 28px;
-  }
-
-  .header-avatar-placeholder svg {
-    width: 14px;
-    height: 14px;
-  }
-
-  .header-user-button {
-    gap: 0.5rem;
-    padding: 0.4rem 0.8rem;
-    font-size: 0.85rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .header-container {
-    padding: 0 15px;
-  }
-  
   .header-nav-links {
-    gap: 0.5rem;
-  }
-  
-  .header-btn {
-    padding: 10px 16px;
-    font-size: 0.9rem;
-  }
-
-  .header-user-avatar {
-    width: 24px;
-    height: 24px;
-  }
-
-  .header-avatar-placeholder svg {
-    width: 12px;
-    height: 12px;
-  }
-
-  .header-user-button {
-    gap: 0.4rem;
-    padding: 0.3rem 0.6rem;
-    font-size: 0.8rem;
-  }
-
-  .header-user-name {
-    display: none; /* Ocultar nombre en móviles muy pequeños */
+    width: 90vw;
   }
 }
 
