@@ -69,10 +69,13 @@ const NotificationSettings = ({ isOpen, onClose }) => {
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
+      // Prevenir scroll del body cuando el modal está abierto
+      document.body.style.overflow = 'hidden';
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);

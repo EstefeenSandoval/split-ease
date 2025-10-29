@@ -8,7 +8,7 @@ import Footer from './components/common/Footer';
 import Modal from './components/common/Modal';
 import HomePage from './pages/HomePage';
 import ComoFunciona from './pages/ComoFunciona';
-import Caracteristicas from './pages/Caracteristicas';
+import Caracteristica from './pages/Caracteristica';
 import Dashboard from './pages/Dashboard';
 import Grupos from './pages/Grupos';
 import Opciones from './pages/Opciones';
@@ -110,7 +110,7 @@ const App = () => {
           <Route path="/" element={<HomePage onOpenModal={openModal} />} />
           <Route path="/inicio" element={<HomePage onOpenModal={openModal}/>} />
           <Route path="/como-funciona" element={<ComoFunciona onOpenModal={openModal} />} />
-          <Route path="/caracteristicas" element={<Caracteristicas onOpenModal={openModal} />} />
+          <Route path="/caracteristicas" element={<Caracteristica onOpenModal={openModal} />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/grupos" element={<Grupos />} />
           <Route path="/opciones" element={<Opciones />} />
