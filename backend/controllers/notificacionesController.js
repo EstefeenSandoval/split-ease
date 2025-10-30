@@ -453,30 +453,43 @@ const streamNotificaciones = async (req, res) => {
     // Enviar un comentario inicial para establecer la conexión
     res.write(': connected\n\n');
 
-    // Función para enviar notificaciones no leídas
-    const enviarNotificaciones = () => {
+    // Mantener track de las notificaciones ya enviadas para evitar duplicados
+    let notificacionesEnviadas = new Set();
+
+    // Función para enviar solo notificaciones nuevas
+    const enviarNotificacionesNuevas = () => {
       notificacionModel.obtenerNotificacionesNoLeidas(id_usuario, (err, notificaciones) => {
         if (err) {
           console.error('Error al obtener notificaciones en stream:', err);
           return;
         }
 
-        // Enviar las notificaciones como evento SSE
-        if (notificaciones.length > 0) {
+        // Filtrar solo las notificaciones que no hemos enviado aún
+        const notificacionesNuevas = notificaciones.filter(notif => 
+          !notificacionesEnviadas.has(notif.id_notificacion)
+        );
+
+        // Enviar solo las notificaciones nuevas
+        if (notificacionesNuevas.length > 0) {
+          // Agregar los IDs al set de enviadas
+          notificacionesNuevas.forEach(notif => {
+            notificacionesEnviadas.add(notif.id_notificacion);
+          });
+
           res.write(`data: ${JSON.stringify({ 
             type: 'notificaciones',
-            count: notificaciones.length,
-            data: notificaciones 
+            count: notificacionesNuevas.length,
+            data: notificacionesNuevas 
           })}\n\n`);
         }
       });
     };
 
     // Enviar notificaciones inicialmente
-    enviarNotificaciones();
+    enviarNotificacionesNuevas();
 
     // Establecer intervalo para verificar nuevas notificaciones cada 10 segundos
-    const intervalId = setInterval(enviarNotificaciones, 10000);
+    const intervalId = setInterval(enviarNotificacionesNuevas, 10000);
 
     // Limpiar el intervalo cuando el cliente se desconecte
     req.on('close', () => {

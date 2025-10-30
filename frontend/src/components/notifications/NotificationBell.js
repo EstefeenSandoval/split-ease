@@ -106,9 +106,9 @@ const NotificationBell = ({ userId }) => {
 
   return (
     <div className="notification-bell-container">
-      {/* Audio para notificaciones (sonido de campana simple) */}
+      {/* Audio para notificaciones (sonido de campana suave y placentero) */}
       <audio ref={audioRef} preload="auto">
-        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBix+zPLTgjMGHm7A7+OZUA0PVqzn7K5aGAlBm+HwwG8fBil5yvHYiToIGGS56+OdTwwOUKXi8LBnHgU7k9jvzH4qBSF0xPDckjwMElyx6OyzXBULQ5zg8L1vIgYneMnw24Y6CRZiuOnmm08OFVeu5+6vWxkJQJvh8cJxJAUrdMjw2YU4CRVhtuvkm1ARDlCl4+6xZh4FO5HY78t+KwUgdcPw3JA8DBJcsejrtFwVCUOc4PC9cCIFKHfJ8NqGOgkVYrjp5ZtQDhVXr+furVsZB0Gb4fDCcSQGK3PI8NiFOQgVYbbr5ZpQEg5RpePusGYfBTmR1+/LfywGIHXD8NuQOwwSXLHn67RbFQlDnN/wvnEiBih3yPDah jkJFGK36OSbUA4VVq/o761bGQZBnODwwXEkBSp0yPDYhDkIFWG06+WbURINUKXk77FmHwU5kNfvy34sBSB1w/DbkDsMEVux6Ou0WhYIQ53g8L5wIgYnd8jw2oY5CRRit+jkm08OE1av6O+uXBgGQJzg8MJyJAUpdMjw14U5CBVhtOvlm1ESDVCl5O+wZx4FOY/X78t+LAUgdcPw25A8DBBbsefrtFoVCEOd4PC+cSMFKHfI8NqFOQkUY7fo45pPDhNWr+nvr1sYB0Cc4PDCciQFK3TH8NeFOQgUYrTr5ZxREw5RpuTurWcfBTmO1+/LfywGH3TE8N2ROwwQW7Hm67NbFQhDneDwvm8jBSd3yPDahToIFGG15+ObUA4TVq/p761bGAdAnODwwXEjBSt0x/DXhTkIFGO06+WbUBMOUKXk7q1mHwU5jtfwzH8rBh91w/DbkDoMEVux5uuzWxQIQpve8L9vIwYod8jw2YU7CBRhtufkmk8OElev6e6tWxgHQZ3h8MFxIgUpdcfw2IQ5CBRituvlnE8SDlGm5O+uZh4FOY7X8Mx/KwYfdMPw2484DBBZs+brsVsTCEGd4PG/cCMGKHjI8dmFOQgUYbbn45pPDhJWr+nurVwZBkCd4PC/cCIFKnXH8NiEOQgUYrfr5p1QEZBQP8+Pnz8+Pj+QkJ+enp6fn/Dw8PDw8P" type="audio/wav" />
+        <source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAA==" type="audio/wav" />
       </audio>
 
       {/* Icono de campana */}
