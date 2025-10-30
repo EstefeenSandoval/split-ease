@@ -3,16 +3,21 @@ require('dotenv').config();
 
 // Middleware para verificar token JWT
 const verificarToken = (req, res, next) => {
+    // Intentar obtener el token del header Authorization
+    let token = null;
     const authHeader = req.headers['authorization'];
     
-    if (!authHeader) {
-        return res.status(401).json({ error: 'No token provided.' });
+    if (authHeader) {
+        token = authHeader.split(' ')[1];
     }
-
-    const token = authHeader.split(' ')[1];
+    
+    // Si no está en el header, intentar obtener del query parameter (para SSE)
+    if (!token) {
+        token = req.query.token;
+    }
     
     if (!token) {
-        return res.status(401).json({ error: 'Token malformado.' });
+        return res.status(401).json({ error: 'No token provided.' });
     }
 
     try {

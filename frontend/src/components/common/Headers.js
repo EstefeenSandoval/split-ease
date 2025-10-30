@@ -9,6 +9,7 @@ import { NotificationBell } from '../notifications';
 
 const Headers = ({ onOpenModal, user, onLogout }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [hoveredBtn, setHoveredBtn] = useState(false);
   const [hoveredUserBtn, setHoveredUserBtn] = useState(false);
@@ -19,13 +20,33 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
     foto_perfil: null
   });
   const dropdownRef = useRef(null);
+  const mobileMenuRef = useRef(null);
   const navigate = useNavigate();
 
-  // Cerrar dropdown al hacer click fuera
+  // Bloquear scroll del body cuando el menú móvil está abierto
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.classList.add('mobile-menu-open');
+    } else {
+      document.body.classList.remove('mobile-menu-open');
+    }
+    
+    return () => {
+      document.body.classList.remove('mobile-menu-open');
+    };
+  }, [isMobileMenuOpen]);
+
+  // Cerrar dropdown y menú móvil al hacer click fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
+      }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        const hamburgerBtn = document.querySelector('.header-hamburger');
+        if (hamburgerBtn && !hamburgerBtn.contains(event.target)) {
+          setIsMobileMenuOpen(false);
+        }
       }
     };
 
@@ -153,6 +174,9 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
       case 'grupos':
         navigate('/grupos');
         break;
+      case 'gastos':
+        navigate('/gastos');
+        break;
       case 'notificaciones':
         navigate('/notificaciones');
         break;
@@ -180,43 +204,73 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
 
   return (
     <header className="header-section">
+      {/* Overlay para cerrar menú móvil */}
+      {isMobileMenuOpen && (
+        <div 
+          className="header-mobile-overlay" 
+          onClick={() => setIsMobileMenuOpen(false)}
+        ></div>
+      )}
+
       <nav className="header-container">
         <div className="header-nav">
           <Link 
             to="/" 
-            className="header-logo"
+            className={`header-logo ${isMobileMenuOpen ? 'menu-open' : ''}`}
           >
-            {/*<span style={{ fontSize: '2.5rem' }}>💲</span> */}
             <img src={logo2} alt="Logo" className="header-logo-img" />
-            SplitEase
+            <span className="header-logo-text">SplitEase</span>
           </Link>
-          <ul className="header-nav-links">
-            <li>
+
+          {/* Campana de notificaciones - siempre visible en navbar */}
+          {user && (
+            <div className="header-notification-item">
+              <NotificationBell userId={userId} />
+            </div>
+          )}
+
+          {/* Menú hamburguesa para móviles */}
+          <button 
+            className="header-hamburger"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+            aria-expanded={isMobileMenuOpen}
+          >
+            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+          </button>
+
+          <ul className={`header-nav-links ${isMobileMenuOpen ? 'mobile-open' : ''}`} ref={mobileMenuRef}>
+            <li className="header-nav-item">
               <Link
                 to="/inicio" 
                 className={`header-nav-link ${hoveredItem === 'inicio' ? 'hovered' : ''}`}
                 onMouseEnter={() => setHoveredItem('inicio')}
                 onMouseLeave={() => setHoveredItem(null)}
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 Inicio
               </Link>
             </li>
-            <li>
+            <li className="header-nav-item">
               <Link
                 to="/como-funciona" 
                 className={`header-nav-link ${hoveredItem === 'como-funciona' ? 'hovered' : ''}`}
                 onMouseEnter={() => setHoveredItem('como-funciona')}
                 onMouseLeave={() => setHoveredItem(null)}
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 Cómo Funciona
               </Link>
             </li>
-            <li>
+            <li className="header-nav-item">
               <Link
                 to="/caracteristicas"
                 className={`header-nav-link ${hoveredItem === 'caracteristicas' ? 'hovered' : ''}`}
                 onMouseEnter={() => setHoveredItem('caracteristicas')}
                 onMouseLeave={() => setHoveredItem(null)}
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 Características
               </Link>
@@ -224,12 +278,7 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
             
             {user ? (
               <>
-                {/* Campana de notificaciones */}
-                <li className="header-notification-wrapper">
-                  <NotificationBell userId={userId} />
-                </li>
-                
-                <li className="header-user-menu" ref={dropdownRef}>
+                <li className="header-nav-item header-user-menu" ref={dropdownRef}>
                   <button 
                     className={`header-user-button ${hoveredUserBtn ? 'hovered' : ''}`}
                     onClick={toggleDropdown}
@@ -302,6 +351,18 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
                       </button>
                       
                       <button 
+                        className={`header-dropdown-item ${hoveredDropdownItem === 'gastos' ? 'hovered' : ''}`}
+                        onClick={() => handleMenuClick('gastos')}
+                        onMouseEnter={() => setHoveredDropdownItem('gastos')}
+                        onMouseLeave={() => setHoveredDropdownItem(null)}
+                      >
+                        <svg width="16" height="16" viewBox="0 0 16 16" className="header-menu-icon">
+                          <path d="M8 1a1 1 0 00-1 1v1H4a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2h-3V2a1 1 0 00-1-1zm0 4a3 3 0 110 6 3 3 0 010-6z" fill="currentColor"/>
+                        </svg>
+                        Crear Gasto
+                      </button>
+                      
+                      <button 
                         className={`header-dropdown-item ${hoveredDropdownItem === 'notificaciones' ? 'hovered' : ''}`}
                         onClick={() => handleMenuClick('notificaciones')}
                         onMouseEnter={() => setHoveredDropdownItem('notificaciones')}
@@ -329,11 +390,13 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
                     </div>
                   )}
                 </li>
-                <li>
+                <li className="header-nav-item header-logout-item">
                   <button
-                    onClick={() => onLogout(navigate)}
+                    onClick={() => {
+                      onLogout(navigate);
+                      setIsMobileMenuOpen(false);
+                    }}
                     className={`header-btn header-btn-primary ${hoveredBtn ? 'hovered' : ''}`}
-                    style={{ marginLeft: '0.5rem' }}
                     onMouseEnter={() => setHoveredBtn(true)}
                     onMouseLeave={() => setHoveredBtn(false)}
                   >
@@ -343,9 +406,12 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
               </>
             ) : (
               <>
-                <li>
+                <li className="header-nav-item">
                   <button 
-                    onClick={() => onOpenModal('login')} 
+                    onClick={() => {
+                      onOpenModal('login');
+                      setIsMobileMenuOpen(false);
+                    }} 
                     className={`header-nav-link ${hoveredItem === 'login' ? 'hovered' : ''}`}
                     onMouseEnter={() => setHoveredItem('login')}
                     onMouseLeave={() => setHoveredItem(null)}
@@ -353,9 +419,12 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
                     Iniciar Sesión
                   </button>
                 </li>
-                <li>
+                <li className="header-nav-item">
                   <button 
-                    onClick={() => onOpenModal('register')} 
+                    onClick={() => {
+                      onOpenModal('register');
+                      setIsMobileMenuOpen(false);
+                    }} 
                     className={`header-btn header-btn-primary ${hoveredBtn ? 'hovered' : ''}`}
                     onMouseEnter={() => setHoveredBtn(true)}
                     onMouseLeave={() => setHoveredBtn(false)}

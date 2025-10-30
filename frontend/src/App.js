@@ -11,6 +11,7 @@ import ComoFunciona from './pages/ComoFunciona';
 import Caracteristica from './pages/Caracteristica';
 import Dashboard from './pages/Dashboard';
 import Grupos from './pages/Grupos';
+import Gastos from './pages/Gastos';
 import Opciones from './pages/Opciones';
 import Notificacion from './pages/Notificacion';
 import Pagos from './pages/Pagos';
@@ -113,6 +114,7 @@ const App = () => {
           <Route path="/caracteristicas" element={<Caracteristica onOpenModal={openModal} />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/grupos" element={<Grupos />} />
+          <Route path="/gastos" element={<Gastos />} />
           <Route path="/opciones" element={<Opciones />} />
           <Route path="/notificaciones" element={<Notificacion />} />
           <Route path="/pagos/:idGasto" element={<Pagos />} />

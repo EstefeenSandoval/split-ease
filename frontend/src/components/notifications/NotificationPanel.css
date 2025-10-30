@@ -1,8 +1,8 @@
 .notification-panel {
   position: absolute;
   top: calc(100% + 8px);
-  right: 0;
-  width: 420px;
+  right: -50px;
+  width: 320px;
   max-width: calc(100vw - 40px);
   max-height: 600px;
   background: white;
@@ -226,7 +226,7 @@
 /* Responsive */
 @media (max-width: 480px) {
   .notification-panel {
-    width: calc(100vw - 20px);
+    width: calc(100vw - 60px);
     max-height: 70vh;
   }
   
