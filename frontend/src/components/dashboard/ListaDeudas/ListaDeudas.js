@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { STATIC_BASE_URL } from '../../../config/api';
 import './ListaDeudas.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faHandHoldingDollar,
+  faHandHoldingHand
+} from '@fortawesome/free-solid-svg-icons';
+
 
 const ListaDeudas = ({ tipo, datos, onPagar, onVerHistorial }) => {
   const [pagandoId, setPagandoId] = useState(null);
@@ -60,7 +66,9 @@ const ListaDeudas = ({ tipo, datos, onPagar, onVerHistorial }) => {
     handleCancelarPago();
   };
 
-  const titulo = tipo === 'cobros' ? '💰 Te Deben' : '💸 Debes';
+  const titulo = tipo === 'cobros'
+    ? (<><FontAwesomeIcon icon={faHandHoldingHand} style={{ color: 'var(--verde-profundo)', marginRight: 8 }} />Te Deben</>)
+    : (<><FontAwesomeIcon icon={faHandHoldingDollar} style={{ color: 'var(--verde-profundo)', marginRight: 8 }} />Debes</>);
   const vacio = tipo === 'cobros' ? 'No tienes cobros pendientes' : 'No tienes deudas pendientes';
 
   if (datos.length === 0) {
@@ -183,7 +191,7 @@ const ListaDeudas = ({ tipo, datos, onPagar, onVerHistorial }) => {
                         onClick={() => handleIniciarPago(deuda)}
                         className="boton-pagar"
                       >
-                        💳 Pagar
+                         Pagar
                       </button>
                     )}
                   </>
@@ -193,7 +201,7 @@ const ListaDeudas = ({ tipo, datos, onPagar, onVerHistorial }) => {
                     onClick={() => onVerHistorial(deuda.idGasto)}
                     className="boton-historial"
                   >
-                    📋 Ver Historial
+                     Ver Historial
                   </button>
                 )}
               </div>

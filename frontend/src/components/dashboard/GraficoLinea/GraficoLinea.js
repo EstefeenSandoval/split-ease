@@ -10,12 +10,20 @@ const GraficoLinea = ({ datos, titulo }) => {
     }).format(parseFloat(valor));
   };
 
-  if (datos.length === 0) {
+  const formatearMonedaCorto = (valor) => {
+    const num = parseFloat(valor);
+    if (num >= 1000) {
+      return `$${(num / 1000).toFixed(1)}k`;
+    }
+    return `$${num.toFixed(0)}`;
+  };
+
+  if (!datos || datos.length === 0) {
     return (
       <div className="grafico-linea-container">
         <h3 className="grafico-titulo">{titulo}</h3>
         <div className="grafico-vacio">
-          <p>📈 No hay datos disponibles</p>
+          <p> No hay datos disponibles</p>
         </div>
       </div>
     );
@@ -24,80 +32,134 @@ const GraficoLinea = ({ datos, titulo }) => {
   const valores = datos.map(d => parseFloat(d.total));
   const maxValor = Math.max(...valores);
   const minValor = Math.min(...valores);
+  
+  // Calcular el rango con un poco de padding
   const rango = maxValor - minValor;
+  const padding = rango * 0.1 || maxValor * 0.1;
+  const yMax = maxValor + padding;
+  const yMin = Math.max(0, minValor - padding);
+  const yRango = yMax - yMin;
 
-  const calcularY = (valor) => {
-    if (rango === 0) return 50;
-    return 90 - ((parseFloat(valor) - minValor) / rango) * 70;
+  // Generar etiquetas del eje Y (4 niveles)
+  const etiquetasY = [];
+  for (let i = 0; i <= 3; i++) {
+    const valor = yMin + (yRango * i / 3);
+    etiquetasY.push({
+      valor: valor,
+      y: 85 - (i * 25), // De abajo hacia arriba
+      label: formatearMonedaCorto(valor)
+    });
+  }
+
+  const calcularAltura = (valor) => {
+    if (yRango === 0) return 30;
+    return ((parseFloat(valor) - yMin) / yRango) * 70;
   };
 
-  const ancho = 100;
-  const espaciado = ancho / (datos.length - 1 || 1);
+  // Configuración del gráfico
+  const paddingLeft = 12;
+  const paddingRight = 2;
+  const usableWidth = 100 - paddingLeft - paddingRight;
+  const barWidth = usableWidth / datos.length * 0.6;
+  const barSpacing = usableWidth / datos.length;
 
-  const puntos = datos.map((dato, index) => ({
-    x: index * espaciado,
-    y: calcularY(dato.total),
-    valor: dato.total,
-    mes: dato.mesFormateado
-  }));
-
-  const lineaPath = puntos
-    .map((punto, index) => `${index === 0 ? 'M' : 'L'} ${punto.x} ${punto.y}`)
-    .join(' ');
-
-  const areaPath = `${lineaPath} L ${puntos[puntos.length - 1].x} 95 L 0 95 Z`;
+  const barras = datos.map((dato, index) => {
+    const altura = calcularAltura(dato.total);
+    const x = paddingLeft + index * barSpacing + (barSpacing - barWidth) / 2;
+    const y = 85 - altura;
+    
+    return {
+      x,
+      y,
+      altura,
+      width: barWidth,
+      valor: dato.total,
+      mes: dato.mesFormateado
+    };
+  });
 
   return (
     <div className="grafico-linea-container">
       <h3 className="grafico-titulo">{titulo}</h3>
       <div className="grafico-linea-contenido">
-        <svg viewBox="0 0 100 100" className="grafico-linea-svg" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#667eea" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#667eea" stopOpacity="0.05" />
-            </linearGradient>
-          </defs>
-          
-          {/* Líneas de grid */}
-          <line x1="0" y1="25" x2="100" y2="25" stroke="#e2e8f0" strokeWidth="0.2" />
-          <line x1="0" y1="50" x2="100" y2="50" stroke="#e2e8f0" strokeWidth="0.2" />
-          <line x1="0" y1="75" x2="100" y2="75" stroke="#e2e8f0" strokeWidth="0.2" />
-
-          {/* Área bajo la línea */}
-          <path
-            d={areaPath}
-            fill="url(#areaGradient)"
-          />
-
-          {/* Línea principal */}
-          <path
-            d={lineaPath}
-            fill="none"
-            stroke="#667eea"
-            strokeWidth="0.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Puntos */}
-          {puntos.map((punto, index) => (
+        <svg viewBox="0 0 100 100" className="grafico-linea-svg" preserveAspectRatio="xMidYMid meet">
+          {/* Líneas horizontales de referencia */}
+          {etiquetasY.map((etiqueta, index) => (
             <g key={index}>
-              <circle
-                cx={punto.x}
-                cy={punto.y}
-                r="1.5"
-                fill="white"
-                stroke="#667eea"
-                strokeWidth="0.5"
-                className="punto-linea"
-                data-mes={punto.mes}
-                data-valor={formatearMoneda(punto.valor)}
+              <line 
+                x1={paddingLeft} 
+                y1={etiqueta.y} 
+                x2="100" 
+                y2={etiqueta.y} 
+                stroke="#c8e6c9" 
+                strokeWidth="0.3"
+                strokeDasharray="1,1"
               />
+              <text
+                x={paddingLeft - 2}
+                y={etiqueta.y + 1}
+                fontSize="3"
+                fill="#596869"
+                textAnchor="end"
+                fontWeight="500"
+              >
+                {etiqueta.label}
+              </text>
+            </g>
+          ))}
+
+          {/* Eje X */}
+          <line 
+            x1={paddingLeft} 
+            y1="85" 
+            x2="100" 
+            y2="85" 
+            stroke="#80CBC4" 
+            strokeWidth="0.4"
+          />
+
+          {/* Barras */}
+          {barras.map((barra, index) => (
+            <g key={index}>
+              {/* Barra */}
+              <rect
+                x={barra.x}
+                y={barra.y}
+                width={barra.width}
+                height={barra.altura}
+                fill="#498467"
+                rx="0.5"
+                className="punto-linea"
+              />
+              
+              {/* Etiqueta del mes debajo */}
+              <text
+                x={barra.x + barra.width / 2}
+                y="92"
+                fontSize="3.5"
+                fill="#596869"
+                textAnchor="middle"
+                fontWeight="600"
+              >
+                {barra.mes}
+              </text>
+
+              {/* Valor encima de la barra */}
+              <text
+                x={barra.x + barra.width / 2}
+                y={barra.y - 2}
+                fontSize="3"
+                fill="#252627"
+                textAnchor="middle"
+                fontWeight="600"
+              >
+                {formatearMonedaCorto(barra.valor)}
+              </text>
             </g>
           ))}
         </svg>
 
+        {/* Etiquetas con valores completos abajo */}
         <div className="grafico-linea-etiquetas">
           {datos.map((dato, index) => (
             <div key={index} className="etiqueta-mes">
@@ -109,6 +171,7 @@ const GraficoLinea = ({ datos, titulo }) => {
       </div>
     </div>
   );
+
 };
 
 export default GraficoLinea;

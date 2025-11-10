@@ -1,15 +1,22 @@
 .lista-deudas-container {
-  background: white;
+  background: var(--fondo-tarjeta);
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.75rem;
+  box-shadow: 0 ;
+  border: 1px solid var(--borde-suave);
+  transition: box-shadow 0.3s ease;
+}
+
+.lista-deudas-container:hover {
+  box-shadow: 0 ;
 }
 
 .lista-deudas-titulo {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--gris-oscuro-verdoso);
   margin: 0 0 1.5rem 0;
+  font-family: var(--font-secondary);
 }
 
 .lista-deudas {
@@ -25,22 +32,42 @@
 }
 
 .deuda-item {
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+  border: 2px solid #e8f5f0;
+  border-radius: 12px;
   padding: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.deuda-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--verde-brillante-acento) 0%, var(--verde-principal) 100%);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
 }
 
 .deuda-item:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-color: var(--verde-brillante-acento);
+  box-shadow: 0 6px 16px rgba(73, 132, 103, 0.1);
+  transform: translateY(-2px);
+}
+
+.deuda-item:hover::before {
+  transform: scaleY(1);
 }
 
 .deuda-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-bottom: 0.75rem;
 }
 
@@ -53,25 +80,30 @@
 }
 
 .deuda-avatar {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
+  border: 2px solid #FFE5D9;
+  box-shadow: 0 2px 8px rgba(255, 183, 77, 0.15);
 }
 
 .deuda-avatar-placeholder {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #FFB74D 0%, #FFA726 100%);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
   flex-shrink: 0;
+  border: 2px solid #FFE5D9;
+  box-shadow: 0 2px 8px rgba(255, 183, 77, 0.2);
+  font-family: var(--font-secondary);
 }
 
 .deuda-info {
@@ -80,19 +112,21 @@
 }
 
 .deuda-nombre {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #1e293b;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gris-oscuro-verdoso);
   margin: 0 0 0.25rem 0;
+  font-family: var(--font-secondary);
 }
 
 .deuda-descripcion {
-  font-size: 0.875rem;
-  color: #64748b;
+  font-size: 0.8rem;
+  color: var(--gris-azulado);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 500;
 }
 
 .deuda-monto-container {
@@ -100,16 +134,21 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 0.25rem;
+  background: #f8fffe;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  border: 2px solid #e8f5f0;
 }
 
 .deuda-monto {
   font-size: 1.25rem;
   font-weight: 700;
   white-space: nowrap;
+  font-family: var(--font-secondary);
 }
 
 .deuda-monto.cobros {
-  color: #10b981;
+  color: var(--verde-exito);
 }
 
 .deuda-monto.deudas {
@@ -117,12 +156,18 @@
 }
 
 .deuda-total-label {
-  font-size: 0.75rem;
-  color: #64748b;
+  font-size: 0.65rem;
+  color: var(--gris-azulado);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .deuda-progreso {
   margin-bottom: 0.75rem;
+  background: #f8fffe;
+  padding: 0.6rem;
+  border-radius: 8px;
 }
 
 .progreso-info {
@@ -134,28 +179,33 @@
 
 .progreso-label {
   font-size: 0.75rem;
-  color: #64748b;
-  font-weight: 500;
+  color: var(--gris-azulado);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .progreso-porcentaje {
-  font-size: 0.75rem;
-  color: #1e293b;
-  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--gris-oscuro-verdoso);
+  font-weight: 700;
+  font-family: var(--font-secondary);
 }
 
 .progreso-barra {
   height: 6px;
-  background-color: #e2e8f0;
-  border-radius: 3px;
+  background-color: #e8f5f0;
+  border-radius: 8px;
   overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .progreso-relleno {
   height: 100%;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-  border-radius: 3px;
-  transition: width 0.3s ease;
+  background: linear-gradient(90deg, var(--verde-brillante-acento) 0%, var(--verde-principal) 100%);
+  border-radius: 8px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 4px rgba(73, 132, 103, 0.2);
 }
 
 .deuda-acciones {
@@ -166,111 +216,180 @@
 
 .boton-pagar,
 .boton-historial {
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1rem;
   border: none;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 600;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  font-family: var(--font-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .boton-pagar {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--verde-brillante) 0%, var(--verde-principal) 100%);
+  color: #FFFFFF;
   flex: 1;
+  box-shadow: 0 2px 8px rgba(102, 187, 106, 0.25);
 }
 
 .boton-pagar:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 187, 106, 0.35);
+}
+
+.boton-pagar:active {
+  transform: translateY(0);
 }
 
 .boton-historial {
   background: white;
-  color: #667eea;
-  border: 1px solid #667eea;
+  color: var(--verde-principal);
+  border: 2px solid var(--verde-principal);
+  box-shadow: 0 2px 6px rgba(73, 132, 103, 0.08);
 }
 
 .boton-historial:hover {
-  background: #f8fafc;
+  background: var(--verde-palido);
+  border-color: var(--verde-brillante-acento);
+  transform: translateY(-2px);
+}
+
+.boton-historial:active {
+  transform: translateY(0);
 }
 
 .pago-form {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  background: #f8fafc;
-  border-radius: 6px;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+  border: 2px solid #e8f5f0;
+  border-radius: 12px;
+  margin-top: 0.75rem;
+  box-shadow: 0 4px 12px rgba(73, 132, 103, 0.08);
 }
 
 .pago-form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
 }
 
 .pago-form-group label {
-  font-size: 0.75rem;
-  color: #64748b;
-  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--gris-oscuro-verdoso);
+  font-weight: 600;
+  font-family: var(--font-secondary);
+  letter-spacing: 0.3px;
 }
 
 .pago-input,
 .pago-select {
-  padding: 0.5rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-family: inherit;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e8f5f0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-family: var(--font-primary);
+  background: white;
+  transition: all 0.25s ease;
+  color: var(--gris-oscuro-verdoso);
 }
 
 .pago-input:focus,
 .pago-select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--verde-brillante-acento);
+  box-shadow: 0 0 0 3px rgba(124, 203, 162, 0.15);
+  background: #fafffe;
+}
+
+.pago-input::placeholder {
+  color: var(--gris-azulado);
+  opacity: 0.6;
 }
 
 .pago-form-botones {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 0.25rem;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
 }
 
 .boton-confirmar,
 .boton-cancelar {
   flex: 1;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.25rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s ease;
+  font-family: var(--font-secondary);
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
 }
 
 .boton-confirmar {
-  background: #10b981;
+  background: var(--verde-brillante);
   color: white;
+  box-shadow: 0 2px 8px rgba(102, 187, 106, 0.3);
+}
+
+.boton-confirmar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.boton-confirmar:hover::before {
+  left: 100%;
 }
 
 .boton-confirmar:hover {
-  background: #059669;
+  background: var(--verde-principal);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(102, 187, 106, 0.4);
+}
+
+.boton-confirmar:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(102, 187, 106, 0.3);
 }
 
 .boton-cancelar {
-  background: #ef4444;
-  color: white;
+  background: transparent;
+  color: #ef4444;
+  border: 2px solid #fee;
 }
 
 .boton-cancelar:hover {
-  background: #dc2626;
+  background: #fee;
+  border-color: #ef4444;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.2);
+}
+
+.boton-cancelar:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(239, 68, 68, 0.15);
 }
 
 @media (max-width: 768px) {
+  .deuda-item {
+    padding: 0.875rem;
+  }
+
   .deuda-header {
     flex-direction: column;
     align-items: flex-start;
