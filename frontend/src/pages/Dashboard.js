@@ -13,11 +13,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // Importa los íconos corregidos y necesarios:
 import {
     faScaleBalanced,
-    faChartLine,
-    faArrowTrendDown, 
     faMoneyBillTrendUp,
     faChartSimple,
-    faReceipt,
     faChartPie,
     faSyncAlt,
     faHand,

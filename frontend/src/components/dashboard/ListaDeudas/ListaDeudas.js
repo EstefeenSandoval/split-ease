@@ -3,8 +3,6 @@ import { STATIC_BASE_URL } from '../../../config/api';
 import './ListaDeudas.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faChartLine,
-  faArrowTrendDown,
   faHandHoldingDollar,
   faHandHoldingHand
 } from '@fortawesome/free-solid-svg-icons';
