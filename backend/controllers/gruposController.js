@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const gruposModel = require('../models/gruposModel');
+const notificacionHelper = require('../utils/notificacionHelper');
 require('dotenv').config();
 
 // <summary>
@@ -339,6 +340,44 @@ const unirseAlGrupo = (req, res) => {
                     console.error('Error al agregar participante:', err);
                     return res.status(500).json({ error: 'Error al unirse al grupo.' });
                 }
+
+                // Obtener información del usuario para las notificaciones
+                const db = require('../config/db');
+                db.query('SELECT nombre FROM USUARIOS WHERE id_usuario = ?', [id_usuario], (err, usuarioResults) => {
+                    const nombreUsuario = usuarioResults && usuarioResults[0] ? usuarioResults[0].nombre : 'Un usuario';
+                    
+                    // Notificar al nuevo miembro
+                    notificacionHelper.notificarNuevoMiembro(
+                        id_usuario,
+                        grupo.nombre_grupo,
+                        grupo.id_grupo,
+                        (err) => {
+                            if (err) console.error('Error al notificar nuevo miembro:', err);
+                        }
+                    );
+
+                    // Obtener todos los participantes del grupo (excepto el nuevo miembro)
+                    gruposModel.obtenerParticipantesGrupo(grupo.id_grupo, (err, participantes) => {
+                        if (!err && participantes && participantes.length > 0) {
+                            const idsParticipantes = participantes
+                                .filter(p => p.id_usuario !== id_usuario)
+                                .map(p => p.id_usuario);
+                            
+                            // Notificar a los demás miembros sobre el nuevo integrante
+                            if (idsParticipantes.length > 0) {
+                                notificacionHelper.notificarGrupoNuevoMiembro(
+                                    idsParticipantes,
+                                    nombreUsuario,
+                                    grupo.nombre_grupo,
+                                    grupo.id_grupo,
+                                    (err) => {
+                                        if (err) console.error('Error al notificar grupo sobre nuevo miembro:', err);
+                                    }
+                                );
+                            }
+                        }
+                    });
+                });
 
                 res.status(200).json({ 
                     mensaje: 'Te has unido al grupo correctamente.',

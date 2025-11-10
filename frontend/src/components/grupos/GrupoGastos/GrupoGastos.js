@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faArrowLeft, faFilter, faSync } from '@fortawesome/free-solid-svg-icons';
 import GastoCard from '../GastoCard/GastoCard';
-import CrearGastoModal from '../CrearGastoModal/CrearGastoModal';
+import { CrearGastoModal } from '../../gasto';
 import DetalleGastoModal from '../DetalleGastoModal/DetalleGastoModal';
 import API_ENDPOINTS from '../../../config/api';
 import './GrupoGastos.css';

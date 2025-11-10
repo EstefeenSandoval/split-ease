@@ -73,9 +73,12 @@ Authorization: Bearer <token>
   "fecha_gasto": "2025-09-24T19:30:00Z",
   "participantes": [1, 2, 3],
   "tipo_division": "equitativa",
+  "id_pagador": 1,
   "moneda": "MXN"
 }
 ```
+
+**Nota:** El campo `id_pagador` es opcional. Si no se especifica, el pagador será el usuario autenticado que realiza la petición. El pagador debe ser un miembro activo del grupo.
 
 **Para división personalizada:**
 ```json
@@ -87,6 +90,7 @@ Authorization: Bearer <token>
   "fecha_gasto": "2025-09-24T19:30:00Z",
   "participantes": [1, 2, 3],
   "tipo_division": "monto_fijo",
+  "id_pagador": 1,
   "montos_personalizados": [
     {"id_usuario": 1, "monto": 50.00},
     {"id_usuario": 2, "monto": 30.50},
@@ -224,7 +228,69 @@ Authorization: Bearer <token>
 ```
 
 #### `PUT /api/gastos/:id_gasto/pagar`
-Marca la división del usuario autenticado como pagada.
+Marca la división del usuario autenticado como completamente pagada.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Body:** (Vacío)
+
+**Respuesta exitosa (200):**
+```json
+{
+  "mensaje": "Marcado como pagado correctamente."
+}
+```
+
+**Notas:**
+- Este endpoint marca la DIVISIÓN COMPLETA del usuario como pagada.
+- El pagador tiene su división marcada automáticamente como pagada al crear el gasto.
+- Cuando TODAS las divisiones están pagadas, el estado del gasto cambia automáticamente a "confirmado".
+
+---
+
+### Pagos Parciales
+
+#### `POST /api/gastos/:id_gasto/pago-parcial`
+Registra un pago parcial entre usuarios. Útil para pagos progresivos en lugar de marcar una división como completamente pagada.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Body:**
+```json
+{
+  "id_usuario_receptor": 2,
+  "monto": 50.00
+}
+```
+
+**Parámetros:**
+- `id_gasto`: ID del gasto (en la URL)
+- `id_usuario_receptor`: ID del usuario que recibe el pago
+- `monto`: Cantidad a pagar (debe ser un número positivo)
+
+**Respuesta exitosa (201):**
+```json
+{
+  "mensaje": "Pago parcial registrado correctamente.",
+  "id_pago": 5
+}
+```
+
+**Ejemplo de Casos de Uso:**
+1. **Gasto de 300 MXN entre 3 personas (100 c/u)**
+   - Usuario 1 (pagador) ya está pagado (100 MXN) automáticamente
+   - Usuario 2 puede hacer un pago parcial de 50 MXN al pagador
+   - Luego hacer otro pago parcial de 50 MXN para completar su deuda
+   - Usuario 3 hace un pago de 100 MXN de una sola vez
+
+#### `GET /api/gastos/:id_gasto/pagos`
+Obtiene todos los pagos parciales realizados para un gasto específico.
 
 **Headers:**
 ```
@@ -234,11 +300,63 @@ Authorization: Bearer <token>
 **Respuesta exitosa (200):**
 ```json
 {
-  "mensaje": "Marcado como pagado correctamente."
+  "mensaje": "Pagos obtenidos correctamente.",
+  "pagos": [
+    {
+      "id_pago": 1,
+      "id_usuario_pagador": 2,
+      "id_usuario_receptor": 1,
+      "monto": 50.00,
+      "fecha_pago": "2025-09-25T14:30:00Z",
+      "descripcion": "Pago parcial para gasto: Cena en restaurante",
+      "nombre_pagador": "María García",
+      "nombre_receptor": "Juan Pérez"
+    },
+    {
+      "id_pago": 2,
+      "id_usuario_pagador": 3,
+      "id_usuario_receptor": 1,
+      "monto": 100.00,
+      "fecha_pago": "2025-09-26T15:00:00Z",
+      "descripcion": "Pago parcial para gasto: Cena en restaurante",
+      "nombre_pagador": "Pedro López",
+      "nombre_receptor": "Juan Pérez"
+    }
+  ]
 }
 ```
 
-## Códigos de Error Comunes
+#### `GET /api/gastos/grupo/:id_grupo/pagos-pendientes`
+Obtiene todos los pagos (realizados y pendientes) del usuario autenticado en un grupo específico.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Respuesta exitosa (200):**
+```json
+{
+  "mensaje": "Pagos obtenidos correctamente.",
+  "pagos": [
+    {
+      "id_pago": 1,
+      "id_usuario_pagador": 2,
+      "id_usuario_receptor": 1,
+      "id_gasto": 5,
+      "monto": 50.00,
+      "fecha_pago": "2025-09-25T14:30:00Z",
+      "descripcion": "Pago parcial para gasto: Cena en restaurante",
+      "nombre_pagador": "María García",
+      "nombre_receptor": "Juan Pérez"
+    }
+  ]
+}
+```
+
+---
+
+
 
 - **400 Bad Request**: Datos inválidos o faltantes
 - **401 Unauthorized**: Token inválido o faltante
@@ -246,6 +364,40 @@ Authorization: Bearer <token>
 - **404 Not Found**: Recurso no encontrado
 - **409 Conflict**: Recurso ya existe (ej: categoría duplicada)
 - **500 Internal Server Error**: Error interno del servidor
+
+### Ejemplos de Prueba en Postman
+
+#### 1. Pago Completo
+```json
+PUT /api/gastos/5/pagar
+Headers: Authorization: Bearer <token>
+Body: (Vacío)
+```
+
+#### 2. Pago Parcial
+```json
+POST /api/gastos/5/pago-parcial
+Headers: Authorization: Bearer <token>
+Body:
+{
+  "id_usuario_receptor": 1,
+  "monto": 50.00
+}
+```
+
+#### 3. Ver Pagos de un Gasto
+```json
+GET /api/gastos/5/pagos
+Headers: Authorization: Bearer <token>
+```
+
+#### 4. Ver Pagos del Usuario en un Grupo
+```json
+GET /api/gastos/grupo/1/pagos-pendientes
+Headers: Authorization: Bearer <token>
+```
+
+---
 
 ## Notas Importantes
 
@@ -257,6 +409,13 @@ Authorization: Bearer <token>
    - `monto_fijo`: Cada participante paga un monto específico
 5. **Monedas**: Por defecto se usa 'MXN', pero se puede especificar otra moneda.
 6. **Estados**: Los gastos pueden estar en estado 'pendiente', 'confirmado' o 'cancelado'.
+7. **Pagos Parciales vs División Completa**:
+   - **Marcar como Pagado** (`PUT /api/gastos/:id_gasto/pagar`): Marca la división completa del usuario como pagada de una sola vez.
+   - **Pago Parcial** (`POST /api/gastos/:id_gasto/pago-parcial`): Registra pagos incrementales. Útil para usuarios que pagan poco a poco.
+8. **Sistema de Pagos**: 
+   - Los pagos parciales se registran en la tabla PAGOS como un historial de transacciones.
+   - No afectan automáticamente el estado de las divisiones, son solo registros de movimientos de dinero.
+   - El usuario puede usar pagos parciales para documentar cada transferencia o puede usar "Marcar como Pagado" cuando termina de pagar su deuda completa.
 
 ## Categorías Predefinidas
 

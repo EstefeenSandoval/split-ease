@@ -1,24 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faPlus, faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faEdit, faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { construirURLEstatico } from '../../../config/api';
-import './CrearGastoModal.css';
+import './EditarGastoModal.css';
 
-const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }) => {
+const EditarGastoModal = ({
+  isOpen,
+  onClose,
+  onActualizar,
+  gasto,
+  participantes,
+  categorias,
+  cargando
+}) => {
   const [formData, setFormData] = useState({
     descripcion: '',
     monto_total: '',
     id_categoria: '',
-    fecha_gasto: new Date().toISOString().slice(0, 16), // formato datetime-local
+    fecha_gasto: '',
     participantes: [],
     tipo_division: 'equitativa',
     montos_personalizados: [],
     moneda: 'MXN'
   });
-  const [cargando, setCargando] = useState(false);
+
   const [errors, setErrors] = useState({});
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (isOpen && gasto) {
+      setFormData({
+        descripcion: gasto.descripcion || '',
+        monto_total: gasto.monto_total || '',
+        id_categoria: gasto.id_categoria || '',
+        fecha_gasto: gasto.fecha_gasto ? gasto.fecha_gasto.slice(0, 16) : '',
+        participantes: gasto.participantes?.map(p => p.id_usuario) || [],
+        tipo_division: gasto.tipo_division || 'equitativa',
+        montos_personalizados: gasto.detalles_reparto?.map(d => ({
+          id_usuario: d.id_usuario,
+          monto: d.monto
+        })) || [],
+        moneda: gasto.moneda || 'MXN'
+      });
+      setErrors({});
+    }
+  }, [isOpen, gasto]);
+
+  if (!isOpen || !gasto) return null;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,8 +53,6 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
       ...prev,
       [name]: value
     }));
-    
-    // Limpiar error específico cuando el usuario empiece a escribir
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -36,130 +61,103 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
     }
   };
 
-  const handleParticipanteToggle = (participanteId) => {
+  const handleParticipantesChange = (e) => {
+    const { value, checked } = e.target;
+    const idUsuario = parseInt(value);
+
+    if (checked) {
+      setFormData(prev => ({
+        ...prev,
+        participantes: [...prev.participantes, idUsuario]
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        participantes: prev.participantes.filter(id => id !== idUsuario)
+      }));
+    }
+
+    if (errors.participantes) {
+      setErrors(prev => ({
+        ...prev,
+        participantes: ''
+      }));
+    }
+  };
+
+  const handleTipoDivisionChange = (tipo) => {
+    setFormData(prev => ({
+      ...prev,
+      tipo_division: tipo
+    }));
+  };
+
+  const handleMontoPersonalizadoChange = (idUsuario, valor) => {
     setFormData(prev => {
-      const participantesActualizados = prev.participantes.includes(participanteId)
-        ? prev.participantes.filter(id => id !== participanteId)
-        : [...prev.participantes, participanteId];
-      
-      // Si es división personalizada, actualizar montos
-      if (prev.tipo_division === 'monto_fijo') {
-        const montosActualizados = participantesActualizados.map(id => {
-          const montoExistente = prev.montos_personalizados.find(m => m.id_usuario === id);
-          return montoExistente || { id_usuario: id, monto: 0 };
-        });
-        
-        return {
-          ...prev,
-          participantes: participantesActualizados,
-          montos_personalizados: montosActualizados
-        };
+      const index = prev.montos_personalizados.findIndex(m => m.id_usuario === idUsuario);
+      let nuevosMontos = [...prev.montos_personalizados];
+
+      if (index !== -1) {
+        nuevosMontos[index] = { id_usuario: idUsuario, monto: parseFloat(valor) || 0 };
+      } else {
+        nuevosMontos.push({ id_usuario: idUsuario, monto: parseFloat(valor) || 0 });
       }
-      
+
       return {
         ...prev,
-        participantes: participantesActualizados
+        montos_personalizados: nuevosMontos
       };
     });
   };
 
-  const handleMontoPersonalizadoChange = (participanteId, monto) => {
-    setFormData(prev => ({
-      ...prev,
-      montos_personalizados: prev.montos_personalizados.map(m =>
-        m.id_usuario === participanteId ? { ...m, monto: parseFloat(monto) || 0 } : m
-      )
-    }));
-  };
-
-  const handleTipoDivisionChange = (tipo) => {
-    setFormData(prev => {
-      if (tipo === 'monto_fijo') {
-        // Inicializar montos personalizados para participantes seleccionados
-        const montosPersonalizados = prev.participantes.map(id => ({
-          id_usuario: id,
-          monto: 0
-        }));
-        
-        return {
-          ...prev,
-          tipo_division: tipo,
-          montos_personalizados: montosPersonalizados
-        };
-      } else {
-        return {
-          ...prev,
-          tipo_division: tipo,
-          montos_personalizados: []
-        };
-      }
-    });
-  };
-
   const calcularTotalPersonalizado = () => {
-    return formData.montos_personalizados.reduce((sum, m) => sum + (m.monto || 0), 0);
+    return formData.montos_personalizados.reduce((sum, m) => sum + m.monto, 0);
   };
 
   const validarFormulario = () => {
     const nuevosErrors = {};
-    
+
     if (!formData.descripcion.trim()) {
       nuevosErrors.descripcion = 'La descripción es requerida';
     }
-    
+
     if (!formData.monto_total || parseFloat(formData.monto_total) <= 0) {
       nuevosErrors.monto_total = 'El monto debe ser mayor a 0';
     }
-    
+
     if (!formData.id_categoria) {
       nuevosErrors.id_categoria = 'Selecciona una categoría';
     }
-    
+
+    if (!formData.fecha_gasto) {
+      nuevosErrors.fecha_gasto = 'La fecha es requerida';
+    }
+
     if (formData.participantes.length === 0) {
       nuevosErrors.participantes = 'Selecciona al menos un participante';
     }
-    
+
     if (formData.tipo_division === 'monto_fijo') {
       const totalPersonalizado = calcularTotalPersonalizado();
       const montoTotal = parseFloat(formData.monto_total);
-      
+
       if (Math.abs(totalPersonalizado - montoTotal) > 0.01) {
-        nuevosErrors.montos_personalizados = `La suma de montos individuales (${totalPersonalizado.toFixed(2)}) debe ser igual al monto total (${montoTotal.toFixed(2)})`;
+        nuevosErrors.montos_personalizados = `La suma debe ser igual a ${montoTotal.toFixed(2)}`;
       }
     }
-    
+
     setErrors(nuevosErrors);
     return Object.keys(nuevosErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validarFormulario()) {
       return;
     }
-    
-    setCargando(true);
-    
-    try {
-      await onCrear(formData);
-      // Si llegamos aquí, el gasto se creó exitosamente
-      setFormData({
-        descripcion: '',
-        monto_total: '',
-        id_categoria: '',
-        fecha_gasto: new Date().toISOString().slice(0, 16),
-        participantes: [],
-        tipo_division: 'equitativa',
-        montos_personalizados: [],
-        moneda: 'MXN'
-      });
-      setErrors({});
-    } catch (error) {
-      // El error ya se maneja en el componente padre
-    } finally {
-      setCargando(false);
-    }
+
+    await onActualizar(formData);
   };
 
   const handleClose = () => {
@@ -168,7 +166,7 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
         descripcion: '',
         monto_total: '',
         id_categoria: '',
-        fecha_gasto: new Date().toISOString().slice(0, 16),
+        fecha_gasto: '',
         participantes: [],
         tipo_division: 'equitativa',
         montos_personalizados: [],
@@ -181,13 +179,13 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
 
   return (
     <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content crear-gasto-modal" onClick={e => e.stopPropagation()}>
+      <div className="modal-content editar-gasto-modal" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <h2>
-            <FontAwesomeIcon icon={faPlus} /> Crear Nuevo Gasto
+            <FontAwesomeIcon icon={faEdit} /> Editar Gasto
           </h2>
-          <button 
-            className="btn-cerrar" 
+          <button
+            className="btn-cerrar"
             onClick={handleClose}
             disabled={cargando}
           >
@@ -195,7 +193,7 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="crear-gasto-form">
+        <form onSubmit={handleSubmit} className="editar-gasto-form">
           <div className="form-group">
             <label htmlFor="descripcion">
               Descripción del gasto *
@@ -206,7 +204,7 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
               name="descripcion"
               value={formData.descripcion}
               onChange={handleInputChange}
-              placeholder="Ej: Cena en restaurante, Uber al aeropuerto..."
+              placeholder="Ej: Cena en restaurante..."
               className={errors.descripcion ? 'error' : ''}
               disabled={cargando}
             />
@@ -271,46 +269,45 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
               onChange={handleInputChange}
               disabled={cargando}
             />
+            {errors.fecha_gasto && <span className="error-message">{errors.fecha_gasto}</span>}
           </div>
 
           <div className="form-group">
             <label>Participantes * {errors.participantes && <span className="error-message">({errors.participantes})</span>}</label>
             <div className="participantes-lista">
-              {participantes && participantes.length > 0 ? participantes.map(participante => {
-                const obtenerFotoPerfil = () => {
-                  if (participante.foto_perfil) {
-                    return construirURLEstatico(participante.foto_perfil);
-                  }
-                  return '/logo.png'; // Imagen por defecto
-                };
-
-                return (
+              {participantes && participantes.length > 0 ? (
+                participantes.map(participante => (
                   <label key={participante.id_usuario} className="participante-item">
                     <input
                       type="checkbox"
+                      value={participante.id_usuario}
                       checked={formData.participantes.includes(participante.id_usuario)}
-                      onChange={() => handleParticipanteToggle(participante.id_usuario)}
+                      onChange={handleParticipantesChange}
                       disabled={cargando}
                     />
-                    <span className="checkmark"></span>
                     <div className="participante-avatar">
-                      <img 
-                        src={obtenerFotoPerfil()} 
-                        alt={`Foto de ${participante.nombre || participante.nombre_usuario || 'Usuario'}`}
-                        onError={(e) => { e.target.src = '/logo.png'; }}
-                      />
+                      {participante.foto_perfil ? (
+                        <img
+                          src={construirURLEstatico(participante.foto_perfil)}
+                          alt={participante.nombre}
+                        />
+                      ) : (
+                        <div className="avatar-placeholder">
+                          {(participante.nombre || participante.nombre_usuario || 'U').charAt(0)}
+                        </div>
+                      )}
                     </div>
                     <div className="participante-info">
                       <span className="participante-nombre">
-                        {participante.nombre || participante.nombre_usuario || 'Usuario'}
+                        {participante.nombre || participante.nombre_usuario}
                       </span>
                       <span className="participante-email">
-                        {participante.email || 'Email no disponible'}
+                        {participante.email}
                       </span>
                     </div>
                   </label>
-                );
-              }) : (
+                ))
+              ) : (
                 <div className="no-participantes">
                   <p>No hay participantes disponibles en este grupo.</p>
                 </div>
@@ -331,9 +328,12 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
                   disabled={cargando}
                 />
                 <span className="radio-checkmark"></span>
-                <span>División equitativa</span>
+                <span className="radio-label">
+                  <strong>Equitativa</strong>
+                  <small>Divide el total en partes iguales</small>
+                </span>
               </label>
-              
+
               <label className="tipo-radio">
                 <input
                   type="radio"
@@ -344,48 +344,45 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
                   disabled={cargando}
                 />
                 <span className="radio-checkmark"></span>
-                <span>Montos personalizados</span>
+                <span className="radio-label">
+                  <strong>Monto fijo</strong>
+                  <small>Asigna montos específicos a cada persona</small>
+                </span>
               </label>
             </div>
           </div>
 
-          {formData.tipo_division === 'monto_fijo' && formData.participantes.length > 0 && (
+          {formData.tipo_division === 'monto_fijo' && (
             <div className="form-group">
-              <label>
-                Montos individuales
-                <FontAwesomeIcon icon={faCalculator} className="calculator-icon" />
-              </label>
+              <label>Distribución de montos</label>
               <div className="montos-personalizados">
-                {formData.montos_personalizados.map(monto => {
-                  const participante = participantes.find(p => p.id_usuario === monto.id_usuario);
-                  
-                  const obtenerFotoPerfil = () => {
-                    if (participante?.foto_perfil) {
-                      return construirURLEstatico(participante.foto_perfil);
-                    }
-                    return '/logo.png';
-                  };
-                  
+                {formData.participantes.map(idUsuario => {
+                  const participante = participantes.find(p => p.id_usuario === idUsuario);
+                  const monto = formData.montos_personalizados.find(m => m.id_usuario === idUsuario)?.monto || 0;
+
                   return (
-                    <div key={monto.id_usuario} className="monto-personalizado">
-                      <div className="participante-con-foto">
-                        <div className="participante-avatar-small">
-                          <img 
-                            src={obtenerFotoPerfil()} 
-                            alt={`Foto de ${participante?.nombre || participante?.nombre_usuario || 'Usuario'}`}
-                            onError={(e) => { e.target.src = '/logo.png'; }}
+                    <div key={idUsuario} className="monto-personalizado">
+                      <div className="participante-avatar">
+                        {participante?.foto_perfil ? (
+                          <img
+                            src={construirURLEstatico(participante.foto_perfil)}
+                            alt={participante.nombre}
                           />
-                        </div>
-                        <span className="participante-nombre">
-                          {participante?.nombre || participante?.nombre_usuario || 'Usuario'}
-                        </span>
+                        ) : (
+                          <div className="avatar-placeholder">
+                            {(participante?.nombre || participante?.nombre_usuario || 'U').charAt(0)}
+                          </div>
+                        )}
+                      </div>
+                      <div className="participante-info">
+                        <span className="participante-nombre">{participante?.nombre || participante?.nombre_usuario}</span>
                       </div>
                       <div className="input-with-symbol">
                         <span className="currency-symbol">$</span>
                         <input
                           type="number"
-                          value={monto.monto}
-                          onChange={(e) => handleMontoPersonalizadoChange(monto.id_usuario, e.target.value)}
+                          value={monto}
+                          onChange={(e) => handleMontoPersonalizadoChange(idUsuario, e.target.value)}
                           placeholder="0.00"
                           step="0.01"
                           min="0"
@@ -411,20 +408,20 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
           )}
 
           <div className="modal-actions">
-            <button 
-              type="button" 
-              className="btn-cancelar" 
+            <button
+              type="button"
+              className="btn-cancelar"
               onClick={handleClose}
               disabled={cargando}
             >
               Cancelar
             </button>
-            <button 
-              type="submit" 
-              className="btn-crear"
+            <button
+              type="submit"
+              className="btn-actualizar"
               disabled={cargando}
             >
-              {cargando ? 'Creando...' : 'Crear Gasto'}
+              {cargando ? 'Actualizando...' : 'Actualizar Gasto'}
             </button>
           </div>
         </form>
@@ -433,4 +430,4 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
   );
 };
 
-export default CrearGastoModal;
+export default EditarGastoModal;

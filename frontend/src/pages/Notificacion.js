@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import NotificationItem from '../components/notifications/NotificationItem';
-import NotificationSettings from '../components/notifications/NotificationSettings';
+import NotificationItem from '../components/notifications/NotificationItem/NotificationItem';
+import NotificationSettings from '../components/notifications/NotificationSettings/NotificationSettings';
 import {
   getPendingNotifications,
   getHistoryNotifications,
@@ -133,14 +133,25 @@ const Notificacion = () => {
 
   // Manejar click en notificación
   const handleNotificationClick = (notification) => {
-    // Si tiene URL de destino, navegar
-    if (notification.url_destino) {
-      navigate(notification.url_destino);
-    }
-    
-    // Si está pendiente, marcar como leída
+    // Primero marcar como leída si está pendiente
     if (notification.leida === 0) {
       handleMarkAsRead(notification.id_notificacion);
+    }
+
+    // Redirigir según el tipo de notificación
+    if (notification.tipo_notificacion === 'INVITACIÓN') {
+      // Extraer id_grupo de la URL si existe, o usar una ruta general
+      
+      navigate('/grupos');
+      
+    } else if (notification.tipo_notificacion === 'GASTO_AGREGADO') {
+      // Redirigir a la página de gastos
+    
+      navigate('/gastos');
+      
+    } else if (notification.url_destino) {
+      // Para otros tipos (PAGO_REALIZADO, SALDO_CAMBIADO), usar url_destino si existe
+      navigate(notification.url_destino);
     }
   };
 

@@ -1,5 +1,6 @@
 const gastoModel = require('../models/gastoModel');
 const gruposModel = require('../models/gruposModel');
+const notificacionHelper = require('../utils/notificacionHelper');
 
 // <summary>
 // Controlador para la gestión de gastos y categorías
@@ -60,8 +61,11 @@ const crearCategoria = (req, res) => {
 
 // Crear un nuevo gasto
 const crearGasto = (req, res) => {
-  const { id_grupo, descripcion, monto_total, id_categoria, fecha_gasto, participantes, tipo_division, moneda } = req.body;
-  const id_pagador = req.usuario.id_usuario; // Del token JWT
+  const { id_grupo, descripcion, monto_total, id_categoria, fecha_gasto, participantes, tipo_division, moneda, id_pagador } = req.body;
+  const id_usuario_autenticado = req.usuario.id_usuario; // Del token JWT
+  
+  // Si no se especifica id_pagador, usar el usuario autenticado
+  const id_pagador_final = id_pagador ? parseInt(id_pagador) : id_usuario_autenticado;
   
   // Validaciones básicas
   if (!id_grupo || !monto_total || !participantes || !Array.isArray(participantes) || participantes.length === 0) {
@@ -80,10 +84,10 @@ const crearGasto = (req, res) => {
   const sanitizedMoneda = moneda || 'MXN';
   const sanitizedTipoDivision = tipo_division || 'equitativa';
   
-  // Verificar que el usuario pertenece al grupo
-  gruposModel.verificarMiembroGrupo(id_pagador, id_grupo, (err, results) => {
+  // Verificar que el usuario autenticado pertenece al grupo (para permisos de creación)
+  gruposModel.verificarMiembroGrupo(id_usuario_autenticado, id_grupo, (err, results) => {
     if (err) {
-      console.error('Error al verificar membresía:', err);
+      console.error('Error al verificar membresía del usuario autenticado:', err);
       return res.status(500).json({ error: 'Error interno del servidor.' });
     }
     
@@ -91,72 +95,131 @@ const crearGasto = (req, res) => {
       return res.status(403).json({ error: 'No tienes permisos para agregar gastos a este grupo.' });
     }
     
-    // Crear el gasto
-    gastoModel.crearGasto(
-      id_grupo, 
-      id_pagador, 
-      sanitizedDescripcion, 
-      sanitizedMontoTotal, 
-      sanitizedIdCategoria, 
-      sanitizedFechaGasto, 
-      sanitizedMoneda,
-      (err, result) => {
+    // Si se especificó un pagador diferente, verificar que también sea miembro del grupo
+    if (id_pagador_final !== id_usuario_autenticado) {
+      gruposModel.verificarMiembroGrupo(id_pagador_final, id_grupo, (err, results) => {
         if (err) {
-          console.error('Error al crear gasto:', err);
-          return res.status(500).json({ error: 'Error al crear el gasto.' });
+          console.error('Error al verificar membresía del pagador:', err);
+          return res.status(500).json({ error: 'Error interno del servidor.' });
         }
         
-        const id_gasto = result.insertId;
-        
-        // Calcular divisiones según el tipo
-        let divisiones = [];
-        const numParticipantes = participantes.length;
-        
-        if (sanitizedTipoDivision === 'equitativa') {
-          const montoPorPersona = sanitizedMontoTotal / numParticipantes;
-          divisiones = participantes.map(id_usuario => ({
-            id_usuario: parseInt(id_usuario),
-            monto_asignado: parseFloat(montoPorPersona.toFixed(2))
-          }));
-        } else if (sanitizedTipoDivision === 'monto_fijo' && req.body.montos_personalizados) {
-          // Para montos personalizados
-          divisiones = req.body.montos_personalizados.map(item => ({
-            id_usuario: parseInt(item.id_usuario),
-            monto_asignado: parseFloat(item.monto)
-          }));
+        if (results.length === 0) {
+          return res.status(400).json({ error: 'El pagador especificado no es miembro del grupo.' });
         }
         
-        // Crear las divisiones
-        let divisionesCreadas = 0;
-        let errorEnDivisiones = false;
-        
-        divisiones.forEach(division => {
-          gastoModel.crearDivisionGasto(
-            id_gasto,
-            division.id_usuario,
-            division.monto_asignado,
-            sanitizedTipoDivision,
-            (err) => {
-              if (err && !errorEnDivisiones) {
-                errorEnDivisiones = true;
-                console.error('Error al crear división:', err);
-                // Eliminar el gasto si fallan las divisiones
-                gastoModel.eliminarGasto(id_gasto, () => {});
-                return res.status(500).json({ error: 'Error al crear las divisiones del gasto.' });
+        // Proceder a crear el gasto
+        crearGastoEnBD();
+      });
+    } else {
+      // El pagador es el mismo que el usuario autenticado, ya verificado
+      crearGastoEnBD();
+    }
+    
+    function crearGastoEnBD() {
+      // Crear el gasto
+      gastoModel.crearGasto(
+        id_grupo, 
+        id_pagador_final, 
+        sanitizedDescripcion, 
+        sanitizedMontoTotal, 
+        sanitizedIdCategoria, 
+        sanitizedFechaGasto, 
+        sanitizedMoneda,
+        (err, result) => {
+          if (err) {
+            console.error('Error al crear gasto:', err);
+            return res.status(500).json({ error: 'Error al crear el gasto.' });
+          }
+          
+          const id_gasto = result.insertId;
+          
+          // Calcular divisiones según el tipo
+          let divisiones = [];
+          const numParticipantes = participantes.length;
+          
+          if (sanitizedTipoDivision === 'equitativa') {
+            const montoPorPersona = sanitizedMontoTotal / numParticipantes;
+            divisiones = participantes.map(id_usuario => ({
+              id_usuario: parseInt(id_usuario),
+              monto_asignado: parseFloat(montoPorPersona.toFixed(2))
+            }));
+          } else if (sanitizedTipoDivision === 'monto_fijo' && req.body.montos_personalizados) {
+            // Para montos personalizados
+            divisiones = req.body.montos_personalizados.map(item => ({
+              id_usuario: parseInt(item.id_usuario),
+              monto_asignado: parseFloat(item.monto)
+            }));
+          }
+          
+          // Crear las divisiones
+          let divisionesCreadas = 0;
+          let errorEnDivisiones = false;
+          
+          divisiones.forEach(division => {
+            gastoModel.crearDivisionGasto(
+              id_gasto,
+              division.id_usuario,
+              division.monto_asignado,
+              sanitizedTipoDivision,
+              (err) => {
+                if (err && !errorEnDivisiones) {
+                  errorEnDivisiones = true;
+                  console.error('Error al crear división:', err);
+                  // Eliminar el gasto si fallan las divisiones
+                  gastoModel.eliminarGasto(id_gasto, () => {});
+                  return res.status(500).json({ error: 'Error al crear las divisiones del gasto.' });
+                }
+                
+                divisionesCreadas++;
+                if (divisionesCreadas === divisiones.length && !errorEnDivisiones) {
+                  // Marcar automáticamente la división del pagador como pagada
+                  gastoModel.marcarDivisionComoPagada(id_gasto, id_pagador_final, (err) => {
+                    if (err) {
+                      console.error('Error al marcar división del pagador como pagada:', err);
+                      // No fallar la creación del gasto por esto
+                    }
+                    
+                    // Obtener información del pagador y del grupo para las notificaciones
+                    const db = require('../config/db');
+                    db.query('SELECT nombre FROM USUARIOS WHERE id_usuario = ?', [id_pagador_final], (err, usuarioResults) => {
+                      const nombrePagador = usuarioResults && usuarioResults[0] ? usuarioResults[0].nombre : 'Un usuario';
+                      
+                      gruposModel.obtenerGrupoPorId(id_grupo, (err, grupoResults) => {
+                        const nombreGrupo = grupoResults && grupoResults[0] ? grupoResults[0].nombre_grupo : 'el grupo';
+                        
+                        // Notificar a todos los participantes del gasto (excepto al pagador)
+                        const idsNotificar = participantes
+                          .map(id => parseInt(id))
+                          .filter(id => id !== id_pagador_final);
+                        
+                        if (idsNotificar.length > 0) {
+                          notificacionHelper.notificarGastoAgregado(
+                            idsNotificar,
+                            nombrePagador,
+                            sanitizedDescripcion,
+                            sanitizedMontoTotal,
+                            nombreGrupo,
+                            id_grupo,
+                            (err) => {
+                              if (err) console.error('Error al notificar gasto agregado:', err);
+                            }
+                          );
+                        }
+                      });
+                    });
+                    
+                    res.status(201).json({ 
+                      mensaje: 'Gasto creado correctamente.',
+                      id_gasto: id_gasto 
+                    });
+                  });
+                }
               }
-              
-              divisionesCreadas++;
-              if (divisionesCreadas === divisiones.length && !errorEnDivisiones) {
-                res.status(201).json({ 
-                  mensaje: 'Gasto creado correctamente.',
-                  id_gasto: id_gasto 
-                });
-              }
-            }
-          );
-        });
-      }
-    );
+            );
+          });
+        }
+      );
+    }
   });
 };
 
@@ -407,17 +470,274 @@ const marcarComoPagado = (req, res) => {
     return res.status(400).json({ error: 'ID de gasto no válido.' });
   }
   
-  gastoModel.marcarDivisionComoPagada(id_gasto, id_usuario, (err, result) => {
+  // Primero obtener información del gasto y la división
+  gastoModel.obtenerGastoPorId(id_gasto, (err, gastoResults) => {
+    if (err || gastoResults.length === 0) {
+      console.error('Error al obtener gasto:', err);
+      return res.status(404).json({ error: 'Gasto no encontrado.' });
+    }
+    
+    const gasto = gastoResults[0];
+    
+    // Obtener la división específica del usuario
+    gastoModel.obtenerDivisionesPorGasto(id_gasto, (err, divisiones) => {
+      if (err) {
+        console.error('Error al obtener divisiones:', err);
+        return res.status(500).json({ error: 'Error al obtener información del gasto.' });
+      }
+      
+      const division = divisiones.find(d => d.id_usuario === id_usuario);
+      if (!division) {
+        return res.status(404).json({ error: 'División no encontrada.' });
+      }
+      
+      // Marcar como pagado
+      gastoModel.marcarDivisionComoPagada(id_gasto, id_usuario, (err, result) => {
+        if (err) {
+          console.error('Error al marcar como pagado:', err);
+          return res.status(500).json({ error: 'Error al marcar como pagado.' });
+        }
+        
+        if (result.affectedRows === 0) {
+          return res.status(404).json({ error: 'División no encontrada.' });
+        }
+        
+        // Verificar si todas las divisiones están pagadas para cambiar el estado del gasto
+        gastoModel.obtenerDivisionesPorGasto(id_gasto, (err, todasLasDivisiones) => {
+          if (err) {
+            console.error('Error al verificar divisiones:', err);
+            // No fallar la operación por esto, solo loggear
+          } else {
+            // Verificar si todas las divisiones están pagadas
+            const todasPagadas = todasLasDivisiones.every(division => division.pagado === 1);
+            
+            if (todasPagadas && gasto.estado === 'pendiente') {
+              // Cambiar el estado del gasto a confirmado
+              gastoModel.actualizarEstadoGasto(id_gasto, 'confirmado', (err, result) => {
+                if (err) {
+                  console.error('Error al actualizar estado del gasto:', err);
+                } else {
+                  console.log(`Gasto ${id_gasto} marcado como confirmado - todas las divisiones pagadas`);
+                }
+              });
+            }
+          }
+          
+          // Obtener información del usuario que pagó
+          const db = require('../config/db');
+          db.query('SELECT nombre FROM USUARIOS WHERE id_usuario = ?', [id_usuario], (err, usuarioResults) => {
+            const nombrePagador = usuarioResults && usuarioResults[0] ? usuarioResults[0].nombre : 'Un usuario';
+            
+            // Obtener información del grupo
+            gruposModel.obtenerGrupoPorId(gasto.id_grupo, (err, grupoResults) => {
+              const nombreGrupo = grupoResults && grupoResults[0] ? grupoResults[0].nombre_grupo : 'el grupo';
+              
+              // Notificar al pagador original del gasto
+              if (gasto.id_pagador !== id_usuario) {
+                notificacionHelper.notificarPagoRealizado(
+                  id_usuario,
+                  gasto.id_pagador,
+                  nombrePagador,
+                  division.monto_asignado,
+                  nombreGrupo,
+                  gasto.id_grupo,
+                  (err) => {
+                    if (err) console.error('Error al notificar pago realizado:', err);
+                  }
+                );
+              }
+            });
+          });
+          
+          res.status(200).json({ mensaje: 'Marcado como pagado correctamente.' });
+        });
+      });
+    });
+  });
+};
+
+// =========== PAGOS PARCIALES ===========
+
+// Realizar un pago parcial
+const realizarPagoParcial = (req, res) => {
+  const { id_gasto, id_usuario_receptor, monto } = req.body;
+  const id_usuario_pagador = req.usuario.id_usuario; // Del token JWT
+  
+  // Validaciones básicas
+  if (!id_gasto || !id_usuario_receptor || !monto) {
+    return res.status(400).json({ error: 'id_gasto, id_usuario_receptor y monto son obligatorios.' });
+  }
+  
+  if (isNaN(monto) || parseFloat(monto) <= 0) {
+    return res.status(400).json({ error: 'El monto debe ser un número positivo.' });
+  }
+  
+  if (id_usuario_pagador === parseInt(id_usuario_receptor)) {
+    return res.status(400).json({ error: 'No puedes hacer un pago a ti mismo.' });
+  }
+  
+  // Obtener el gasto para verificar permisos y obtener id_grupo
+  gastoModel.obtenerGastoPorId(id_gasto, (err, results) => {
     if (err) {
-      console.error('Error al marcar como pagado:', err);
-      return res.status(500).json({ error: 'Error al marcar como pagado.' });
+      console.error('Error al obtener gasto:', err);
+      return res.status(500).json({ error: 'Error interno del servidor.' });
     }
     
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'División no encontrada.' });
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Gasto no encontrado.' });
     }
     
-    res.status(200).json({ mensaje: 'Marcado como pagado correctamente.' });
+    const gasto = results[0];
+    const sanitizedMonto = parseFloat(monto);
+    
+    // Verificar que el usuario pagador es miembro del grupo
+    gruposModel.verificarMiembroGrupo(id_usuario_pagador, gasto.id_grupo, (err, memberResults) => {
+      if (err) {
+        console.error('Error al verificar membresía del pagador:', err);
+        return res.status(500).json({ error: 'Error interno del servidor.' });
+      }
+      
+      if (memberResults.length === 0) {
+        return res.status(403).json({ error: 'No tienes permisos para hacer pagos en este grupo.' });
+      }
+      
+      // Verificar que el usuario receptor es miembro del grupo
+      gruposModel.verificarMiembroGrupo(parseInt(id_usuario_receptor), gasto.id_grupo, (err, receptorResults) => {
+        if (err) {
+          console.error('Error al verificar membresía del receptor:', err);
+          return res.status(500).json({ error: 'Error interno del servidor.' });
+        }
+        
+        if (receptorResults.length === 0) {
+          return res.status(400).json({ error: 'El usuario receptor no es miembro del grupo.' });
+        }
+        
+        // Crear el pago parcial
+        const descripcion = `Pago parcial para gasto: ${gasto.descripcion}`;
+        gastoModel.crearPagoParcial(
+          id_usuario_pagador,
+          parseInt(id_usuario_receptor),
+          gasto.id_grupo,
+          id_gasto,
+          sanitizedMonto,
+          descripcion,
+          (err, result) => {
+            if (err) {
+              console.error('Error al crear pago parcial:', err);
+              return res.status(500).json({ error: 'Error al crear el pago parcial.' });
+            }
+            
+            // Obtener información para notificaciones
+            const db = require('../config/db');
+            db.query('SELECT nombre FROM USUARIOS WHERE id_usuario = ?', [id_usuario_pagador], (err, usuarioResults) => {
+              const nombrePagador = usuarioResults && usuarioResults[0] ? usuarioResults[0].nombre : 'Un usuario';
+              
+              // Notificar al receptor del pago
+              notificacionHelper.notificarPagoParcial(
+                id_usuario_pagador,
+                parseInt(id_usuario_receptor),
+                nombrePagador,
+                sanitizedMonto,
+                gasto.nombre_grupo || 'el grupo',
+                gasto.id_grupo,
+                (err) => {
+                  if (err) console.error('Error al notificar pago parcial:', err);
+                }
+              );
+            });
+            
+            res.status(201).json({ 
+              mensaje: 'Pago parcial registrado correctamente.',
+              id_pago: result.insertId 
+            });
+          }
+        );
+      });
+    });
+  });
+};
+
+// Obtener pagos de un gasto
+const obtenerPagosPorGasto = (req, res) => {
+  const { id_gasto } = req.params;
+  const id_usuario = req.usuario.id_usuario;
+  
+  if (!id_gasto || isNaN(id_gasto)) {
+    return res.status(400).json({ error: 'ID de gasto no válido.' });
+  }
+  
+  // Obtener el gasto para verificar permisos
+  gastoModel.obtenerGastoPorId(id_gasto, (err, gastoResults) => {
+    if (err) {
+      console.error('Error al obtener gasto:', err);
+      return res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+    
+    if (gastoResults.length === 0) {
+      return res.status(404).json({ error: 'Gasto no encontrado.' });
+    }
+    
+    const gasto = gastoResults[0];
+    
+    // Verificar que el usuario es miembro del grupo
+    gruposModel.verificarMiembroGrupo(id_usuario, gasto.id_grupo, (err, memberResults) => {
+      if (err) {
+        console.error('Error al verificar membresía:', err);
+        return res.status(500).json({ error: 'Error interno del servidor.' });
+      }
+      
+      if (memberResults.length === 0) {
+        return res.status(403).json({ error: 'No tienes permisos para ver los pagos de este gasto.' });
+      }
+      
+      // Obtener los pagos del gasto
+      gastoModel.obtenerPagosPorGasto(id_gasto, (err, pagos) => {
+        if (err) {
+          console.error('Error al obtener pagos:', err);
+          return res.status(500).json({ error: 'Error al obtener los pagos.' });
+        }
+        
+        res.status(200).json({ 
+          mensaje: 'Pagos obtenidos correctamente.',
+          pagos: pagos || []
+        });
+      });
+    });
+  });
+};
+
+// Obtener pagos pendientes de un usuario en un grupo
+const obtenerPagosPendientes = (req, res) => {
+  const { id_grupo } = req.params;
+  const id_usuario = req.usuario.id_usuario;
+  
+  if (!id_grupo || isNaN(id_grupo)) {
+    return res.status(400).json({ error: 'ID de grupo no válido.' });
+  }
+  
+  // Verificar que el usuario es miembro del grupo
+  gruposModel.verificarMiembroGrupo(id_usuario, id_grupo, (err, memberResults) => {
+    if (err) {
+      console.error('Error al verificar membresía:', err);
+      return res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+    
+    if (memberResults.length === 0) {
+      return res.status(403).json({ error: 'No tienes permisos para ver los pagos de este grupo.' });
+    }
+    
+    // Obtener los pagos del usuario en el grupo
+    gastoModel.obtenerPagosPorUsuario(id_usuario, id_grupo, (err, pagos) => {
+      if (err) {
+        console.error('Error al obtener pagos:', err);
+        return res.status(500).json({ error: 'Error al obtener los pagos.' });
+      }
+      
+      res.status(200).json({ 
+        mensaje: 'Pagos obtenidos correctamente.',
+        pagos: pagos || []
+      });
+    });
   });
 };
 
@@ -432,5 +752,10 @@ module.exports = {
   obtenerDetalleGasto,
   actualizarGasto,
   eliminarGasto,
-  marcarComoPagado
+  marcarComoPagado,
+  
+  // Pagos Parciales
+  realizarPagoParcial,
+  obtenerPagosPorGasto,
+  obtenerPagosPendientes
 };

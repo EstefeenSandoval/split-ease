@@ -29,6 +29,18 @@
   line-height: 1;
 }
 
+.bell-icon-svg {
+  width: 24px;
+  height: 24px;
+  stroke: #333;
+  stroke-width: 2;
+  display: block;
+}
+
+.notification-bell-button:hover .bell-icon-svg {
+  stroke: #4CAF50;
+}
+
 .notification-badge {
   position: absolute;
   top: 4px;

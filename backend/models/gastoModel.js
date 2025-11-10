@@ -58,7 +58,46 @@ const obtenerGastosPorGrupo = (id_grupo, callback) => {
     ORDER BY g.fecha_gasto DESC
   `;
   
-  db.query(query, [id_grupo], callback);
+  db.query(query, [id_grupo], (err, gastos) => {
+    if (err) return callback(err);
+    
+    if (gastos.length === 0) return callback(null, []);
+    
+    // Obtener divisiones para cada gasto
+    const gastosIds = gastos.map(g => g.id_gasto);
+    const divisionesQuery = `
+      SELECT 
+        dg.id_gasto,
+        dg.id_usuario,
+        dg.monto_asignado as monto,
+        dg.pagado,
+        dg.fecha_pago,
+        dg.tipo_division,
+        u.nombre as nombre_usuario,
+        u.email,
+        u.foto_perfil
+      FROM DIVISIONES_GASTO dg
+      LEFT JOIN USUARIOS u ON dg.id_usuario = u.id_usuario
+      WHERE dg.id_gasto IN (?)
+      ORDER BY dg.id_gasto, u.nombre
+    `;
+    
+    db.query(divisionesQuery, [gastosIds], (err, divisiones) => {
+      if (err) return callback(err);
+      
+      // Agrupar divisiones por gasto
+      const gastosConDivisiones = gastos.map(gasto => {
+        const divisionesDelGasto = divisiones.filter(d => d.id_gasto === gasto.id_gasto);
+        return {
+          ...gasto,
+          divisiones: divisionesDelGasto,
+          participantes: divisionesDelGasto // Alias para compatibilidad
+        };
+      });
+      
+      callback(null, gastosConDivisiones);
+    });
+  });
 };
 
 const obtenerGastoPorId = (id_gasto, callback) => {
@@ -154,6 +193,59 @@ const actualizarDivisionGasto = (id_gasto, id_usuario, monto_asignado, callback)
   );
 };
 
+// =========== PAGOS PARCIALES ===========
+
+const crearPagoParcial = (id_usuario_pagador, id_usuario_receptor, id_grupo, id_gasto, monto, descripcion, callback) => {
+  db.query(
+    'INSERT INTO PAGOS (id_usuario_pagador, id_usuario_receptor, id_grupo, id_gasto, monto, descripcion) VALUES (?, ?, ?, ?, ?, ?)',
+    [id_usuario_pagador, id_usuario_receptor, id_grupo, id_gasto, monto, descripcion || null],
+    callback
+  );
+};
+
+const obtenerPagosPorGasto = (id_gasto, callback) => {
+  const query = `
+    SELECT 
+      p.id_pago,
+      p.id_usuario_pagador,
+      p.id_usuario_receptor,
+      p.monto,
+      p.fecha_pago,
+      p.descripcion,
+      u_pagador.nombre as nombre_pagador,
+      u_receptor.nombre as nombre_receptor
+    FROM PAGOS p
+    LEFT JOIN USUARIOS u_pagador ON p.id_usuario_pagador = u_pagador.id_usuario
+    LEFT JOIN USUARIOS u_receptor ON p.id_usuario_receptor = u_receptor.id_usuario
+    WHERE p.id_gasto = ?
+    ORDER BY p.fecha_pago DESC
+  `;
+  
+  db.query(query, [id_gasto], callback);
+};
+
+const obtenerPagosPorUsuario = (id_usuario, id_grupo, callback) => {
+  const query = `
+    SELECT 
+      p.id_pago,
+      p.id_usuario_pagador,
+      p.id_usuario_receptor,
+      p.id_gasto,
+      p.monto,
+      p.fecha_pago,
+      p.descripcion,
+      u_pagador.nombre as nombre_pagador,
+      u_receptor.nombre as nombre_receptor
+    FROM PAGOS p
+    LEFT JOIN USUARIOS u_pagador ON p.id_usuario_pagador = u_pagador.id_usuario
+    LEFT JOIN USUARIOS u_receptor ON p.id_usuario_receptor = u_receptor.id_usuario
+    WHERE (p.id_usuario_pagador = ? OR p.id_usuario_receptor = ?) AND p.id_grupo = ?
+    ORDER BY p.fecha_pago DESC
+  `;
+  
+  db.query(query, [id_usuario, id_usuario, id_grupo], callback);
+};
+
 module.exports = {
   // Categorías
   obtenerCategorias,
@@ -173,5 +265,10 @@ module.exports = {
   obtenerDivisionesPorGasto,
   marcarDivisionComoPagada,
   eliminarDivisionesPorGasto,
-  actualizarDivisionGasto
+  actualizarDivisionGasto,
+  
+  // Pagos Parciales
+  crearPagoParcial,
+  obtenerPagosPorGasto,
+  obtenerPagosPorUsuario
 };
