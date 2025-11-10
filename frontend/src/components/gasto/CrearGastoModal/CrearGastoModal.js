@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faPlus, faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { construirURLEstatico } from '../../../config/api';
 import './CrearGastoModal.css';
 
@@ -16,7 +16,6 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
   // Obtener fecha actual en zona horaria GMT-6 (México)
   const obtenerFechaGMT6 = () => {
     const now = new Date();
-    // GMT-6 = UTC-6 horas
     // Crear fecha en GMT-6
     const gmt6Date = new Date(now.toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
     
@@ -184,10 +183,6 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
       return 0;
     }
     return parseFloat(formData.monto_total) / formData.participantes.length;
-  };
-
-  const tieneMontos = () => {
-    return formData.montos_personalizados.some(m => m.monto > 0);
   };
 
   const validarFormulario = () => {
