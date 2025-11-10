@@ -154,6 +154,15 @@
   opacity: 0.5;
 }
 
+.empty-icon-svg {
+  width: 48px;
+  height: 48px;
+  stroke: #999;
+  stroke-width: 1.5;
+  opacity: 0.5;
+  margin-bottom: 12px;
+}
+
 .notification-panel-empty p {
   margin: 0;
   font-size: 14px;

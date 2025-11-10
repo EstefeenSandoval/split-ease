@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import NotificationItem from './NotificationItem';
-import NotificationSettings from './NotificationSettings';
+import NotificationItem from '../NotificationItem/NotificationItem';
+import NotificationSettings from '../NotificationSettings/NotificationSettings';
 import { 
   getPendingNotifications, 
   getHistoryNotifications, 
@@ -10,13 +10,13 @@ import {
   getUnreadCount,
   connectNotificationSSE,
   disconnectNotificationSSE
-} from '../../config/notificacionesApi';
+} from '../../../config/notificacionesApi';
 import './NotificationPanel.css';
 
 /**
  * Componente NotificationPanel - Panel dropdown de notificaciones
  */
-const NotificationPanel = ({ isOpen, onClose, userId, anchorRef, onCountUpdate }) => {
+export const NotificationPanel = ({ isOpen, onClose, userId, anchorRef, onCountUpdate }) => {
   const [activeTab, setActiveTab] = useState('pendientes');
   const [pendingNotifications, setPendingNotifications] = useState([]);
   const [historyNotifications, setHistoryNotifications] = useState([]);
@@ -205,7 +205,12 @@ const NotificationPanel = ({ isOpen, onClose, userId, anchorRef, onCountUpdate }
       <div ref={panelRef} className="notification-panel">
         {/* Header */}
         <div className="notification-panel-header">
-          <h3 className="notification-panel-title">🔔 Notificaciones</h3>
+          <h3 className="notification-panel-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ width: '20px', height: '20px', display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }}>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            Notificaciones
+          </h3>
          
         </div>
 
@@ -243,7 +248,9 @@ const NotificationPanel = ({ isOpen, onClose, userId, anchorRef, onCountUpdate }
                 </div>
               ) : pendingNotifications.length === 0 ? (
                 <div className="notification-panel-empty">
-                  <span className="empty-icon">✓</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="empty-icon-svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                   <p>No tienes notificaciones pendientes</p>
                 </div>
               ) : (
@@ -267,7 +274,9 @@ const NotificationPanel = ({ isOpen, onClose, userId, anchorRef, onCountUpdate }
                 </div>
               ) : historyNotifications.length === 0 ? (
                 <div className="notification-panel-empty">
-                  <span className="empty-icon">📭</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="empty-icon-svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                  </svg>
                   <p>No hay notificaciones en el historial</p>
                 </div>
               ) : (

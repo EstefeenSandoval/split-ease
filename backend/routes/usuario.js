@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');
-const { mostrarTodos, registrar, login, validar, actualizarPerfil} = require('../controllers/usuarioController');
+const { mostrarTodos, registrar, login, validar, actualizarPerfil, obtenerPerfil} = require('../controllers/usuarioController');
 
 //<summary>
 // Rutas para la gestión de usuarios
@@ -25,7 +25,10 @@ router.get('/mostrar', auth.verificarToken, mostrarTodos);
 // /api/usuarios/validar
 router.get('/validar', auth.verificarToken, validar);
 
-// /api/usuarios/perfil
+// /api/usuarios/perfil - Obtener perfil del usuario actual
+router.get('/perfil', auth.verificarToken, obtenerPerfil);
+
+// /api/usuarios/perfil - Actualizar perfil
 router.put('/perfil', auth.verificarToken, upload.single('foto_perfil'), actualizarPerfil);
 
 module.exports = router;

@@ -187,5 +187,33 @@ const actualizarPerfil = (req, res) => {
   });
 };
 
+// Obtener perfil del usuario actual
+const obtenerPerfil = (req, res) => {
+  const userId = req.usuario.id_usuario;
 
-module.exports = { registrar, mostrarTodos, login, validar, actualizarPerfil };
+  usuarioModel.findById(userId, (err, results) => {
+    if (err) {
+      console.error('Error al obtener perfil:', err);
+      return res.status(500).json({ error: 'Error al obtener perfil.' });
+    }
+    
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado.' });
+    }
+
+    const usuario = results[0];
+    res.status(200).json({ 
+      usuario: {
+        id_usuario: usuario.id_usuario,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        foto_perfil: usuario.foto_perfil,
+        fecha_registro: usuario.fecha_registro,
+        activo: usuario.activo
+      }
+    });
+  });
+};
+
+
+module.exports = { registrar, mostrarTodos, login, validar, actualizarPerfil, obtenerPerfil };

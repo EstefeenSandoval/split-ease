@@ -359,7 +359,7 @@ const Headers = ({ onOpenModal, user, onLogout }) => {
                         <svg width="16" height="16" viewBox="0 0 16 16" className="header-menu-icon">
                           <path d="M8 1a1 1 0 00-1 1v1H4a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2h-3V2a1 1 0 00-1-1zm0 4a3 3 0 110 6 3 3 0 010-6z" fill="currentColor"/>
                         </svg>
-                        Crear Gasto
+                        Ver Gastos
                       </button>
                       
                       <button 

@@ -1,29 +1,64 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faUsers, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { CrearGastoModal } from '../components/grupos';
+import { faUsers, faTimes, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { ListaGastos, CrearGastoModal } from '../components/gasto';
 import { construirURLEstatico } from '../config/api';
 import API_ENDPOINTS from '../config/api';
 import './Gastos.css';
+
+// SVG para Gestionar Gastos (Lista de gastos)
+const SVGGestionarGastos = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M9 6.75H15M9 12H15M9 17.25H15M4.5 6.75H4.507M4.5 12H4.507M4.5 17.25H4.507" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// SVG para Crear Gasto Rápido (Plus dentro de círculo)
+const SVGCrearGasto = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M12 9V15M9 12H15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
 
 const Gastos = () => {
   const [grupos, setGrupos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
   const [grupoSeleccionado, setGrupoSeleccionado] = useState(null);
-  const [mostrarModalCrearGasto, setMostrarModalCrearGasto] = useState(false);
   const [categorias, setCategorias] = useState([]);
   const [participantes, setParticipantes] = useState([]);
-  const [cargandoGasto, setCargandoGasto] = useState(false);
   const [mostrarModalMiembros, setMostrarModalMiembros] = useState(false);
   const [miembrosGrupo, setMiembrosGrupo] = useState([]);
   const [grupoParaMostrarMiembros, setGrupoParaMostrarMiembros] = useState(null);
+  const [mostrarCrearGastoRapido, setMostrarCrearGastoRapido] = useState(false);
+  const [grupoParaGastoRapido, setGrupoParaGastoRapido] = useState(null);
 
   // Cargar grupos al montar el componente
   useEffect(() => {
     cargarGrupos();
+    cargarCategorias();
   }, []);
+
+  const cargarCategorias = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(API_ENDPOINTS.gastos.categorias, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCategorias(data.categorias || []);
+      }
+    } catch (error) {
+      console.error('Error al cargar categorías:', error);
+    }
+  };
 
   const cargarGrupos = async () => {
     try {
@@ -62,9 +97,11 @@ const Gastos = () => {
               
               if (participantesResponse.ok) {
                 const participantesData = await participantesResponse.json();
+                const participantes = participantesData.participantes || [];
                 return {
                   ...grupo,
-                  cantidad_miembros: participantesData.participantes?.length || 0
+                  cantidad_miembros: participantes.length,
+                  _miembros_nombres: participantes.slice(0, 3).map(p => p.nombre || p.nombre_usuario)
                 };
               }
               return grupo;
@@ -89,31 +126,14 @@ const Gastos = () => {
     }
   };
 
-  const handleSeleccionarGrupo = (grupo) => {
+  const handleSeleccionarGrupo = async (grupo) => {
     setGrupoSeleccionado(grupo);
-    cargarDetallesGrupo(grupo.id_grupo);
-    setMostrarModalCrearGasto(true);
+    await cargarDetallesGrupo(grupo.id_grupo);
   };
 
   const cargarDetallesGrupo = async (idGrupo) => {
     try {
       const token = localStorage.getItem('token');
-      
-      // Cargar categorías
-      const categoriesResponse = await fetch(
-        API_ENDPOINTS.gastos.categorias,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-      
-      if (categoriesResponse.ok) {
-        const categoriesData = await categoriesResponse.json();
-        setCategorias(categoriesData.categorias || []);
-      }
 
       // Cargar participantes del grupo usando el endpoint correcto
       const participantesResponse = await fetch(
@@ -136,48 +156,14 @@ const Gastos = () => {
     }
   };
 
-  const handleCrearGasto = async (formData) => {
-    try {
-      setCargandoGasto(true);
-      const token = localStorage.getItem('token');
-
-      // Agregar el ID del grupo al formulario
-      const gastoData = {
-        ...formData,
-        id_grupo: grupoSeleccionado.id_grupo
-      };
-
-      const response = await fetch(API_ENDPOINTS.gastos.crear, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(gastoData)
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success('Gasto creado correctamente');
-        setMostrarModalCrearGasto(false);
-        setGrupoSeleccionado(null);
-        // Reiniciar para poder crear otro gasto
-        cargarGrupos();
-      } else {
-        toast.error(data.error || 'Error al crear el gasto');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      toast.error('Error de conexión');
-    } finally {
-      setCargandoGasto(false);
+  const obtenerNombresTooltip = (grupo) => {
+    if (grupo.cantidad_miembros === 0) {
+      return 'Sin miembros';
     }
-  };
-
-  const handleCerrarModal = () => {
-    setMostrarModalCrearGasto(false);
-    setGrupoSeleccionado(null);
+    if (grupo._miembros_nombres && grupo._miembros_nombres.length > 0) {
+      return grupo._miembros_nombres.slice(0, 3).join(', ');
+    }
+    return `${grupo.cantidad_miembros} ${grupo.cantidad_miembros === 1 ? 'miembro' : 'miembros'}`;
   };
 
   const handleVerMiembros = async (grupo) => {
@@ -213,14 +199,68 @@ const Gastos = () => {
     setGrupoParaMostrarMiembros(null);
   };
 
-  // Si tenemos un grupo seleccionado, mostrar solo el modal
-  if (grupoSeleccionado && mostrarModalCrearGasto) {
+  const handleCrearGastoRapido = async (grupo) => {
+    setGrupoParaGastoRapido(grupo);
+    setMostrarCrearGastoRapido(true);
+    await cargarDetallesGrupo(grupo.id_grupo);
+  };
+
+  const handleCerrarCrearGastoRapido = () => {
+    setMostrarCrearGastoRapido(false);
+    setGrupoParaGastoRapido(null);
+  };
+
+  const handleCrearGastoRapidoSubmit = async (datosGasto) => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      const response = await fetch(API_ENDPOINTS.gastos.crear, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...datosGasto,
+          id_grupo: grupoParaGastoRapido.id_grupo
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success('Gasto creado correctamente');
+        handleCerrarCrearGastoRapido();
+        cargarGrupos();
+      } else {
+        toast.error(data.error || 'Error al crear gasto');
+        throw new Error(data.error || 'Error al crear gasto');
+      }
+    } catch (error) {
+      console.error('Error al crear gasto:', error);
+      toast.error('Error de conexión al crear gasto');
+    }
+  };
+
+  // Si tenemos un grupo seleccionado, mostrar lista de gastos
+  if (grupoSeleccionado) {
     return (
-      <div className="gastos-container gastos-modal-view">
-        <CrearGastoModal
-          isOpen={mostrarModalCrearGasto}
-          onClose={handleCerrarModal}
-          onCrear={handleCrearGasto}
+      <div className="gastos-container gastos-container-detalle">
+        <div className="gastos-header-detalle">
+          <button
+            className="btn-volver-detalle"
+            onClick={() => setGrupoSeleccionado(null)}
+            title="Volver a la lista de grupos"
+          >
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </button>
+          <div className="gastos-titulo-detalle">
+            <h1>Gestión de Gastos</h1>
+          </div>
+        </div>
+
+        <ListaGastos
+          grupo={grupoSeleccionado}
           participantes={participantes}
           categorias={categorias}
         />
@@ -232,10 +272,8 @@ const Gastos = () => {
   return (
     <div className="gastos-container">
       <div className="gastos-header">
-        <h1>Crear Nuevo Gasto</h1>
-        <p className="gastos-subtitle">
-          Selecciona un grupo para crear un nuevo gasto
-        </p>
+        <h1>Gastos por Grupo</h1>
+        <p>Selecciona un grupo para ver, crear, editar, eliminar o pagar gastos</p>
       </div>
 
       {cargando ? (
@@ -270,6 +308,7 @@ const Gastos = () => {
                   className="grupo-badge-button"
                   onClick={() => handleVerMiembros(grupo)}
                   title="Ver miembros del grupo"
+                  data-tooltip={obtenerNombresTooltip(grupo)}
                 >
                   <FontAwesomeIcon icon={faUsers} />
                   {grupo.cantidad_miembros || 0}
@@ -286,14 +325,24 @@ const Gastos = () => {
                 </p>
               </div>
 
-              <button
-                className="btn-crear-en-grupo"
-                onClick={() => handleSeleccionarGrupo(grupo)}
-                disabled={cargandoGasto}
-              >
-                <FontAwesomeIcon icon={faPlus} /> 
-                Crear Gasto
-              </button>
+              <div className="grupo-acciones-gasto">
+                <button
+                  className="btn-crear-rapido-gasto"
+                  onClick={() => handleCrearGastoRapido(grupo)}
+                  title="Crear gasto rápidamente en este grupo"
+                >
+                  <SVGCrearGasto />
+                  Crear Gasto
+                </button>
+
+                <button
+                  className="btn-crear-en-grupo"
+                  onClick={() => handleSeleccionarGrupo(grupo)}
+                >
+                  <SVGGestionarGastos />
+                  Gestionar Gastos
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -347,6 +396,18 @@ const Gastos = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal de Crear Gasto Rápido */}
+      {mostrarCrearGastoRapido && grupoParaGastoRapido && (
+        <CrearGastoModal
+          isOpen={mostrarCrearGastoRapido}
+          onClose={handleCerrarCrearGastoRapido}
+          onCrear={handleCrearGastoRapidoSubmit}
+          participantes={participantes}
+          categorias={categorias}
+          grupoId={grupoParaGastoRapido.id_grupo}
+        />
       )}
     </div>
   );

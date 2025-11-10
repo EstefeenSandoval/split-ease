@@ -7,5 +7,4 @@ export { default as UnirseGrupoForm } from './UnirseGrupoForm/UnirseGrupoForm';
 export { default as ParticipantCard } from './ParticipantCard/ParticipantCard';
 export { default as GrupoGastos } from './GrupoGastos/GrupoGastos';
 export { default as GastoCard } from './GastoCard/GastoCard';
-export { default as CrearGastoModal } from './CrearGastoModal/CrearGastoModal';
 export { default as DetalleGastoModal } from './DetalleGastoModal/DetalleGastoModal';
