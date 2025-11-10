@@ -1,5 +1,7 @@
 import React from 'react';
 import './ActividadReciente.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReceipt } from '@fortawesome/free-solid-svg-icons';
 
 const ActividadReciente = ({ actividades, onCargarMas, paginacion }) => {
   const formatearFecha = (fecha) => {
@@ -43,7 +45,10 @@ const ActividadReciente = ({ actividades, onCargarMas, paginacion }) => {
   if (actividades.length === 0) {
     return (
       <div className="actividad-reciente-container">
-        <h3 className="actividad-titulo">📋 Actividad Reciente</h3>
+        <h3 className="actividad-titulo">
+          <FontAwesomeIcon icon={faReceipt} style={{ color: 'var(--verde-profundo)', marginRight: 8 }} />
+          Actividad Reciente
+        </h3>
         <div className="actividad-vacia">
           <p>No hay actividad reciente</p>
         </div>
@@ -53,7 +58,10 @@ const ActividadReciente = ({ actividades, onCargarMas, paginacion }) => {
 
   return (
     <div className="actividad-reciente-container">
-      <h3 className="actividad-titulo">📋 Actividad Reciente</h3>
+      <h3 className="actividad-titulo">
+        <FontAwesomeIcon icon={faReceipt} style={{ color: 'var(--verde-profundo)', marginRight: 8 }} />
+        Actividad Reciente
+      </h3>
       <div className="actividad-lista">
         {actividades.map((actividad, index) => (
           <div

@@ -23,26 +23,24 @@
   justify-content: center;
   font-size: 1.8rem;
   flex-shrink: 0;
+
+  /* Fondo e icono según paleta principal */
+  background: var(--verde-claro);
+  color: var(--verde-profundo);
+
+  /* Evita degradados previos y añade sombra sutil */
+  background-image: none;
+  box-shadow: 0 4px 12px rgba(73, 132, 103, 0.06);
 }
 
-.kpi-card.balance .kpi-icono {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-}
-
-.kpi-card.cobros .kpi-icono {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  color: white;
-}
-
-.kpi-card.deudas .kpi-icono {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  color: white;
-}
-
+/* Sobrescribir reglas por tipo para asegurar el mismo estilo (sin degradados) */
+.kpi-card.balance .kpi-icono,
+.kpi-card.cobros .kpi-icono,
+.kpi-card.deudas .kpi-icono,
 .kpi-card.gastos .kpi-icono {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  color: white;
+  background: var(--verde-claro);
+  color: var(--verde-profundo);
+  background-image: none;
 }
 
 .kpi-contenido {
@@ -59,18 +57,18 @@
 }
 
 .kpi-valor {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--verde-profundo);
   margin: 0;
 }
 
-.kpi-valor.valor-positivo {
+.kpi-valor-positivo {
   color: #10b981;
 }
 
-.kpi-valor.valor-negativo {
-  color: #ef4444;
+.kpi-valor-negativo {
+  color: #ef4444 !important;
 }
 
 @media (max-width: 768px) {

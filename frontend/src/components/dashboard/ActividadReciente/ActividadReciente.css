@@ -1,8 +1,14 @@
 .actividad-reciente-container {
-  background: white;
+  background: var(--fondo-tarjeta);
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.75rem;
+  box-shadow: 0 6px 20px rgba(37, 38, 39, 0.2), 0 3px 10px rgba(37, 38, 39, 0.12), 0 1px 4px rgba(37, 38, 39, 0.08);
+  border: 1px solid var(--borde-suave);
+  transition: box-shadow 0.3s ease;
+}
+
+.actividad-reciente-container:hover {
+  box-shadow: 0 8px 28px rgba(37, 38, 39, 0.25), 0 4px 14px rgba(37, 38, 39, 0.15), 0 2px 6px rgba(37, 38, 39, 0.1);
 }
 
 .actividad-titulo {

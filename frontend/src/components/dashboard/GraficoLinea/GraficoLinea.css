@@ -1,8 +1,21 @@
 .grafico-linea-container {
-  background: white;
+  background: var(--fondo-tarjeta);
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.75rem;
+  box-shadow:0;
+  transition: box-shadow 0.3s ease;
+}
+
+.grafico-linea-container:hover {
+  box-shadow: 0.5;
+}
+
+.grafico-titulo {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.3rem;
+  color: var(--texto-principal);
+  font-weight: 600;
+  font-family: var(--font-secondary);
 }
 
 .grafico-linea-contenido {
@@ -13,65 +26,92 @@
 
 .grafico-linea-svg {
   width: 100%;
-  height: 200px;
+  height: 280px;
 }
 
 .punto-linea {
   cursor: pointer;
-  transition: r 0.2s, stroke-width 0.2s;
+  transition: all 0.3s ease;
 }
 
 .punto-linea:hover {
-  r: 2;
-  stroke-width: 0.8;
+  filter: brightness(1.1);
+  transform: translateY(-1px);
 }
 
 .grafico-linea-etiquetas {
   display: flex;
   justify-content: space-between;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--verde-claro);
 }
 
 .etiqueta-mes {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.4rem;
   flex: 1;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.etiqueta-mes:hover {
+  background: var(--fondo-hover);
 }
 
 .etiqueta-mes-nombre {
-  font-size: 0.75rem;
-  color: #64748b;
-  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--texto-secundario);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-secondary);
 }
 
 .etiqueta-mes-valor {
-  font-size: 0.875rem;
-  color: #1e293b;
-  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--verde-profundo);
+  font-weight: 700;
+  font-family: var(--font-secondary);
 }
 
 .grafico-vacio {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 200px;
-  color: #94a3b8;
-  font-size: 1rem;
+  height: 280px;
+  color: var(--texto-secundario);
+  font-size: 1.1rem;
+  background: var(--fondo-secundario);
+  border-radius: 8px;
 }
 
 @media (max-width: 768px) {
-  .etiqueta-mes-nombre {
-    font-size: 0.625rem;
+  .grafico-linea-container {
+    padding: 1.25rem;
   }
 
-  .etiqueta-mes-valor {
-    font-size: 0.75rem;
+  .grafico-titulo {
+    font-size: 1.1rem;
   }
 
   .grafico-linea-svg {
-    height: 150px;
+    height: 220px;
+  }
+
+  .etiqueta-mes-nombre {
+    font-size: 0.85rem;
+  }
+
+  .etiqueta-mes-valor {
+    font-size: 1rem;
+  }
+
+  .grafico-vacio {
+    height: 220px;
   }
 }

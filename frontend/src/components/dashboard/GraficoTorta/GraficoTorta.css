@@ -1,8 +1,8 @@
 .grafico-torta-container {
   background: white;
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  box-shadow: 0;
 }
 
 .grafico-titulo {
@@ -112,6 +112,44 @@
   height: 240px;
   color: #94a3b8;
   font-size: 1rem;
+}
+
+/* --- AÑADIR ESTILOS PARA EL TOOLTIP --- */
+
+.grafico-tooltip {
+  position: fixed; /* Se posiciona relativo a la ventana del navegador */
+  background-color: var(--casi-negro); /* Un color oscuro (indigo-800), similar a la imagen */
+  color: white;
+  padding: 0.5rem 0.75rem; /* 8px 12px */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 0.875rem; /* 14px */
+  z-index: 1000;
+  
+  /* MUY IMPORTANTE: Evita que el tooltip bloquee los eventos del mouse */
+  pointer-events: none; 
+  
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Espacio entre el círculo, nombre y porcentaje */
+  white-space: nowrap; /* Evita que el texto se parta en dos líneas */
+}
+
+/* Estiliza el círculo de color dentro del tooltip */
+.grafico-tooltip .leyenda-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%; /* Lo hace un círculo */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Borde blanco sutil */
+  flex-shrink: 0;
+}
+
+.tooltip-nombre {
+  font-weight: 500;
+}
+
+.tooltip-porcentaje {
+  font-weight: 700; /* Hace el porcentaje más grueso */
 }
 
 @media (max-width: 768px) {
