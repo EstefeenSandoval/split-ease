@@ -1,6 +1,5 @@
-/* UnirseGrupoForm.css - Diseño moderno para formulario de unirse a grupo */
+/* UnirseGrupoForm.css - Diseño coherente con Gastos */
 
-/* Variables CSS consistentes con la aplicación */
 :root {
   --viridian: #498467;
   --celadon: #bcebcb;
@@ -12,6 +11,9 @@
   --success-green: #28a745;
   --warning-orange: #fd7e14;
   --danger-red: #dc3545;
+  --fuente-principal: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
 }
 
 .unirse-grupo-overlay {
@@ -50,6 +52,7 @@
   animation: slideInScale 0.4s ease-out;
   position: relative;
   overflow: hidden;
+  font-family: var(--fuente-principal);
 }
 
 .unirse-grupo-modal::before {
@@ -87,18 +90,20 @@
   position: relative;
 }
 
+
 .unirse-grupo-modal p {
-  margin: 0 0 2rem 0;
+  margin: 0 0 1.5rem 0;
   color: var(--gunmetal);
   text-align: center;
   line-height: 1.6;
-  background: linear-gradient(135deg, var(--light-green) 0%, rgba(188, 235, 203, 0.3) 100%);
-  padding: 1.5rem;
-  border-radius: 12px;
+  background: linear-gradient(135deg, var(--light-green) 0%, rgba(188, 235, 203, 0.2) 100%);
+  padding: 1.25rem;
+  border-radius: 10px;
   border: 1px solid rgba(73, 132, 103, 0.2);
   position: relative;
   overflow: hidden;
   font-weight: 500;
+  font-size: 0.95rem;
 }
 
 .unirse-grupo-modal p::before {
@@ -106,10 +111,10 @@
   position: absolute;
   top: 0.75rem;
   left: 1rem;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: var(--viridian);
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   background: var(--viridian);
   border-radius: 50%;
   display: flex;
@@ -122,7 +127,7 @@
   position: absolute;
   top: 0.75rem;
   left: 1rem;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: white;
   font-weight: bold;
   font-style: italic;
@@ -130,7 +135,7 @@
 }
 
 .form-group {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   position: relative;
 }
 
@@ -151,10 +156,10 @@
 
 .form-group input {
   width: 100%;
-  padding: 1rem 4rem 1rem 1.25rem;
+  padding: 0.875rem 3.5rem 0.875rem 1rem;
   border: 2px solid rgba(188, 235, 203, 0.5);
   border-radius: 12px;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   transition: all 0.3s ease;
   box-sizing: border-box;
   background: rgba(255, 255, 255, 0.9);
@@ -174,21 +179,21 @@
   color: white;
   border: none;
   border-radius: 8px;
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 1.2rem;
-  transition: all 0.3s ease, opacity 0.2s ease;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(73, 132, 103, 0.2);
 }
 
 .btn-paste:hover:not(:disabled) {
   background: var(--dark-green);
+  transform: translateY(-50%) scale(1.05);
   box-shadow: 0 4px 12px rgba(73, 132, 103, 0.3);
-  opacity: 0.95;
 }
 
 .btn-paste:disabled {

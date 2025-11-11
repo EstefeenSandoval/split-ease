@@ -207,18 +207,6 @@
   left: 100%;
 }
 
-.btn-ver-detalle {
-  background: linear-gradient(135deg, var(--info-blue) 0%, #138496 100%);
-  color: white;
-  box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
-}
-
-.btn-ver-detalle:hover {
-  background: linear-gradient(135deg, #138496 0%, var(--info-blue) 100%);
-  box-shadow: 0 6px 20px rgba(23, 162, 184, 0.4);
-  opacity: 0.95;
-}
-
 .btn-marcar-pagado {
   background: linear-gradient(135deg, var(--success-green) 0%, #1e7e34 100%);
   color: white;
