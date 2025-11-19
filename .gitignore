@@ -145,3 +145,14 @@ vite.config.ts.timestamp-*
 # Archivos subidos por usuarios (backend)
 backend/public/uploads/
 
+# Capacitor generated files (Ionic/Capacitor)
+/ios
+/android
+.capacitor/
+capacitor.config.json
+**/capacitor.config.json
+
+# Frontend build and dist
+frontend/dist/
+frontend/build/
+
