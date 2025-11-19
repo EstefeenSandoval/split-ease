@@ -183,6 +183,27 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.3px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.gce-participantes-stats {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.gce-stat-pagado {
+  color: var(--success-green);
+  font-weight: 600;
+}
+
+.gce-stat-pendiente {
+  color: var(--warning-orange);
+  font-weight: 600;
 }
 
 .gce-participantes-preview {
@@ -231,6 +252,57 @@
 .gce-avatar-mas {
   background: linear-gradient(135deg, var(--cinereous) 0%, #7a6868 100%);
   font-size: 0.65rem;
+}
+
+.gce-avatar-pagado {
+  border-color: var(--success-green) !important;
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
+}
+
+.gce-avatar-pendiente {
+  border-color: var(--warning-orange) !important;
+  box-shadow: 0 0 0 2px rgba(253, 126, 20, 0.2);
+}
+
+.gce-avatar-check {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 14px;
+  height: 14px;
+  background: var(--success-green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.gce-avatar-check svg {
+  font-size: 0.5rem;
+  color: white;
+}
+
+.gce-btn-ver-detalle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--info-blue) 0%, #138496 100%);
+  color: white;
+  border: 2px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3);
+}
+
+.gce-btn-ver-detalle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
 }
 
 /* Acciones */
