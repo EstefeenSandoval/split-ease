@@ -1,418 +1,619 @@
+/* PagarGastoModal.css - Diseño cohesivo con la aplicación */
+
+/* Variables CSS consistentes */
+:root {
+  --viridian: #498467;
+  --celadon: #bcebcb;
+  --eerie-black: #252627;
+  --gunmetal: #2e3138;
+  --cinereous: #998888;
+  --light-green: #e8f5e8;
+  --dark-green: #3a6b54;
+  --success-green: #28a745;
+  --warning-orange: #fd7e14;
+  --danger-red: #dc3545;
+  --info-blue: #17a2b8;
+}
+
 .pagar-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 1rem;
+  overflow-y: auto;
 }
 
 .pagar-modal-content {
+  background: white;
+  border-radius: 20px;
   width: 90%;
-  max-width: 500px;
+  max-width: 550px;
   max-height: 90vh;
   overflow-y: auto;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  background: white;
-  animation: slideUp 0.3s ease-out;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  border: 1px solid #e0e0e0;
+  animation: modalSlideIn 0.3s ease-out;
+  margin: auto;
 }
 
-@keyframes slideUp {
+@keyframes modalSlideIn {
   from {
-    transform: translateY(30px);
     opacity: 0;
+    transform: translateY(-30px) scale(0.95);
   }
   to {
-    transform: translateY(0);
     opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
+/* Scrollbar personalizado */
+.pagar-modal-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.pagar-modal-content::-webkit-scrollbar-track {
+  background: rgba(188, 235, 203, 0.1);
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.pagar-modal-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--viridian) 0%, var(--dark-green) 100%);
+  border-radius: 10px;
+  border: 2px solid white;
+}
+
+.pagar-modal-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--dark-green) 0%, var(--viridian) 100%);
+}
+
+/* Header */
 .pagar-modal-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 24px;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
   border-bottom: 1px solid #e0e0e0;
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-radius: 20px 20px 0 0;
 }
 
 .pagar-modal-header h2 {
   margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-  color: #333;
+  color: var(--viridian);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
+.modal-close-button {
+  background: transparent;
+  color: var(--cinereous);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.modal-close-button:hover {
+  background: var(--viridian);
+  color: white;
+  transform: rotate(90deg);
+}
+
+.modal-close-button:active {
+  transform: rotate(90deg) scale(0.95);
+}
+
+.modal-close-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Body */
 .pagar-modal-body {
-  padding: 24px;
+  padding: 1.5rem 2rem;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1.5rem;
 }
 
 /* Información del Gasto */
 .pagar-info-gasto {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 16px;
-  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(188, 235, 203, 0.2) 0%, rgba(188, 235, 203, 0.05) 100%);
+  padding: 1.25rem;
+  border-radius: 16px;
+  border: 1px solid rgba(188, 235, 203, 0.4);
 }
 
 .pagar-info-gasto h3 {
-  margin: 0 0 12px 0;
-  font-size: 16px;
-  color: #333;
-  font-weight: 600;
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  color: var(--eerie-black);
+  font-weight: 700;
 }
 
 .pagar-monto-info {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .info-item {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 }
 
 .info-item .label {
-  font-size: 12px;
-  color: #666;
-  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--cinereous);
+  font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .info-item .valor {
-  font-size: 18px;
+  font-size: 1rem;
   font-weight: 700;
-  color: #333;
-}
-
-.info-item .valor.pendiente {
-  color: #e74c3c;
-}
-
-.info-item .valor.completado {
-  color: #27ae60;
+  color: var(--gunmetal);
 }
 
 .info-item .valor.valor-tu-deuda {
-  color: #c0392b;
-  font-size: 20px;
-  background: linear-gradient(135deg, rgba(192, 57, 43, 0.1) 0%, rgba(192, 57, 43, 0.05) 100%);
-  padding: 4px 8px;
-  border-radius: 4px;
+  color: var(--viridian);
+  font-size: 1.75rem;
+  background: linear-gradient(135deg, rgba(73, 132, 103, 0.15) 0%, rgba(73, 132, 103, 0.05) 100%);
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(73, 132, 103, 0.3);
 }
 
 /* Selector de Tipo de Pago */
 .pagar-tipo-selector {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.75rem;
 }
 
 .selector-option {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 12px;
+  gap: 0.85rem;
+  padding: 1rem;
   border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
+  background: white;
 }
 
 .selector-option:hover {
-  border-color: #3498db;
-  background: #f0f7ff;
+  border-color: var(--viridian);
+  background: rgba(188, 235, 203, 0.05);
+  box-shadow: 0 2px 8px rgba(73, 132, 103, 0.1);
 }
 
 .selector-option input[type="radio"] {
-  margin-top: 2px;
+  margin-top: 0.2rem;
   cursor: pointer;
-  accent-color: #3498db;
-}
-
-.selector-option input[type="radio"]:checked {
-  accent-color: #2980b9;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--viridian);
+  flex-shrink: 0;
 }
 
 .selector-option input[type="radio"]:checked ~ .selector-label {
-  color: #2980b9;
+  color: var(--viridian);
+}
+
+.selector-option:has(input[type="radio"]:checked) {
+  border-color: var(--viridian);
+  background: rgba(188, 235, 203, 0.1);
+  box-shadow: 0 0 0 3px rgba(73, 132, 103, 0.1);
 }
 
 .selector-label {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0.3rem;
   flex: 1;
 }
 
 .selector-label strong {
-  font-size: 14px;
-  color: #333;
-  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--eerie-black);
+  font-weight: 700;
 }
 
 .selector-label small {
-  font-size: 12px;
-  color: #999;
-  font-weight: normal;
+  font-size: 0.8rem;
+  color: var(--cinereous);
+  font-weight: 400;
+  line-height: 1.4;
 }
 
 /* Sección de Pago Completo */
 .pagar-completo-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 1rem;
 }
 
 .pagar-resumen {
-  background: #ecf0f1;
-  padding: 12px;
-  border-radius: 8px;
+  background: rgba(188, 235, 203, 0.08);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(188, 235, 203, 0.2);
 }
 
 .pagar-resumen p {
-  margin: 0 0 12px 0;
-  font-size: 13px;
-  color: #555;
+  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+  color: var(--gunmetal);
   line-height: 1.5;
 }
 
 .pagar-breakdown {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .breakdown-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px;
-  color: #333;
-  padding: 8px;
+  font-size: 0.95rem;
+  color: var(--gunmetal);
+  padding: 0.75rem 1rem;
   background: white;
-  border-radius: 6px;
+  border-radius: 10px;
+  border: 1px solid rgba(188, 235, 203, 0.3);
 }
 
 .breakdown-item strong {
-  font-size: 16px;
-  color: #2980b9;
-  font-weight: 700;
+  color: var(--viridian);
+  font-size: 1.1rem;
 }
 
 /* Sección de Pago Parcial */
 .pagar-parcial-section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.5rem;
 }
 
 .form-group label {
-  font-size: 13px;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: #333;
-  text-transform: uppercase;
+  color: var(--gunmetal);
+  letter-spacing: 0.2px;
 }
 
 .monto-input-group {
+  position: relative;
   display: flex;
   align-items: center;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 0 12px;
-  transition: border-color 0.3s ease;
-}
-
-.monto-input-group:focus-within {
-  border-color: #3498db;
 }
 
 .currency-symbol {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-  margin-right: 6px;
+  position: absolute;
+  left: 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--viridian);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .monto-input-group input {
-  flex: 1;
-  border: none;
-  outline: none;
-  padding: 12px 0;
-  font-size: 18px;
+  width: 100%;
+  padding: 0.9rem 1rem 0.9rem 2.5rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  color: #333;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: white;
+  color: var(--eerie-black);
 }
 
-.monto-input-group input::placeholder {
-  color: #bbb;
+.monto-input-group input:focus {
+  border-color: var(--viridian);
+  box-shadow: 0 0 0 3px rgba(73, 132, 103, 0.1);
 }
 
-.monto-help {
-  font-size: 12px;
-  color: #999;
+.monto-input-group input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
-/* Botones de Cantidad Rápida */
+/* Botones de cantidad rápida */
 .pagar-quick-amounts {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  display: flex;
+  gap: 0.75rem;
 }
 
 .quick-amount-btn {
-  padding: 10px;
-  border: 2px solid #3498db;
+  flex: 1;
+  padding: 0.75rem;
   background: white;
-  color: #3498db;
-  border-radius: 8px;
-  font-weight: 600;
+  border: 2px solid var(--celadon);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--viridian);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.quick-amount-btn:hover:not(:disabled) {
-  background: #3498db;
+.quick-amount-btn:hover {
+  background: var(--viridian);
+  border-color: var(--viridian);
   color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(73, 132, 103, 0.3);
+}
+
+.quick-amount-btn:active {
+  transform: translateY(0);
 }
 
 .quick-amount-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
-/* Resumen Parcial */
+/* Resumen de Pago Parcial */
 .pagar-resumen-parcial {
-  background: #ecf0f1;
-  padding: 12px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(40, 167, 69, 0.05) 100%);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(40, 167, 69, 0.3);
 }
 
 .resumen-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 13px;
-}
-
-.resumen-item span {
-  color: #555;
-  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--gunmetal);
 }
 
 .resumen-item strong {
-  font-size: 14px;
+  font-size: 1.25rem;
+  color: var(--success-green);
   font-weight: 700;
-  color: #333;
 }
 
-.resumen-item.faltante strong {
-  color: #e74c3c;
-}
-
-/* Footer del Modal */
+/* Footer */
 .pagar-modal-footer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding-top: 12px;
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 1rem;
   border-top: 1px solid #e0e0e0;
 }
 
 .btn-cancelar {
-  padding: 12px;
-  border: 2px solid #e0e0e0;
+  flex: 1;
+  padding: 0.85rem 1.25rem;
   background: white;
-  color: #333;
-  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 0.9rem;
   font-weight: 600;
+  color: var(--cinereous);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.btn-cancelar:hover:not(:disabled) {
-  border-color: #999;
-  background: #f5f5f5;
+.btn-cancelar:hover {
+  background: #f8f8f8;
+  border-color: var(--cinereous);
+  color: var(--gunmetal);
+}
+
+.btn-cancelar:active {
+  transform: scale(0.98);
+}
+
+.btn-cancelar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .btn-pagar-completo,
 .btn-pagar-parcial {
-  padding: 12px;
+  flex: 2;
+  padding: 0.85rem 1.25rem;
+  background: linear-gradient(135deg, var(--viridian) 0%, var(--dark-green) 100%);
   border: none;
-  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
   color: white;
-  border-radius: 8px;
-  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(73, 132, 103, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.btn-pagar-completo:hover:not(:disabled),
-.btn-pagar-parcial:hover:not(:disabled) {
+.btn-pagar-completo:hover,
+.btn-pagar-parcial:hover {
+  box-shadow: 0 6px 16px rgba(73, 132, 103, 0.4);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
 }
 
-.btn-pagar-completo:active:not(:disabled),
-.btn-pagar-parcial:active:not(:disabled) {
+.btn-pagar-completo:active,
+.btn-pagar-parcial:active {
   transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(73, 132, 103, 0.3);
 }
 
-.btn-cancelar:disabled,
 .btn-pagar-completo:disabled,
 .btn-pagar-parcial:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-/* Información Adicional */
+/* Información adicional */
 .pagar-info-adicional {
-  background: #e8f4f8;
-  padding: 12px;
-  border-radius: 8px;
-  border-left: 4px solid #3498db;
+  background: linear-gradient(135deg, rgba(253, 126, 20, 0.1) 0%, rgba(253, 126, 20, 0.05) 100%);
+  padding: 1rem;
+  border-radius: 12px;
+  border-left: 4px solid var(--warning-orange);
 }
 
 .info-text {
   margin: 0;
-  font-size: 12px;
-  color: #333;
-  line-height: 1.4;
+  font-size: 0.85rem;
+  color: var(--gunmetal);
+  line-height: 1.6;
 }
 
 .info-text strong {
-  color: #2980b9;
+  font-weight: 700;
+  color: var(--warning-orange);
 }
 
 /* Responsive */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .pagar-modal-content {
-    width: 95%;
-    max-width: 100%;
+    max-width: 95%;
+  }
+
+  .pagar-modal-header {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .pagar-modal-header h2 {
+    font-size: 1.3rem;
   }
 
   .pagar-modal-body {
-    padding: 16px;
-    gap: 16px;
+    padding: 1.25rem 1.5rem;
+    gap: 1.25rem;
   }
 
-  .pagar-monto-info {
-    grid-template-columns: 1fr;
+  .info-item .valor.valor-tu-deuda {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .pagar-modal-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .pagar-modal-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .pagar-modal-body {
+    padding: 1rem 1.25rem;
+    gap: 1rem;
+  }
+
+  .pagar-info-gasto {
+    padding: 1rem;
+  }
+
+  .pagar-info-gasto h3 {
+    font-size: 1rem;
+  }
+
+  .info-item .valor.valor-tu-deuda {
+    font-size: 1.4rem;
+  }
+
+  .selector-option {
+    padding: 0.85rem;
+  }
+
+  .selector-label strong {
+    font-size: 0.9rem;
+  }
+
+  .selector-label small {
+    font-size: 0.75rem;
   }
 
   .pagar-modal-footer {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .btn-cancelar,
+  .btn-pagar-completo,
+  .btn-pagar-parcial {
+    width: 100%;
+    padding: 0.85rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .pagar-modal-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .info-item .label {
+    font-size: 0.75rem;
+  }
+
+  .info-item .valor {
+    font-size: 0.9rem;
+  }
+
+  .info-item .valor.valor-tu-deuda {
+    font-size: 1.25rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .breakdown-item {
+    font-size: 0.85rem;
+    padding: 0.6rem 0.85rem;
+  }
+
+  .monto-input-group input {
+    font-size: 1rem;
+    padding: 0.75rem 0.85rem 0.75rem 2.25rem;
+  }
+
+  .currency-symbol {
+    font-size: 1.1rem;
+    left: 0.85rem;
   }
 }

@@ -1,9 +1,14 @@
 // Configuración dinámica basada en el entorno
 // Detecta automáticamente si estás en desarrollo o producción
 
+// Detectar si estamos en Capacitor (app móvil)
+const isCapacitor = () => {
+  return window.Capacitor !== undefined;
+};
+
 // Determinar la URL base según el entorno
 const BASE_URL = process.env.REACT_APP_API_URL || 
-  (process.env.NODE_ENV === 'production' 
+  (isCapacitor() || process.env.NODE_ENV === 'production' 
     ? 'https://backend-split-ease.up.railway.app' 
     : 'http://localhost:3100');
 
