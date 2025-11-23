@@ -13,7 +13,10 @@ const PORT = process.env.PORT || 3100;
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3100',
-  'https://split-ease.up.railway.app'
+  'https://split-ease.up.railway.app',
+  'https://localhost',
+  'capacitor://localhost',
+  'http://localhost'
 ];
 
 app.use(express.json());
