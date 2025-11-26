@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from '../../utils/toast';
 import { API_ENDPOINTS } from '../../config/api';
 import './Modal.css';
 
@@ -90,7 +90,11 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
       }
       if (isLogin && data.token) {
         localStorage.setItem('token', data.token);
-        localStorage.setItem('usuario', JSON.stringify({ nombre: data.usuario.nombre }));
+        localStorage.setItem('usuario', JSON.stringify({
+          id_usuario: data.usuario.id_usuario,
+          nombre: data.usuario.nombre,
+          email: data.usuario.email
+        }));
         if (onLoginSuccess) {
           onLoginSuccess(data.usuario.nombre || formData.name || 'Usuario');
         }

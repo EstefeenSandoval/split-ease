@@ -980,3 +980,19 @@ body {
     font-size: 0.8rem;
   }
 }
+
+/* ===== Native App Styles ===== */
+body.native-app .gastos-container {
+  min-height: auto;
+  padding: 1rem 1rem 0;
+  padding-top: calc(1rem + var(--safe-area-top, 0px));
+}
+
+body.native-app .gastos-header {
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+}
+
+body.native-app .gastos-header h1 {
+  font-size: 1.75rem;
+}

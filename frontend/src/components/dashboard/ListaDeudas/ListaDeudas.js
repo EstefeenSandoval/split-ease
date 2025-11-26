@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { STATIC_BASE_URL } from '../../../config/api';
+import { construirURLEstatico } from '../../../config/api';
 import './ListaDeudas.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -21,9 +21,7 @@ const ListaDeudas = ({ tipo, datos, onPagar, onVerHistorial }) => {
   };
 
   const obtenerURLFoto = (ruta) => {
-    if (!ruta) return null;
-    if (ruta.startsWith('http')) return ruta;
-    return `${STATIC_BASE_URL}${ruta}`;
+    return construirURLEstatico(ruta);
   };
 
   const calcularProgreso = (montoPagado, montoTotal) => {

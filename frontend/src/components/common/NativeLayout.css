@@ -1,0 +1,56 @@
+/* Native Layout Styles */
+.native-layout {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+}
+
+.native-layout-content {
+  flex: 1;
+  padding-bottom: calc(var(--bottom-tabs-height) + var(--safe-area-bottom) + 10px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure content scrolls properly behind the tabs */
+.native-layout-content > * {
+  animation: contentFadeIn 0.3s ease-out;
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Override for pages that have their own min-height */
+.native-layout-content .dashboard-container,
+.native-layout-content .grupos-page,
+.native-layout-content .gastos-page,
+.native-layout-content .notificacion-container,
+.native-layout-content .opciones-container {
+  min-height: auto;
+  padding-top: 20px;
+}
+
+/* Smooth scroll behavior */
+.native-layout-content {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar but keep functionality */
+.native-layout-content::-webkit-scrollbar {
+  display: none;
+}
+
+.native-layout-content {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

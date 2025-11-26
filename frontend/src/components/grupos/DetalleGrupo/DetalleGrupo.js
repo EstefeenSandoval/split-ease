@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from '../../../utils/toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrashAlt, faLock, faLink, faClipboard } from '@fortawesome/free-solid-svg-icons';
 import ParticipantCard from '../ParticipantCard/ParticipantCard';

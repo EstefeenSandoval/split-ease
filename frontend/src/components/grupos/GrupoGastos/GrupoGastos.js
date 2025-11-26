@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from '../../../utils/toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faArrowLeft, faFilter, faSync } from '@fortawesome/free-solid-svg-icons';
 import GastoCard from '../GastoCard/GastoCard';

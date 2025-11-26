@@ -875,3 +875,98 @@ input[type="email"]#email {
 .input-field:focus::placeholder {
   opacity: 0.5;
 }
+
+/* ===== Native App Styles ===== */
+body.native-app .opciones-container {
+  min-height: auto;
+  padding: 1rem 1rem 0;
+  padding-top: calc(1rem + var(--safe-area-top, 0px));
+}
+
+body.native-app .opciones-header {
+  padding: 0.5rem 0;
+  margin-bottom: 1.5rem;
+}
+
+body.native-app .opciones-header h1 {
+  font-size: 1.75rem;
+}
+
+body.native-app .opciones-header p {
+  font-size: 0.95rem;
+}
+
+body.native-app .opciones-section {
+  padding: 1rem;
+}
+
+body.native-app .section-title {
+  font-size: 1.1rem;
+}
+
+/* ===== Native App Specific Styles ===== */
+
+/* Take Photo Button */
+.btn-take-photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--viridian) 0%, var(--dark-green) 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(73, 132, 103, 0.3);
+}
+
+.btn-take-photo:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 8px rgba(73, 132, 103, 0.3);
+}
+
+.btn-take-photo svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Logout Section */
+.logout-section {
+  margin-top: 2rem;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.btn-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 24px;
+  background: #fff;
+  color: #dc3545;
+  border: 2px solid #dc3545;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-logout:active {
+  background: #dc3545;
+  color: white;
+  transform: scale(0.98);
+}
+
+.btn-logout svg {
+  width: 20px;
+  height: 20px;
+}
