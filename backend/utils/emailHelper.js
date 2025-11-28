@@ -6,11 +6,18 @@
 const Mailjet = require('node-mailjet');
 require('dotenv').config();
 
-// Configuración de Mailjet
-const mailjet = new Mailjet({
-  apiKey: process.env.MJ_APIKEY_PUBLIC,
-  apiSecret: process.env.MJ_APIKEY_PRIVATE
-});
+// Configuración de Mailjet - solo inicializar si las credenciales están disponibles
+let mailjet = null;
+const isMailjetConfigured = process.env.MJ_APIKEY_PUBLIC && process.env.MJ_APIKEY_PRIVATE;
+
+if (isMailjetConfigured) {
+  mailjet = new Mailjet({
+    apiKey: process.env.MJ_APIKEY_PUBLIC,
+    apiSecret: process.env.MJ_APIKEY_PRIVATE
+  });
+} else if (process.env.NODE_ENV !== 'test') {
+  console.warn('⚠️  Mailjet API keys not configured. Email functionality will be disabled.');
+}
 
 // URL base del frontend
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://split-ease.up.railway.app';
@@ -55,9 +62,9 @@ const getBaseTemplate = (content, previewText = '') => `
         <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
           <!-- Header -->
           <tr>
-            <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px 40px; border-radius: 16px 16px 0 0; text-align: center;">
+            <td style="background-color: #498467; padding: 30px 40px; border-radius: 16px 16px 0 0; text-align: center;">
               <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
-                💰 SplitEase
+                SplitEase
               </h1>
               <p style="margin: 8px 0 0; color: rgba(255, 255, 255, 0.9); font-size: 14px;">
                 Divide gastos, no amistades
@@ -99,11 +106,11 @@ const getBaseTemplate = (content, previewText = '') => `
 /**
  * Genera botón de acción para los emails
  */
-const getActionButton = (text, url, color = '#667eea') => `
+const getActionButton = (text, url, color = '#498467') => `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin: 30px 0;">
   <tr>
     <td align="center">
-      <a href="${url}" class="button" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, ${color} 0%, #764ba2 100%); color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px; border-radius: 50px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+      <a href="${url}" class="button" style="display: inline-block; padding: 16px 40px; background-color: ${color}; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px; border-radius: 50px; box-shadow: 0 4px 15px rgba(73, 132, 103, 0.3);">
         ${text}
       </a>
     </td>
@@ -115,11 +122,17 @@ const getActionButton = (text, url, color = '#667eea') => `
  * Envía email de verificación de cuenta
  */
 const sendVerificationEmail = async (email, nombre, token) => {
+  // Verificar si Mailjet está configurado
+  if (!mailjet) {
+    console.warn('⚠️  Email not sent: Mailjet not configured');
+    return { success: false, error: 'Email service not configured' };
+  }
+
   const verificationUrl = `${FRONTEND_URL}/verificar-email/${token}`;
   
   const content = `
     <h2 style="margin: 0 0 20px; color: #1f2937; font-size: 24px; font-weight: 600;">
-      ¡Bienvenido a SplitEase, ${nombre}! 🎉
+      Bienvenido a SplitEase, ${nombre}
     </h2>
     
     <p style="margin: 0 0 15px; color: #4b5563; font-size: 16px; line-height: 1.6;">
@@ -135,18 +148,18 @@ const sendVerificationEmail = async (email, nombre, token) => {
     <p style="margin: 0 0 10px; color: #6b7280; font-size: 14px;">
       O copia y pega este enlace en tu navegador:
     </p>
-    <p style="margin: 0; padding: 12px; background-color: #f3f4f6; border-radius: 8px; word-break: break-all; color: #667eea; font-size: 13px;">
+    <p style="margin: 0; padding: 12px; background-color: #f3f4f6; border-radius: 8px; word-break: break-all; color: #498467; font-size: 13px;">
       ${verificationUrl}
     </p>
     
-    <div style="margin-top: 30px; padding: 20px; background-color: #fef3c7; border-radius: 12px; border-left: 4px solid #f59e0b;">
-      <p style="margin: 0; color: #92400e; font-size: 14px;">
-        ⏰ <strong>Importante:</strong> Este enlace expirará en 24 horas.
+    <div style="margin-top: 30px; padding: 20px; background-color: #ecfdf5; border-radius: 12px; border-left: 4px solid #498467;">
+      <p style="margin: 0; color: #065f46; font-size: 14px;">
+        <strong>Importante:</strong> Este enlace expirará en 24 horas.
       </p>
     </div>
   `;
 
-  const htmlContent = getBaseTemplate(content, `¡Hola ${nombre}! Verifica tu email para comenzar a usar SplitEase.`);
+  const htmlContent = getBaseTemplate(content, `Hola ${nombre}, verifica tu email para comenzar a usar SplitEase.`);
 
   try {
     const result = await mailjet.post('send', { version: 'v3.1' }).request({
@@ -162,7 +175,7 @@ const sendVerificationEmail = async (email, nombre, token) => {
               Name: nombre
             }
           ],
-          Subject: '✉️ Verifica tu email - SplitEase',
+          Subject: 'Verifica tu email - SplitEase',
           HTMLPart: htmlContent
         }
       ]
@@ -180,11 +193,17 @@ const sendVerificationEmail = async (email, nombre, token) => {
  * Envía email de recuperación de contraseña
  */
 const sendPasswordResetEmail = async (email, nombre, token) => {
+  // Verificar si Mailjet está configurado
+  if (!mailjet) {
+    console.warn('⚠️  Email not sent: Mailjet not configured');
+    return { success: false, error: 'Email service not configured' };
+  }
+
   const resetUrl = `${FRONTEND_URL}/reset-password/${token}`;
   
   const content = `
     <h2 style="margin: 0 0 20px; color: #1f2937; font-size: 24px; font-weight: 600;">
-      Recupera tu contraseña 🔐
+      Recupera tu contraseña
     </h2>
     
     <p style="margin: 0 0 15px; color: #4b5563; font-size: 16px; line-height: 1.6;">
@@ -195,18 +214,18 @@ const sendPasswordResetEmail = async (email, nombre, token) => {
       Haz clic en el siguiente botón para crear una nueva contraseña:
     </p>
     
-    ${getActionButton('Restablecer Contraseña', resetUrl, '#ef4444')}
+    ${getActionButton('Restablecer Contraseña', resetUrl)}
     
     <p style="margin: 0 0 10px; color: #6b7280; font-size: 14px;">
       O copia y pega este enlace en tu navegador:
     </p>
-    <p style="margin: 0; padding: 12px; background-color: #f3f4f6; border-radius: 8px; word-break: break-all; color: #667eea; font-size: 13px;">
+    <p style="margin: 0; padding: 12px; background-color: #f3f4f6; border-radius: 8px; word-break: break-all; color: #498467; font-size: 13px;">
       ${resetUrl}
     </p>
     
-    <div style="margin-top: 30px; padding: 20px; background-color: #fee2e2; border-radius: 12px; border-left: 4px solid #ef4444;">
-      <p style="margin: 0; color: #991b1b; font-size: 14px;">
-        ⏰ <strong>Importante:</strong> Este enlace expirará en 1 hora por seguridad.
+    <div style="margin-top: 30px; padding: 20px; background-color: #ecfdf5; border-radius: 12px; border-left: 4px solid #498467;">
+      <p style="margin: 0; color: #065f46; font-size: 14px;">
+        <strong>Importante:</strong> Este enlace expirará en 1 hora por seguridad.
       </p>
     </div>
     
@@ -231,7 +250,7 @@ const sendPasswordResetEmail = async (email, nombre, token) => {
               Name: nombre
             }
           ],
-          Subject: '🔐 Restablece tu contraseña - SplitEase',
+          Subject: 'Restablece tu contraseña - SplitEase',
           HTMLPart: htmlContent
         }
       ]
@@ -249,6 +268,12 @@ const sendPasswordResetEmail = async (email, nombre, token) => {
  * Envía email de confirmación de cambio de perfil
  */
 const sendProfileChangeVerificationEmail = async (email, nombre, token, cambios) => {
+  // Verificar si Mailjet está configurado
+  if (!mailjet) {
+    console.warn('⚠️  Email not sent: Mailjet not configured');
+    return { success: false, error: 'Email service not configured' };
+  }
+
   const verifyUrl = `${FRONTEND_URL}/verificar-cambio/${token}`;
   
   // Construir lista de cambios
@@ -263,7 +288,7 @@ const sendProfileChangeVerificationEmail = async (email, nombre, token, cambios)
   
   const content = `
     <h2 style="margin: 0 0 20px; color: #1f2937; font-size: 24px; font-weight: 600;">
-      Confirma los cambios en tu perfil 📝
+      Confirma los cambios en tu perfil
     </h2>
     
     <p style="margin: 0 0 15px; color: #4b5563; font-size: 16px; line-height: 1.6;">
@@ -279,24 +304,24 @@ const sendProfileChangeVerificationEmail = async (email, nombre, token, cambios)
       Si tú realizaste estos cambios, haz clic en el siguiente botón para confirmarlos:
     </p>
     
-    ${getActionButton('Confirmar Cambios', verifyUrl, '#10b981')}
+    ${getActionButton('Confirmar Cambios', verifyUrl)}
     
     <p style="margin: 0 0 10px; color: #6b7280; font-size: 14px;">
       O copia y pega este enlace en tu navegador:
     </p>
-    <p style="margin: 0; padding: 12px; background-color: #f3f4f6; border-radius: 8px; word-break: break-all; color: #667eea; font-size: 13px;">
+    <p style="margin: 0; padding: 12px; background-color: #f3f4f6; border-radius: 8px; word-break: break-all; color: #498467; font-size: 13px;">
       ${verifyUrl}
     </p>
     
-    <div style="margin-top: 30px; padding: 20px; background-color: #fef3c7; border-radius: 12px; border-left: 4px solid #f59e0b;">
-      <p style="margin: 0; color: #92400e; font-size: 14px;">
-        ⏰ <strong>Importante:</strong> Este enlace expirará en 24 horas.
+    <div style="margin-top: 30px; padding: 20px; background-color: #ecfdf5; border-radius: 12px; border-left: 4px solid #498467;">
+      <p style="margin: 0; color: #065f46; font-size: 14px;">
+        <strong>Importante:</strong> Este enlace expirará en 24 horas.
       </p>
     </div>
     
-    <div style="margin-top: 15px; padding: 20px; background-color: #fee2e2; border-radius: 12px; border-left: 4px solid #ef4444;">
-      <p style="margin: 0; color: #991b1b; font-size: 14px;">
-        ⚠️ <strong>¿No fuiste tú?</strong> Si no solicitaste estos cambios, ignora este correo y considera cambiar tu contraseña por seguridad.
+    <div style="margin-top: 15px; padding: 20px; background-color: #fef3c7; border-radius: 12px; border-left: 4px solid #d97706;">
+      <p style="margin: 0; color: #92400e; font-size: 14px;">
+        <strong>¿No fuiste tú?</strong> Si no solicitaste estos cambios, ignora este correo y considera cambiar tu contraseña por seguridad.
       </p>
     </div>
   `;
@@ -317,7 +342,7 @@ const sendProfileChangeVerificationEmail = async (email, nombre, token, cambios)
               Name: nombre
             }
           ],
-          Subject: '📝 Confirma los cambios en tu perfil - SplitEase',
+          Subject: 'Confirma los cambios en tu perfil - SplitEase',
           HTMLPart: htmlContent
         }
       ]

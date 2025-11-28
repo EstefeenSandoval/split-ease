@@ -2,10 +2,12 @@
 const usuarioController = require('../controllers/usuarioController');
 const usuarioModel = require('../models/usuarioModel');
 const bcrypt = require('bcryptjs');
+const emailHelper = require('../utils/emailHelper');
 
 // Crear mocks para las dependencias
 jest.mock('../models/usuarioModel');
 jest.mock('bcryptjs');
+jest.mock('../utils/emailHelper');
 
 // Grupo de pruebas para el método registrar
 describe('UsuarioController - Método registrar', () => {
@@ -18,12 +20,16 @@ describe('UsuarioController - Método registrar', () => {
     // Limpiamos todos los mocks para evitar interferencias entre pruebas
     jest.clearAllMocks();
     
+    // Mock del email helper para evitar envío real de emails
+    emailHelper.sendVerificationEmail.mockResolvedValue({ success: true });
+    emailHelper.generateVerificationToken.mockReturnValue('mock-verification-token-12345');
+    
     // Creamos objetos simulados de request y response
     req = {
       body: {
         nombre: 'Usuario Prueba',
         email: 'test@ejemplo.com',
-        password: 'contraseña123'
+        password: 'Contraseña123!'  // Contraseña que cumple requisitos: mayúscula + especial + 8 chars
       }
     };
     
@@ -36,14 +42,14 @@ describe('UsuarioController - Método registrar', () => {
   // PRUEBA 1: Validación de campos obligatorios
   test('debería retornar error 400 cuando faltan campos obligatorios', () => {
     // Caso 1: Sin nombre
-    req.body = { email: 'test@ejemplo.com', password: 'contraseña123' };
+    req.body = { email: 'test@ejemplo.com', password: 'Contraseña123!' };
     usuarioController.registrar(req, res);
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: 'Todos los campos son obligatorios.' });
     
     // Caso 2: Sin email
     jest.clearAllMocks();
-    req.body = { nombre: 'Usuario Prueba', password: 'contraseña123' };
+    req.body = { nombre: 'Usuario Prueba', password: 'Contraseña123!' };
     usuarioController.registrar(req, res);
     expect(res.status).toHaveBeenCalledWith(400);
     
@@ -66,6 +72,7 @@ describe('UsuarioController - Método registrar', () => {
   // PRUEBA 3: Sanitización de datos
   test('debería rechazar datos que se convierten en vacíos tras la sanitización', () => {
     req.body.nombre = '!@#$%^'; // Este nombre será sanitizado y quedará vacío
+    req.body.password = 'Contraseña123!'; // Asegurar contraseña válida
     usuarioController.registrar(req, res);
     
     expect(res.status).toHaveBeenCalledWith(400);
@@ -109,18 +116,20 @@ describe('UsuarioController - Método registrar', () => {
     // Simulamos el hash de la contraseña
     bcrypt.hash.mockResolvedValue('password_hasheada');
     
-    // Simulamos un error al crear el usuario
-    usuarioModel.crearUsuario.mockImplementation((nombre, email, password, callback) => {
+    // Simulamos un error al crear el usuario con verificación
+    usuarioModel.crearUsuarioConVerificacion.mockImplementation((nombre, email, password, token, tokenExpira, callback) => {
       callback(new Error('Error al crear usuario'), null);
     });
     
     await usuarioController.registrar(req, res);
     
-    expect(bcrypt.hash).toHaveBeenCalledWith('contraseña123', 10);
-    expect(usuarioModel.crearUsuario).toHaveBeenCalledWith(
+    expect(bcrypt.hash).toHaveBeenCalledWith('Contraseña123!', 10);
+    expect(usuarioModel.crearUsuarioConVerificacion).toHaveBeenCalledWith(
       'Usuario Prueba', 
       'test@ejemplo.com', 
-      'password_hasheada', 
+      'password_hasheada',
+      expect.any(String),  // token de verificación
+      expect.any(Date),    // fecha de expiración del token
       expect.any(Function)
     );
     expect(res.status).toHaveBeenCalledWith(500);
@@ -137,23 +146,31 @@ describe('UsuarioController - Método registrar', () => {
     // Simulamos el hash de la contraseña
     bcrypt.hash.mockResolvedValue('password_hasheada');
     
-    // Simulamos una creación exitosa de usuario
-    usuarioModel.crearUsuario.mockImplementation((nombre, email, password, callback) => {
+    // Simulamos una creación exitosa de usuario con verificación
+    usuarioModel.crearUsuarioConVerificacion.mockImplementation((nombre, email, password, token, tokenExpira, callback) => {
       callback(null, { insertId: 1 });
     });
     
     await usuarioController.registrar(req, res);
     
+    // Esperamos a que se resuelvan todas las promesas pendientes
+    await new Promise(resolve => setImmediate(resolve));
+    
     expect(usuarioModel.buscarPorEmail).toHaveBeenCalledWith('test@ejemplo.com', expect.any(Function));
-    expect(bcrypt.hash).toHaveBeenCalledWith('contraseña123', 10);
-    expect(usuarioModel.crearUsuario).toHaveBeenCalledWith(
+    expect(bcrypt.hash).toHaveBeenCalledWith('Contraseña123!', 10);
+    expect(usuarioModel.crearUsuarioConVerificacion).toHaveBeenCalledWith(
       'Usuario Prueba', 
       'test@ejemplo.com', 
-      'password_hasheada', 
+      'password_hasheada',
+      expect.any(String),  // token de verificación
+      expect.any(Date),    // fecha de expiración del token
       expect.any(Function)
     );
     expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith({ mensaje: 'Usuario registrado correctamente.' });
+    expect(res.json).toHaveBeenCalledWith({ 
+      mensaje: 'Usuario registrado correctamente. Por favor, revisa tu correo para verificar tu cuenta.',
+      emailEnviado: expect.any(Boolean)
+    });
   });
   
   // PRUEBA 8: Caracteres especiales en el nombre
@@ -168,17 +185,19 @@ describe('UsuarioController - Método registrar', () => {
     
     bcrypt.hash.mockResolvedValue('password_hasheada');
     
-    usuarioModel.crearUsuario.mockImplementation((nombre, email, password, callback) => {
+    usuarioModel.crearUsuarioConVerificacion.mockImplementation((nombre, email, password, token, tokenExpira, callback) => {
       callback(null, { insertId: 1 });
     });
     
     await usuarioController.registrar(req, res);
     
     // Verificamos que el nombre fue sanitizado correctamente
-    expect(usuarioModel.crearUsuario).toHaveBeenCalledWith(
+    expect(usuarioModel.crearUsuarioConVerificacion).toHaveBeenCalledWith(
       'María José  García',  // Los caracteres especiales se eliminan
       'test@ejemplo.com', 
-      'password_hasheada', 
+      'password_hasheada',
+      expect.any(String),  // token de verificación
+      expect.any(Date),    // fecha de expiración del token
       expect.any(Function)
     );
   });
