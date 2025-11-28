@@ -19,11 +19,15 @@ const allowedOrigins = [
   'http://localhost'
 ];
 
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors({
   origin: function (origin, callback) {
     // Permitir requests sin origin (como mobile apps o curl requests)
     if (!origin) return callback(null, true);
+    
+    // Permitir cualquier origen que comience con capacitor://
+    if (origin.startsWith('capacitor://')) return callback(null, true);
     
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg = 'La política de CORS no permite el acceso desde este origen.';
