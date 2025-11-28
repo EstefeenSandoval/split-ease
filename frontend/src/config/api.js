@@ -74,13 +74,22 @@ export const construirURLEstatico = (ruta) => {
     return ruta;
   }
   
+  let url;
+  
   // Verificar si la URL ya incluye el protocolo y host
   if (ruta.startsWith('http')) {
-    return ruta;
+    url = ruta;
   } else {
     // Si es una ruta relativa, agregar el host
-    return `${STATIC_BASE_URL}${ruta}`;
+    url = `${STATIC_BASE_URL}${ruta}`;
   }
+  
+  // Forzar HTTPS en Capacitor o producción para evitar Mixed Content
+  if ((isCapacitor() || process.env.NODE_ENV === 'production') && url.startsWith('http://')) {
+    url = url.replace('http://', 'https://');
+  }
+  
+  return url;
 };
 
 export default API_ENDPOINTS;

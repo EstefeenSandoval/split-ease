@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from '../utils/toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faTimes, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { ListaGastos, CrearGastoModal } from '../components/gasto';

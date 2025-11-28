@@ -321,3 +321,23 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ===== Native App Styles ===== */
+body.native-app .dashboard-container {
+  min-height: auto;
+  padding: 1rem 1rem 0;
+  padding-top: calc(1rem + var(--safe-area-top, 0px));
+}
+
+body.native-app .dashboard-header {
+  margin-bottom: 1.5rem;
+}
+
+body.native-app .dashboard-header h1 {
+  font-size: 1.75rem;
+}
+
+body.native-app .boton-actualizar {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}

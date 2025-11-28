@@ -4,9 +4,13 @@
   "private": true,
   "dependencies": {
     "@capacitor/android": "^7.4.4",
+    "@capacitor/camera": "^7.0.2",
     "@capacitor/cli": "^7.4.4",
     "@capacitor/core": "^7.4.4",
+    "@capacitor/haptics": "^7.0.2",
     "@capacitor/ios": "^7.4.4",
+    "@capacitor/status-bar": "^7.0.3",
+    "@capacitor/toast": "^7.0.2",
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
     "@fortawesome/free-brands-svg-icons": "^7.0.1",
     "@fortawesome/free-solid-svg-icons": "^7.1.0",

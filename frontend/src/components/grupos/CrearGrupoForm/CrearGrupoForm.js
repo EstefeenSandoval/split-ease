@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from '../../../utils/toast';
 import './CrearGrupoForm.css';
 
 const CrearGrupoForm = ({ onCrear, onCancelar, cargando, grupoInicial }) => {
