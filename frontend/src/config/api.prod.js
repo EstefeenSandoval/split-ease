@@ -14,7 +14,16 @@ export const API_ENDPOINTS = {
     registro: `${API_BASE_URL}/usuarios/registro`,
     perfil: `${API_BASE_URL}/usuarios/perfil`,
     validar: `${API_BASE_URL}/usuarios/validar`,
-    actualizarPerfil: `${API_BASE_URL}/usuarios/perfil`
+    actualizarPerfil: `${API_BASE_URL}/usuarios/perfil`,
+    // Verificación de email
+    verificarEmail: (token) => `${API_BASE_URL}/usuarios/verificar-email/${token}`,
+    reenviarVerificacion: `${API_BASE_URL}/usuarios/reenviar-verificacion`,
+    // Recuperación de contraseña
+    forgotPassword: `${API_BASE_URL}/usuarios/forgot-password`,
+    resetPassword: (token) => `${API_BASE_URL}/usuarios/reset-password/${token}`,
+    validarTokenReset: (token) => `${API_BASE_URL}/usuarios/reset-password/${token}`,
+    // Verificación de cambios de perfil
+    verificarCambioPerfil: (token) => `${API_BASE_URL}/usuarios/verificar-cambio/${token}`
   },
   grupos: {
     crear: `${API_BASE_URL}/grupos/crear`,

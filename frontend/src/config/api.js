@@ -23,7 +23,16 @@ export const API_ENDPOINTS = {
     registro: `${API_BASE_URL}/usuarios/registro`,
     perfil: `${API_BASE_URL}/usuarios/perfil`,
     validar: `${API_BASE_URL}/usuarios/validar`,
-    actualizarPerfil: `${API_BASE_URL}/usuarios/perfil`
+    actualizarPerfil: `${API_BASE_URL}/usuarios/perfil`,
+    // Endpoints de verificación de email
+    verificarEmail: (token) => `${API_BASE_URL}/usuarios/verificar-email/${token}`,
+    reenviarVerificacion: `${API_BASE_URL}/usuarios/reenviar-verificacion`,
+    // Endpoints de recuperación de contraseña
+    forgotPassword: `${API_BASE_URL}/usuarios/forgot-password`,
+    resetPassword: (token) => `${API_BASE_URL}/usuarios/reset-password/${token}`,
+    validarTokenReset: (token) => `${API_BASE_URL}/usuarios/reset-password/${token}`,
+    // Endpoint de verificación de cambio de perfil
+    verificarCambioPerfil: (token) => `${API_BASE_URL}/usuarios/verificar-cambio/${token}`
   },
   grupos: {
     crear: `${API_BASE_URL}/grupos/crear`,
@@ -78,14 +87,27 @@ export const construirURLEstatico = (ruta) => {
   
   // Verificar si la URL ya incluye el protocolo y host
   if (ruta.startsWith('http')) {
-    url = ruta;
+    // Si tiene localhost, extraer solo la ruta relativa y reconstruir con el host correcto
+    // Esto corrige URLs antiguas que se guardaron con host completo
+    try {
+      const urlObj = new URL(ruta);
+      if (urlObj.hostname === 'localhost' || urlObj.hostname.includes('127.0.0.1')) {
+        // Extraer la ruta relativa y reconstruir
+        url = `${STATIC_BASE_URL}${urlObj.pathname}`;
+      } else {
+        url = ruta;
+      }
+    } catch (e) {
+      url = ruta;
+    }
   } else {
     // Si es una ruta relativa, agregar el host
     url = `${STATIC_BASE_URL}${ruta}`;
   }
   
-  // Forzar HTTPS en Capacitor o producción para evitar Mixed Content
-  if ((isCapacitor() || process.env.NODE_ENV === 'production') && url.startsWith('http://')) {
+  // Forzar HTTPS solo en Capacitor o producción, pero NUNCA para localhost
+  const isLocalhost = url.includes('localhost') || url.includes('127.0.0.1');
+  if (!isLocalhost && (isCapacitor() || process.env.NODE_ENV === 'production') && url.startsWith('http://')) {
     url = url.replace('http://', 'https://');
   }
   

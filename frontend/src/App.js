@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { StatusBar, Style } from '@capacitor/status-bar';
@@ -8,7 +8,6 @@ import { isNativeApp } from './utils/platform';
 import Headers from './components/common/Headers';
 import Footer from './components/common/Footer';
 import Modal from './components/common/Modal';
-import NativeLayout from './components/common/NativeLayout';
 import HomePage from './pages/HomePage';
 import ComoFunciona from './pages/ComoFunciona';
 import Caracteristica from './pages/Caracteristica';
@@ -18,7 +17,10 @@ import Gastos from './pages/Gastos';
 import Opciones from './pages/Opciones';
 import Notificacion from './pages/Notificacion';
 import Pagos from './pages/Pagos';
-import NativeAuth from './pages/NativeAuth';
+import VerifyEmail from './pages/VerifyEmail';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import VerifyProfileChange from './pages/VerifyProfileChange';
 
 const App = () => {
   const [modalState, setModalState] = useState({
@@ -122,72 +124,6 @@ const App = () => {
     };
   }, []);
 
-  // Native App Layout - No header/footer, uses bottom tabs
-  if (isNative) {
-    return (
-      <Router>
-        <div className="App native-app-container">
-          <Routes>
-            {/* Native Auth Screen */}
-            <Route path="/" element={<NativeAuth onLoginSuccess={handleLoginSuccess} />} />
-            <Route path="/login" element={<NativeAuth onLoginSuccess={handleLoginSuccess} />} />
-            
-            {/* Protected routes with NativeLayout (includes BottomTabs) */}
-            <Route path="/dashboard" element={
-              <NativeLayout>
-                <Dashboard />
-              </NativeLayout>
-            } />
-            <Route path="/grupos" element={
-              <NativeLayout>
-                <Grupos />
-              </NativeLayout>
-            } />
-            <Route path="/gastos" element={
-              <NativeLayout>
-                <Gastos />
-              </NativeLayout>
-            } />
-            <Route path="/opciones" element={
-              <NativeLayout>
-                <Opciones onLogout={handleLogout} />
-              </NativeLayout>
-            } />
-            <Route path="/notificaciones" element={
-              <NativeLayout>
-                <Notificacion />
-              </NativeLayout>
-            } />
-            <Route path="/pagos/:idGasto" element={
-              <NativeLayout>
-                <Pagos />
-              </NativeLayout>
-            } />
-            
-            {/* Redirect marketing pages to auth in native */}
-            <Route path="/inicio" element={<Navigate to="/" replace />} />
-            <Route path="/como-funciona" element={<Navigate to="/" replace />} />
-            <Route path="/caracteristicas" element={<Navigate to="/" replace />} />
-          </Routes>
-          
-          <ToastContainer
-            position="top-center"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss={false}
-            draggable
-            pauseOnHover
-            theme="colored"
-          />
-        </div>
-      </Router>
-    );
-  }
-
-  // Web Layout - Original behavior with header/footer
   return (
     <Router>
       <div className="App">
@@ -205,6 +141,12 @@ const App = () => {
           <Route path="/opciones" element={<Opciones />} />
           <Route path="/notificaciones" element={<Notificacion />} />
           <Route path="/pagos/:idGasto" element={<Pagos />} />
+          
+          {/* Rutas de verificación y recuperación */}
+          <Route path="/verificar-email/:token" element={<VerifyEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/verificar-cambio/:token" element={<VerifyProfileChange />} />
         </Routes>
         
         {/* Footer */}

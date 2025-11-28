@@ -11,20 +11,23 @@
   backdrop-filter: blur(5px);
   overflow-y: auto;
   overflow-x: hidden;
+  /* Centrado con flexbox */
+  justify-content: center;
+  align-items: center;
 }
 
 .modal-overlay.open {
-  display: block;
+  display: flex;
 }
 
 .modal-content {
   background-color: white;
-  margin: 2vh auto;
+  margin: auto;
   padding: 0;
   border-radius: 15px;
   width: 90%;
   max-width: 400px;
-  max-height: 95vh;
+  max-height: 90vh;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   animation: modalSlideIn 0.3s ease-out;
   overflow-y: auto;
@@ -40,11 +43,6 @@
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-}
-
-.modal-overlay.open {
-  display: block;
-  animation: fadeIn 0.3s ease-out;
 }
 
 @keyframes fadeIn {
@@ -143,6 +141,52 @@
   transform: translateY(-1px);
 }
 
+/* ========== INDICADORES DE REQUISITOS DE CONTRASEÑA ========== */
+.password-strength-bar {
+  height: 6px;
+  background-color: #e0e0e0;
+  border-radius: 3px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.password-strength-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.password-strength-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 4px;
+  text-align: right;
+}
+
+.password-requirements {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 0.75rem;
+}
+
+.password-requirements span {
+  padding: 2px 8px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.password-requirements span.valid {
+  color: #2e7d32;
+  background-color: #e8f5e9;
+}
+
+.password-requirements span.invalid {
+  color: #9e9e9e;
+  background-color: #f5f5f5;
+}
+
 /* ========== BOTÓN SUBMIT MEJORADO ========== */
 .modal-submit {
   width: 100%;
@@ -225,13 +269,136 @@
   font-size: 0.9rem;
 }
 
+/* ========== BOTÓN OLVIDÉ CONTRASEÑA ========== */
+.modal-forgot-password {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  color: #498467;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1rem;
+  text-decoration: underline;
+}
+
+.modal-forgot-password:hover {
+  color: #3a6b55;
+}
+
+/* ========== PANTALLA ÉXITO REGISTRO ========== */
+.modal-success-registration {
+  text-align: center;
+  padding: 2rem 2rem 2.5rem;
+}
+
+.modal-success-icon {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #498467 0%, #356859 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  animation: successPulse 2s ease-in-out infinite;
+}
+
+@keyframes successPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(73, 132, 103, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 15px rgba(73, 132, 103, 0);
+  }
+}
+
+.modal-success-icon svg {
+  width: 50px;
+  height: 50px;
+  stroke: white;
+  stroke-width: 2;
+}
+
+.modal-success-registration .modal-title {
+  font-size: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.modal-success-registration .modal-subtitle {
+  color: #596869;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.modal-email-highlight {
+  background: linear-gradient(135deg, #e8f5e9 0%, #bcebcb 100%);
+  color: #356859;
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  display: inline-block;
+  margin: 0.75rem 0 1rem;
+  word-break: break-all;
+  border: 2px solid #bcebcb;
+}
+
+.modal-verification-hint {
+  color: #998888;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.modal-success-registration .modal-submit {
+  margin-top: 0.5rem;
+}
+
+.modal-registration-success {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.modal-registration-success .success-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-registration-success h2 {
+  color: #498467;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.modal-registration-success p {
+  color: #666;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.modal-registration-success .email-highlight {
+  background: #bcebcb;
+  color: #498467;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  display: inline-block;
+  margin: 1rem 0;
+  word-break: break-all;
+}
+
+.modal-registration-success .modal-submit {
+  margin-top: 1.5rem;
+}
 
 
 /* Responsive Design */
 @media (max-width: 1366px) and (min-height: 768px) {
   /* Para laptops de 16 pulgadas y similares */
   .modal-content {
-    margin: 3vh auto;
+    margin: auto;
     max-height: 90vh;
   }
   
@@ -247,8 +414,8 @@
 @media (max-width: 768px) {
   .modal-content {
     width: 95%;
-    margin: 2vh auto;
-    max-height: 96vh;
+    margin: auto;
+    max-height: 92vh;
   }
   
   .modal-header {
@@ -276,10 +443,10 @@
 
 @media (max-width: 480px) {
   .modal-content {
-    width: 95%;
-    margin: 1vh auto;
-    max-height: 98vh;
-    border-radius: 10px;
+    width: 94%;
+    margin: auto;
+    max-height: 88vh;
+    border-radius: 12px;
   }
   
   .modal-header {

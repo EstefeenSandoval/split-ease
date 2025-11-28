@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { toast } from '../../utils/toast';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { API_ENDPOINTS } from '../../config/api';
 import './Modal.css';
 
 const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
+  const [showRegistrationSuccess, setShowRegistrationSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState('');
 
   const isLogin = type === 'login';
 
@@ -41,6 +45,7 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
       password: '',
       confirmPassword: ''
     });
+    setShowRegistrationSuccess(false);
   }, [type]);
 
   if (!isOpen) return null;
@@ -55,6 +60,33 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // Función para calcular la fortaleza de la contraseña
+  const getPasswordStrength = (password) => {
+    if (!password) return { level: 0, label: '', color: '' };
+    
+    let score = 0;
+    
+    // Longitud
+    if (password.length >= 8) score++;
+    if (password.length >= 12) score++;
+    
+    // Mayúsculas
+    if (/[A-Z]/.test(password)) score++;
+    
+    // Minúsculas
+    if (/[a-z]/.test(password)) score++;
+    
+    // Números
+    if (/[0-9]/.test(password)) score++;
+    
+    // Caracteres especiales
+    if (/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) score++;
+    
+    if (score <= 2) return { level: 1, label: 'Débil', color: '#e74c3c' };
+    if (score <= 4) return { level: 2, label: 'Media', color: '#f39c12' };
+    return { level: 3, label: 'Fuerte', color: '#27ae60' };
+  };
+
   const handleSubmit = async () => {
     if (!formData.email || !formData.password) {
       alert('Por favor completa todos los campos requeridos');
@@ -67,6 +99,21 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
     if (!isLogin && formData.password !== formData.confirmPassword) {
       alert('Las contraseñas no coinciden');
       return;
+    }
+    // Validar contraseña segura solo en registro
+    if (!isLogin) {
+      if (formData.password.length < 8) {
+        toast.error('La contraseña debe tener al menos 8 caracteres');
+        return;
+      }
+      if (!/[A-Z]/.test(formData.password)) {
+        toast.error('La contraseña debe tener al menos una letra mayúscula');
+        return;
+      }
+      if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(formData.password)) {
+        toast.error('La contraseña debe tener al menos un carácter especial');
+        return;
+      }
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
@@ -93,22 +140,61 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
         localStorage.setItem('usuario', JSON.stringify({
           id_usuario: data.usuario.id_usuario,
           nombre: data.usuario.nombre,
-          email: data.usuario.email
+          email: data.usuario.email,
+          email_verificado: data.usuario.email_verificado
         }));
         if (onLoginSuccess) {
           onLoginSuccess(data.usuario.nombre || formData.name || 'Usuario');
         }
+        toast.success(data.mensaje || 'Operación exitosa');
+        onClose();
+      } else if (!isLogin) {
+        // Registro exitoso - mostrar mensaje de verificación
+        setRegisteredEmail(formData.email);
+        setShowRegistrationSuccess(true);
       }
-      toast.success(data.mensaje || 'Operación exitosa');
-      onClose();
     } catch (err) {
       toast.error('Error de conexión con el servidor');
     }
   };
 
+  const handleForgotPassword = () => {
+    onClose();
+    navigate('/forgot-password');
+  };
+
   return (
     <div className={`modal-overlay${isOpen ? ' open' : ''}`} onClick={handleBackdropClick}>
       <div className="modal-content">
+        {showRegistrationSuccess ? (
+          // Mensaje de registro exitoso con verificación de email
+          <div className="modal-success-registration">
+            <div className="modal-success-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h2 className="modal-title">¡Cuenta creada!</h2>
+            <p className="modal-subtitle">
+              Hemos enviado un correo de verificación a:
+            </p>
+            <p className="modal-email-highlight">{registeredEmail}</p>
+            <p className="modal-verification-hint">
+              Revisa tu bandeja de entrada (y spam) para verificar tu cuenta.
+            </p>
+            <button
+              onClick={() => {
+                setShowRegistrationSuccess(false);
+                onSwitchModal('login');
+              }}
+              className="modal-submit"
+              type="button"
+            >
+              Ir a iniciar sesión
+            </button>
+          </div>
+        ) : (
+        <>
         <div className="modal-header">
           <button
             onClick={onClose}
@@ -165,6 +251,33 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
               className="modal-input"
                onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(); }}
             />
+            {!isLogin && formData.password && (
+              <>
+                <div className="password-strength-bar">
+                  <div 
+                    className="password-strength-fill"
+                    style={{ 
+                      width: `${(getPasswordStrength(formData.password).level / 3) * 100}%`,
+                      backgroundColor: getPasswordStrength(formData.password).color
+                    }}
+                  />
+                </div>
+                <div className="password-strength-label" style={{ color: getPasswordStrength(formData.password).color }}>
+                  Seguridad: {getPasswordStrength(formData.password).label}
+                </div>
+                <div className="password-requirements">
+                  <span className={formData.password.length >= 8 ? 'valid' : 'invalid'}>
+                    ✓ 8+ caracteres
+                  </span>
+                  <span className={/[A-Z]/.test(formData.password) ? 'valid' : 'invalid'}>
+                    ✓ Una mayúscula
+                  </span>
+                  <span className={/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(formData.password) ? 'valid' : 'invalid'}>
+                    ✓ Un carácter especial
+                  </span>
+                </div>
+              </>
+            )}
           </div>
 
           {!isLogin && (
@@ -190,6 +303,16 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
             {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
           </button>
 
+          {isLogin && (
+            <button
+              onClick={handleForgotPassword}
+              className="modal-forgot-password"
+              type="button"
+            >
+              ¿Olvidaste tu contraseña?
+            </button>
+          )}
+
           <p className="modal-switch-text">
             {isLogin ? '¿No tienes cuenta? ' : '¿Ya tienes cuenta? '}
             <button
@@ -201,6 +324,8 @@ const Modal = ({ isOpen, onClose, type, onSwitchModal, onLoginSuccess }) => {
             </button>
           </p>
         </div>
+        </>
+        )}
       </div>
     </div>
   );

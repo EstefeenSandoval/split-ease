@@ -218,6 +218,53 @@
   box-shadow: 0 0 0 4px rgba(73, 132, 103, 0.1);
 }
 
+/* Barra de fortaleza de contraseña */
+.native-auth-field .password-strength-bar {
+  height: 6px;
+  background-color: #e0e0e0;
+  border-radius: 3px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.native-auth-field .password-strength-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.native-auth-field .password-strength-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 4px;
+  text-align: right;
+}
+
+/* Indicadores de requisitos de contraseña */
+.native-auth-field .password-requirements {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 0.7rem;
+}
+
+.native-auth-field .password-requirements span {
+  padding: 3px 8px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.native-auth-field .password-requirements span.valid {
+  color: #2e7d32;
+  background-color: #e8f5e9;
+}
+
+.native-auth-field .password-requirements span.invalid {
+  color: #9e9e9e;
+  background-color: #f5f5f5;
+}
+
 /* Submit Button */
 .native-auth-submit {
   width: 100%;
@@ -261,6 +308,71 @@
 .native-auth-submit.loading {
   pointer-events: none;
   opacity: 0.85;
+}
+
+/* Forgot Password Button */
+.native-auth-forgot {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  color: var(--verde-principal);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  text-decoration: underline;
+  margin-top: 8px;
+}
+
+.native-auth-forgot:active {
+  color: var(--verde-profundo);
+}
+
+/* Registration Success Screen */
+.native-auth-success {
+  padding: 24px;
+  text-align: center;
+}
+
+.native-auth-success .success-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+}
+
+.native-auth-success h2 {
+  color: var(--verde-principal);
+  font-size: 1.5rem;
+  margin: 0 0 12px;
+}
+
+.native-auth-success p {
+  color: var(--gris-azulado);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 8px 0;
+}
+
+.native-auth-success .email-highlight {
+  background: var(--menta-suave);
+  color: var(--verde-profundo);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  display: inline-block;
+  margin: 12px 0;
+  word-break: break-all;
+  font-size: 0.9rem;
+}
+
+.native-auth-success .success-note {
+  font-size: 0.85rem;
+  color: #999;
+  margin-top: 16px;
+}
+
+.native-auth-success .native-auth-submit {
+  margin-top: 24px;
 }
 
 .native-auth-spinner {

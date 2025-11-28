@@ -9,6 +9,8 @@ import './NativeAuth.css';
 const NativeAuth = ({ onLoginSuccess }) => {
   const [activeTab, setActiveTab] = useState('login');
   const [isLoading, setIsLoading] = useState(false);
+  const [showRegistrationSuccess, setShowRegistrationSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -27,6 +29,7 @@ const NativeAuth = ({ onLoginSuccess }) => {
       password: '',
       confirmPassword: ''
     });
+    setShowRegistrationSuccess(false);
   }, [activeTab]);
 
   const handleTabChange = async (tab) => {
@@ -44,6 +47,33 @@ const NativeAuth = ({ onLoginSuccess }) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // Función para calcular la fortaleza de la contraseña
+  const getPasswordStrength = (password) => {
+    if (!password) return { level: 0, label: '', color: '' };
+    
+    let score = 0;
+    
+    // Longitud
+    if (password.length >= 8) score++;
+    if (password.length >= 12) score++;
+    
+    // Mayúsculas
+    if (/[A-Z]/.test(password)) score++;
+    
+    // Minúsculas
+    if (/[a-z]/.test(password)) score++;
+    
+    // Números
+    if (/[0-9]/.test(password)) score++;
+    
+    // Caracteres especiales
+    if (/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) score++;
+    
+    if (score <= 2) return { level: 1, label: 'Débil', color: '#e74c3c' };
+    if (score <= 4) return { level: 2, label: 'Media', color: '#f39c12' };
+    return { level: 3, label: 'Fuerte', color: '#27ae60' };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -59,6 +89,21 @@ const NativeAuth = ({ onLoginSuccess }) => {
     if (!isLogin && formData.password !== formData.confirmPassword) {
       toast.error('Las contraseñas no coinciden');
       return;
+    }
+    // Validar contraseña segura solo en registro
+    if (!isLogin) {
+      if (formData.password.length < 8) {
+        toast.error('La contraseña debe tener al menos 8 caracteres');
+        return;
+      }
+      if (!/[A-Z]/.test(formData.password)) {
+        toast.error('La contraseña debe tener al menos una letra mayúscula');
+        return;
+      }
+      if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(formData.password)) {
+        toast.error('La contraseña debe tener al menos un carácter especial');
+        return;
+      }
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
@@ -99,7 +144,8 @@ const NativeAuth = ({ onLoginSuccess }) => {
         localStorage.setItem('usuario', JSON.stringify({
           id_usuario: data.usuario.id_usuario,
           nombre: data.usuario.nombre,
-          email: data.usuario.email
+          email: data.usuario.email,
+          email_verificado: data.usuario.email_verificado || false
         }));
         
         try {
@@ -115,9 +161,13 @@ const NativeAuth = ({ onLoginSuccess }) => {
         toast.success('¡Bienvenido de vuelta!');
         navigate('/dashboard');
       } else if (!isLogin) {
-        toast.success(data.mensaje || '¡Cuenta creada exitosamente!');
-        setActiveTab('login');
-        setFormData(prev => ({ ...prev, password: '', confirmPassword: '' }));
+        setRegisteredEmail(formData.email);
+        setShowRegistrationSuccess(true);
+        try {
+          await Haptics.impact({ style: ImpactStyle.Medium });
+        } catch (e) {
+          // Haptics not available
+        }
       }
     } catch (err) {
       toast.error('Error de conexión con el servidor');
@@ -125,6 +175,49 @@ const NativeAuth = ({ onLoginSuccess }) => {
       setIsLoading(false);
     }
   };
+
+  const handleForgotPassword = () => {
+    navigate('/forgot-password');
+  };
+
+  const handleGoToLogin = () => {
+    setShowRegistrationSuccess(false);
+    setActiveTab('login');
+    setFormData(prev => ({ ...prev, password: '', confirmPassword: '' }));
+  };
+
+  // Show registration success screen
+  if (showRegistrationSuccess) {
+    return (
+      <div className="native-auth">
+        <div className="native-auth-container">
+          <div className="native-auth-logo-section">
+            <div className="native-auth-logo-wrapper">
+              <img src={logo2} alt="SplitEase" className="native-auth-logo" />
+            </div>
+          </div>
+
+          <div className="native-auth-card">
+            <div className="native-auth-success">
+              <div className="success-icon">📧</div>
+              <h2>¡Cuenta creada!</h2>
+              <p>Te hemos enviado un correo de verificación a:</p>
+              <div className="email-highlight">{registeredEmail}</div>
+              <p>Por favor revisa tu bandeja de entrada y haz clic en el enlace para verificar tu cuenta.</p>
+              <p className="success-note">Si no ves el correo, revisa tu carpeta de spam.</p>
+              <button 
+                type="button"
+                className="native-auth-submit"
+                onClick={handleGoToLogin}
+              >
+                Ir a Iniciar Sesión
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="native-auth">
@@ -201,6 +294,33 @@ const NativeAuth = ({ onLoginSuccess }) => {
                   className="native-auth-input"
                   autoComplete={isLogin ? "current-password" : "new-password"}
                 />
+                {!isLogin && formData.password && (
+                  <>
+                    <div className="password-strength-bar">
+                      <div 
+                        className="password-strength-fill"
+                        style={{ 
+                          width: `${(getPasswordStrength(formData.password).level / 3) * 100}%`,
+                          backgroundColor: getPasswordStrength(formData.password).color
+                        }}
+                      />
+                    </div>
+                    <div className="password-strength-label" style={{ color: getPasswordStrength(formData.password).color }}>
+                      Seguridad: {getPasswordStrength(formData.password).label}
+                    </div>
+                    <div className="password-requirements">
+                      <span className={formData.password.length >= 8 ? 'valid' : 'invalid'}>
+                        ✓ 8+ caracteres
+                      </span>
+                      <span className={/[A-Z]/.test(formData.password) ? 'valid' : 'invalid'}>
+                        ✓ Una mayúscula
+                      </span>
+                      <span className={/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(formData.password) ? 'valid' : 'invalid'}>
+                        ✓ Un carácter especial
+                      </span>
+                    </div>
+                  </>
+                )}
               </div>
 
               {!isLogin && (
@@ -228,6 +348,16 @@ const NativeAuth = ({ onLoginSuccess }) => {
                   isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'
                 )}
               </button>
+
+              {isLogin && (
+                <button
+                  type="button"
+                  className="native-auth-forgot"
+                  onClick={handleForgotPassword}
+                >
+                  ¿Olvidaste tu contraseña?
+                </button>
+              )}
             </div>
           </form>
         </div>

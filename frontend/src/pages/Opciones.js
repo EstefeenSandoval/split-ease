@@ -15,13 +15,15 @@ const Opciones = () => {
     id_usuario: '',
     nombre: '',
     email: '',
-    foto_perfil: null
+    foto_perfil: null,
+    email_verificado: false
   });
 
   const [originalProfile, setOriginalProfile] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  const [pendingVerificationMessage, setPendingVerificationMessage] = useState(null);
 
   // const [setSettings] = useState({
   //   language: 'es',
@@ -67,7 +69,8 @@ const Opciones = () => {
           id_usuario: data.usuario.id_usuario,
           nombre: data.usuario.nombre,
           email: data.usuario.email,
-          foto_perfil: data.usuario.foto_perfil
+          foto_perfil: data.usuario.foto_perfil,
+          email_verificado: data.usuario.email_verificado || false
         };
         setUserProfile(userData);
         setOriginalProfile(userData);
@@ -164,6 +167,36 @@ const Opciones = () => {
 
       if (!response.ok) {
         toast.error(data.error || 'Error al actualizar el perfil');
+        setIsSaving(false);
+        return;
+      }
+
+      // Check if verification is pending (for name/email changes)
+      if (data.requiereVerificacion) {
+        setPendingVerificationMessage(data.mensaje);
+        // Update photo if it was changed (photo doesn't require verification)
+        if (data.usuario && data.usuario.foto_perfil !== originalProfile.foto_perfil) {
+          setUserProfile(prev => ({
+            ...prev,
+            nombre: originalProfile.nombre,
+            email: originalProfile.email,
+            foto_perfil: data.usuario.foto_perfil,
+            newProfilePicFile: null
+          }));
+          setOriginalProfile(prev => ({
+            ...prev,
+            foto_perfil: data.usuario.foto_perfil
+          }));
+          // Actualizar localStorage con la nueva foto
+          const storedUser = JSON.parse(localStorage.getItem('usuario') || '{}');
+          storedUser.foto_perfil = data.usuario.foto_perfil;
+          localStorage.setItem('usuario', JSON.stringify(storedUser));
+          window.dispatchEvent(new Event('profileUpdated'));
+        } else {
+          // Reset to original if no photo change
+          setUserProfile({ ...originalProfile });
+        }
+        setHasChanges(false);
         setIsSaving(false);
         return;
       }
@@ -345,6 +378,39 @@ const Opciones = () => {
           </div>
           
           <div className="profile-form">
+            {/* Email verification warning */}
+            {!userProfile.email_verificado && (
+              <div className="verification-warning">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <div className="verification-warning-text">
+                  <span className="verification-warning-title">Email no verificado</span>
+                  <span className="verification-warning-subtitle">Verifica tu correo para poder editar tu nombre o email. Puedes cambiar tu foto de perfil sin restricciones.</span>
+                </div>
+              </div>
+            )}
+
+            {/* Pending verification message */}
+            {pendingVerificationMessage && (
+              <div className="pending-verification-message">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <div className="pending-message-text">
+                  <span className="pending-message-title">Confirmación requerida</span>
+                  <span className="pending-message-subtitle">{pendingVerificationMessage}</span>
+                </div>
+                <button 
+                  type="button" 
+                  className="dismiss-message"
+                  onClick={() => setPendingVerificationMessage(null)}
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="nombre" className="form-label">
@@ -358,8 +424,9 @@ const Opciones = () => {
                   id="nombre"
                   value={userProfile.nombre}
                   onChange={(e) => handleProfileChange('nombre', e.target.value)}
-                  className="input-field"
+                  className={`input-field ${!userProfile.email_verificado ? 'disabled' : ''}`}
                   placeholder="Tu nombre completo"
+                  disabled={!userProfile.email_verificado}
                 />
               </div>
               
@@ -375,8 +442,9 @@ const Opciones = () => {
                   id="email"
                   value={userProfile.email}
                   onChange={(e) => handleProfileChange('email', e.target.value)}
-                  className="input-field"
+                  className={`input-field ${!userProfile.email_verificado ? 'disabled' : ''}`}
                   placeholder="tu@email.com"
+                  disabled={!userProfile.email_verificado}
                 />
               </div>
             </div>

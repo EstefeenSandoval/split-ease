@@ -1,0 +1,199 @@
+/* =====================================================
+   Estilos para Banner de Verificación de Email
+   Responsivo para web, móvil web y Capacitor
+   ===================================================== */
+
+.email-verification-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: linear-gradient(135deg, #498467 0%, #356859 100%);
+  padding: 12px 20px;
+  box-shadow: 0 -4px 20px rgba(73, 132, 103, 0.25);
+  animation: slideUpBanner 0.4s ease-out;
+}
+
+/* Para apps nativas, considerar safe area */
+.native .email-verification-banner {
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Si hay bottom tabs en nativo */
+.email-verification-banner.with-tabs {
+  bottom: 70px;
+}
+
+@keyframes slideUpBanner {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.email-verification-banner-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Icono */
+.email-verification-banner-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.email-verification-banner-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: white;
+}
+
+/* Texto */
+.email-verification-banner-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.email-verification-banner-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+}
+
+.email-verification-banner-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Acciones */
+.email-verification-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.email-verification-banner-btn {
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.email-verification-banner-btn.primary {
+  padding: 10px 20px;
+  background: white;
+  color: #356859;
+  border-radius: 50px;
+  font-size: 14px;
+  min-width: 140px;
+}
+
+.email-verification-banner-btn.primary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+.email-verification-banner-btn.primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.email-verification-banner-btn.dismiss {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
+.email-verification-banner-btn.dismiss:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.email-verification-banner-btn.dismiss svg {
+  width: 18px;
+  height: 18px;
+  stroke: white;
+}
+
+/* Spinner */
+.email-verification-banner-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(53, 104, 89, 0.3);
+  border-top-color: #356859;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .email-verification-banner {
+    padding: 12px 16px;
+  }
+
+  .email-verification-banner-content {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .email-verification-banner-icon {
+    display: none;
+  }
+
+  .email-verification-banner-text {
+    flex: 1 1 100%;
+  }
+
+  .email-verification-banner-title {
+    font-size: 14px;
+  }
+
+  .email-verification-banner-subtitle {
+    font-size: 12px;
+  }
+
+  .email-verification-banner-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .email-verification-banner-btn.primary {
+    flex: 1;
+    padding: 12px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .email-verification-banner-btn.primary {
+    font-size: 13px;
+    min-width: auto;
+  }
+}
