@@ -1,6 +1,7 @@
 const gastoModel = require('../models/gastoModel');
 const gruposModel = require('../models/gruposModel');
 const notificacionHelper = require('../utils/notificacionHelper');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // <summary>
 // Controlador para la gestión de gastos y categorías
@@ -741,6 +742,130 @@ const obtenerPagosPendientes = (req, res) => {
   });
 };
 
+// =========== ANÁLISIS DE TICKETS CON IA ===========
+
+// Analizar ticket con Gemini AI
+const analizarTicket = async (req, res) => {
+  try {
+    const { imagen } = req.body;
+    
+    if (!imagen) {
+      return res.status(400).json({ error: 'La imagen es requerida.' });
+    }
+
+    // Verificar que la API key esté configurada
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      console.error('GEMINI_API_KEY no está configurada');
+      return res.status(500).json({ error: 'Servicio de análisis no disponible.' });
+    }
+
+    // Inicializar Gemini
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+    // Preparar la imagen (remover prefijo data:image si existe)
+    let base64Image = imagen;
+    let mimeType = 'image/jpeg';
+    
+    if (imagen.includes('data:image')) {
+      const matches = imagen.match(/^data:(.+);base64,(.+)$/);
+      if (matches) {
+        mimeType = matches[1];
+        base64Image = matches[2];
+      }
+    }
+
+    // Prompt estructurado para extraer items del ticket
+    const prompt = `Analiza esta imagen de un ticket o recibo de compra.
+Extrae los productos/items con su precio individual.
+Límite máximo: 25 items.
+Si hay propinas, impuestos o cargos adicionales, inclúyelos como items separados.
+
+Responde ÚNICAMENTE con un JSON válido en este formato exacto, sin markdown ni texto adicional:
+{
+  "items": [
+    {"concepto": "nombre del producto", "precio": 0.00}
+  ],
+  "total": 0.00
+}
+
+Reglas:
+- Los precios deben ser números decimales (ej: 15.50)
+- El concepto debe tener máximo 50 caracteres
+- Si no puedes leer un precio, usa 0.00
+- Si no hay items legibles, devuelve items vacío
+- El total debe ser la suma de todos los items o el total del ticket si es visible`;
+
+    // Enviar a Gemini
+    const result = await model.generateContent([
+      prompt,
+      {
+        inlineData: {
+          mimeType: mimeType,
+          data: base64Image
+        }
+      }
+    ]);
+
+    const response = await result.response;
+    let text = response.text();
+    
+    // Limpiar respuesta (a veces Gemini agrega ```json)
+    text = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    
+    // Parsear JSON
+    let ticketData;
+    try {
+      ticketData = JSON.parse(text);
+    } catch (parseError) {
+      console.error('Error al parsear respuesta de Gemini:', text);
+      return res.status(422).json({ 
+        error: 'No se pudo interpretar el ticket. Intenta con una foto más clara.',
+        detalles: 'El formato de respuesta no es válido'
+      });
+    }
+
+    // Validar estructura
+    if (!ticketData.items || !Array.isArray(ticketData.items)) {
+      ticketData.items = [];
+    }
+
+    // Sanitizar y limitar items
+    ticketData.items = ticketData.items
+      .slice(0, 25) // Máximo 25 items
+      .map((item, index) => ({
+        id: index + 1,
+        concepto: String(item.concepto || 'Item sin nombre').substring(0, 50).trim(),
+        precio: parseFloat(item.precio) || 0
+      }))
+      .filter(item => item.precio > 0 || item.concepto !== 'Item sin nombre');
+
+    // Calcular total si no viene o recalcular
+    const totalCalculado = ticketData.items.reduce((sum, item) => sum + item.precio, 0);
+    ticketData.total = ticketData.total ? parseFloat(ticketData.total) : totalCalculado;
+
+    res.status(200).json({
+      mensaje: 'Ticket analizado correctamente.',
+      items: ticketData.items,
+      total: parseFloat(ticketData.total.toFixed(2)),
+      totalCalculado: parseFloat(totalCalculado.toFixed(2))
+    });
+
+  } catch (error) {
+    console.error('Error al analizar ticket:', error);
+    
+    if (error.message?.includes('API key')) {
+      return res.status(500).json({ error: 'Error de configuración del servicio.' });
+    }
+    
+    res.status(500).json({ 
+      error: 'Error al analizar el ticket. Intenta de nuevo.',
+      detalles: error.message 
+    });
+  }
+};
+
 module.exports = {
   // Categorías
   obtenerCategorias,
@@ -757,5 +882,8 @@ module.exports = {
   // Pagos Parciales
   realizarPagoParcial,
   obtenerPagosPorGasto,
-  obtenerPagosPendientes
+  obtenerPagosPendientes,
+  
+  // Análisis de Tickets
+  analizarTicket
 };

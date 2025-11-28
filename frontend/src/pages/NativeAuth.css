@@ -2,15 +2,15 @@
 .native-auth {
   min-height: 100vh;
   min-height: 100dvh;
-  background: linear-gradient(165deg, var(--verde-palido) 0%, var(--verde-claro) 50%, var(--menta-suave) 100%);
+  background: linear-gradient(165deg, var(--verde-palido, #e8f5e9) 0%, var(--verde-claro, #c8e6c9) 50%, var(--menta-suave, #bcebcb) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--safe-area-top) var(--safe-area-right) var(--safe-area-bottom) var(--safe-area-left);
-  padding-left: max(16px, var(--safe-area-left));
-  padding-right: max(16px, var(--safe-area-right));
-  padding-top: max(20px, var(--safe-area-top));
-  padding-bottom: max(20px, var(--safe-area-bottom));
+  padding: var(--safe-area-top, 0px) var(--safe-area-right, 0px) var(--safe-area-bottom, 0px) var(--safe-area-left, 0px);
+  padding-left: max(16px, var(--safe-area-left, 0px));
+  padding-right: max(16px, var(--safe-area-right, 0px));
+  padding-top: max(20px, var(--safe-area-top, 0px));
+  padding-bottom: max(20px, var(--safe-area-bottom, 0px));
   box-sizing: border-box;
   animation: authFadeIn 0.5s ease-out;
 }
@@ -53,7 +53,7 @@
 .native-auth-logo-wrapper {
   width: 100px;
   height: 100px;
-  background: var(--blanco);
+  background: var(--blanco, #FFFFFF);
   border-radius: 24px;
   display: flex;
   align-items: center;

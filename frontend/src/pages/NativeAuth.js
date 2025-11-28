@@ -140,13 +140,15 @@ const NativeAuth = ({ onLoginSuccess }) => {
       }
       
       if (isLogin && data.token) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('usuario', JSON.stringify({
+        const userData = {
           id_usuario: data.usuario.id_usuario,
           nombre: data.usuario.nombre,
           email: data.usuario.email,
           email_verificado: data.usuario.email_verificado || false
-        }));
+        };
+        
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('usuario', JSON.stringify(userData));
         
         try {
           await Haptics.impact({ style: ImpactStyle.Medium });
@@ -155,7 +157,7 @@ const NativeAuth = ({ onLoginSuccess }) => {
         }
         
         if (onLoginSuccess) {
-          onLoginSuccess(data.usuario.nombre || formData.name || 'Usuario');
+          onLoginSuccess(userData);
         }
         
         toast.success('¡Bienvenido de vuelta!');

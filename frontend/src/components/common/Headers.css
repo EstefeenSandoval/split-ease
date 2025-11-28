@@ -229,6 +229,11 @@
   object-position: center;
   transition: transform 0.3s ease;
   display: block;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .header-user-button:hover .header-avatar-img {

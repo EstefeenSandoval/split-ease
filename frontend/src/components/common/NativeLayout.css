@@ -9,7 +9,7 @@
 
 .native-layout-content {
   flex: 1;
-  padding-bottom: calc(var(--bottom-tabs-height) + var(--safe-area-bottom) + 10px);
+  padding-bottom: calc(var(--bottom-tabs-height, 65px) + var(--safe-area-bottom, 0px) + 10px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -32,10 +32,11 @@
 
 /* Override for pages that have their own min-height */
 .native-layout-content .dashboard-container,
-.native-layout-content .grupos-page,
-.native-layout-content .gastos-page,
-.native-layout-content .notificacion-container,
-.native-layout-content .opciones-container {
+.native-layout-content .grupos-container,
+.native-layout-content .gastos-container,
+.native-layout-content .notificacion-page,
+.native-layout-content .opciones-container,
+.native-layout-content .pagos-page {
   min-height: auto;
   padding-top: 20px;
 }

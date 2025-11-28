@@ -1048,3 +1048,26 @@
     font-size: 0.9rem;
   }
 }
+
+/* Mensaje informativo del modo ticket */
+.ticket-mode-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(73, 132, 103, 0.1) 0%, rgba(188, 235, 203, 0.2) 100%);
+  border: 1px solid var(--viridian);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: var(--eerie-black);
+  line-height: 1.5;
+}
+
+.ticket-mode-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.ticket-mode-info strong {
+  color: var(--viridian);
+}

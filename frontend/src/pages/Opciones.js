@@ -245,12 +245,14 @@ const Opciones = () => {
       await Haptics.impact({ style: ImpactStyle.Light });
       
       const image = await Camera.getPhoto({
-        quality: 90,
+        quality: 100,
         allowEditing: true,
         resultType: CameraResultType.DataUrl,
-        source: CameraSource.Camera,
-        width: 400,
-        height: 400
+        source: CameraSource.Camera, // Permite elegir entre cámara y galería
+        width: 1024,
+        height: 1024,
+        correctOrientation: true,
+        presentationStyle: 'fullscreen'
       });
 
       if (image.dataUrl) {

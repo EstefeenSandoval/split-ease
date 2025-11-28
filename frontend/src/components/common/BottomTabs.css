@@ -4,9 +4,9 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--blanco);
+  background: var(--blanco, #FFFFFF);
   border-top: 1px solid rgba(0, 0, 0, 0.06);
-  padding-bottom: var(--safe-area-bottom);
+  padding-bottom: var(--safe-area-bottom, 0px);
   z-index: 1000;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
 }
@@ -15,7 +15,7 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: var(--bottom-tabs-height);
+  height: var(--bottom-tabs-height, 65px);
   max-width: 500px;
   margin: 0 auto;
   padding: 0 8px;
@@ -52,12 +52,12 @@
 
 .bottom-tab-icon {
   font-size: 1.25rem;
-  color: var(--gris-azulado);
+  color: var(--gris-azulado, #596869);
   transition: all 0.25s ease;
 }
 
 .bottom-tab.active .bottom-tab-icon {
-  color: var(--verde-principal);
+  color: var(--verde-principal, #498467);
   transform: scale(1.1);
 }
 
@@ -68,7 +68,7 @@
   transform: translateX(-50%);
   width: 6px;
   height: 6px;
-  background: var(--verde-principal);
+  background: var(--verde-principal, #498467);
   border-radius: 50%;
   animation: indicatorPop 0.3s ease-out;
 }
@@ -90,13 +90,13 @@
 .bottom-tab-label {
   font-size: 0.7rem;
   font-weight: 500;
-  color: var(--gris-azulado);
+  color: var(--gris-azulado, #596869);
   transition: all 0.25s ease;
   white-space: nowrap;
 }
 
 .bottom-tab.active .bottom-tab-label {
-  color: var(--verde-principal);
+  color: var(--verde-principal, #498467);
   font-weight: 600;
 }
 
@@ -126,8 +126,8 @@
   right: 8px;
   min-width: 18px;
   height: 18px;
-  background: var(--rojo-error);
-  color: var(--blanco);
+  background: var(--rojo-error, #c33);
+  color: var(--blanco, #FFFFFF);
   font-size: 0.65rem;
   font-weight: 700;
   border-radius: 9px;

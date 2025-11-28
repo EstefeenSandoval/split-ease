@@ -468,3 +468,21 @@
     height: 36px;
   }
 }
+
+/* ===== Native App Styles ===== */
+body.native-app .pagos-page {
+  min-height: auto;
+  padding-top: var(--safe-area-top, 0px);
+}
+
+body.native-app .pagos-header {
+  padding: 16px 0;
+}
+
+body.native-app .pagos-title {
+  font-size: 1.5rem;
+}
+
+body.native-app .pagos-content {
+  padding: 16px;
+}

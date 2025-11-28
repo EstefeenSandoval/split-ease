@@ -9,7 +9,8 @@ const {
   obtenerDetalleGasto, 
   actualizarGasto, 
   eliminarGasto, 
-  marcarComoPagado 
+  marcarComoPagado,
+  analizarTicket
 } = require('../controllers/gastoController');
 
 //<summary>
@@ -27,6 +28,11 @@ router.get('/categorias', auth.verificarToken, obtenerCategorias);
 
 // /api/gastos/categorias - Crear nueva categoría
 router.post('/categorias', auth.verificarToken, crearCategoria);
+
+// =========== ANÁLISIS DE TICKETS ===========
+
+// /api/gastos/analizar-ticket - Analizar ticket con IA
+router.post('/analizar-ticket', auth.verificarToken, analizarTicket);
 
 // =========== GASTOS ===========
 

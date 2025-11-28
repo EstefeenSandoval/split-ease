@@ -242,6 +242,11 @@ body {
   height: 100%;
   object-fit: cover;
   transition: filter 0.3s ease;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .avatar:hover .avatar-img {

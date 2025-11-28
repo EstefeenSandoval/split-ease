@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { construirURLEstatico } from '../../../config/api';
+import TicketScanner from '../TicketScanner';
 import './CrearGastoModal.css';
 
 // SVG para Crear Gasto Rápido (Plus dentro de círculo)
@@ -40,6 +41,7 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
     moneda: 'MXN',
     id_pagador: ''
   });
+  const [ticketItems, setTicketItems] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [errors, setErrors] = useState({});
   const [avisoParticipantes, setAvisoParticipantes] = useState('');
@@ -224,6 +226,64 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Si hay items del ticket asignados, crear gastos múltiples
+    const itemsAsignados = ticketItems.filter(item => item.id_usuario && item.precio > 0);
+    
+    if (itemsAsignados.length > 0) {
+      // Validar que haya pagador y categoría
+      if (!formData.id_pagador) {
+        setErrors({ id_pagador: 'Selecciona quién pagó' });
+        return;
+      }
+      if (!formData.id_categoria) {
+        setErrors({ id_categoria: 'Selecciona una categoría' });
+        return;
+      }
+      
+      // Agrupar items por usuario
+      const gastosPorUsuario = {};
+      itemsAsignados.forEach(item => {
+        const idUsuario = item.id_usuario.toString();
+        if (!gastosPorUsuario[idUsuario]) {
+          gastosPorUsuario[idUsuario] = {
+            conceptos: [],
+            total: 0
+          };
+        }
+        gastosPorUsuario[idUsuario].conceptos.push(item.concepto);
+        gastosPorUsuario[idUsuario].total += parseFloat(item.precio) || 0;
+      });
+      
+      setCargando(true);
+      
+      try {
+        // Crear un gasto por cada usuario
+        for (const [idUsuario, data] of Object.entries(gastosPorUsuario)) {
+          const descripcionGasto = data.conceptos.join(', ');
+          const gastoData = {
+            ...formData,
+            descripcion: descripcionGasto.substring(0, 255),
+            monto_total: data.total,
+            participantes: [parseInt(idUsuario)],
+            tipo_division: 'equitativa',
+            montos_personalizados: []
+          };
+          
+          await onCrear(gastoData);
+        }
+        
+        // Limpiar formulario
+        resetFormulario();
+      } catch (error) {
+        // El error ya se maneja en el componente padre
+      } finally {
+        setCargando(false);
+      }
+      
+      return;
+    }
+    
+    // Flujo normal sin items de ticket
     if (!validarFormulario()) {
       return;
     }
@@ -233,18 +293,7 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
     try {
       await onCrear(formData);
       // Si llegamos aquí, el gasto se creó exitosamente
-      setFormData({
-        descripcion: '',
-        monto_total: '',
-        id_categoria: '',
-        fecha_gasto: obtenerFechaGMT6(),
-        participantes: [],
-        tipo_division: 'equitativa',
-        montos_personalizados: [],
-        moneda: 'MXN',
-        id_pagador: ''
-      });
-      setErrors({});
+      resetFormulario();
     } catch (error) {
       // El error ya se maneja en el componente padre
     } finally {
@@ -252,20 +301,25 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
     }
   };
 
+  const resetFormulario = () => {
+    setFormData({
+      descripcion: '',
+      monto_total: '',
+      id_categoria: '',
+      fecha_gasto: obtenerFechaGMT6(),
+      participantes: [],
+      tipo_division: 'equitativa',
+      montos_personalizados: [],
+      moneda: 'MXN',
+      id_pagador: ''
+    });
+    setTicketItems([]);
+    setErrors({});
+  };
+
   const handleClose = () => {
     if (!cargando) {
-      setFormData({
-        descripcion: '',
-        monto_total: '',
-        id_categoria: '',
-        fecha_gasto: obtenerFechaGMT6(),
-        participantes: [],
-        tipo_division: 'equitativa',
-        montos_personalizados: [],
-        moneda: 'MXN',
-        id_pagador: ''
-      });
-      setErrors({});
+      resetFormulario();
       onClose();
     }
   };
@@ -385,7 +439,29 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
             </div>
           </div>
 
-          {/* Sección participantes y división */}
+          {/* Sección Ticket Scanner - Opcional */}
+          <TicketScanner 
+            participantes={participantes}
+            onItemsChange={setTicketItems}
+            moneda={formData.moneda}
+          />
+
+          {/* Mensaje informativo cuando hay items de ticket */}
+          {ticketItems.filter(item => item.id_usuario && item.precio > 0).length > 0 && (
+            <div className="ticket-mode-info">
+              <span className="ticket-mode-icon">📋</span>
+              <span>
+                Se crearán <strong>{Object.keys(ticketItems.filter(item => item.id_usuario && item.precio > 0).reduce((acc, item) => {
+                  acc[item.id_usuario] = true;
+                  return acc;
+                }, {})).length} gastos</strong> (uno por cada persona con items asignados). 
+                Los campos de descripción, monto y participantes de arriba se ignorarán.
+              </span>
+            </div>
+          )}
+
+          {/* Sección participantes y división - Solo si NO hay items de ticket asignados */}
+          {ticketItems.filter(item => item.id_usuario && item.precio > 0).length === 0 && (
           <div className="seccion-participantes">
             <div className="participantes-seccion">
               <label className="seccion-titulo">Participantes * {errors.participantes && <span className="error-message">({errors.participantes})</span>}</label>
@@ -485,9 +561,10 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
               )}
             </div>
           </div>
+          )}
 
           {/* Desglose de montos equitativos */}
-          {formData.tipo_division === 'equitativa' && formData.participantes.length > 0 && formData.monto_total && (
+          {ticketItems.filter(item => item.id_usuario && item.precio > 0).length === 0 && formData.tipo_division === 'equitativa' && formData.participantes.length > 0 && formData.monto_total && (
             <div className="form-group montos-section">
               <label className="seccion-titulo">
                 Desglose equitativo
@@ -536,7 +613,7 @@ const CrearGastoModal = ({ isOpen, onClose, onCrear, participantes, categorias }
           )}
 
           {/* Montos personalizados - solo si es necesario */}
-          {formData.tipo_division === 'monto_fijo' && formData.participantes.length > 0 && (
+          {ticketItems.filter(item => item.id_usuario && item.precio > 0).length === 0 && formData.tipo_division === 'monto_fijo' && formData.participantes.length > 0 && (
             <div className="form-group montos-section">
               <label className="seccion-titulo">
                 Montos individuales
